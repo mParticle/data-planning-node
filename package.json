@@ -1,0 +1,71 @@
+{
+    "name": "@mparticle/data-planning-node",
+    "version": "0.0.1",
+    "description": "A Node Interface for Data Planning",
+    "main": "dist/mparticle-data-planning.common.js",
+    "types": "dist/index.d.ts",
+    "files": [
+        "dist/",
+        "src"
+    ],
+    "repository": "https://github.com/mParticle/data-planning-node",
+    "scripts": {
+        "lint": "npm run gts:check",
+        "build": "npm run build:dts && npm run build:prod",
+        "build:dev": "ENVIRONMENT=dev rollup --config rollup.config.js",
+        "build:prod": "ENVIRONMENT=prod rollup --config rollup.config.js",
+        "build:dts": "tsc --emitDeclarationOnly",
+        "gts:check": "gts check",
+        "gts:clean": "gts clean",
+        "gts:compile": "tsc -p .",
+        "gts:fix": "gts fix",
+        "docs": "typedoc src/",
+        "test": "npm run build && npm run test:ts && npm run test:js",
+        "test:ts": "jest --config jest.ts.config.js",
+        "test:ts:watch": "jest --config jest.ts.config.js --watchAll",
+        "test:ts:clear": "jest --config jest.ts.config.js --clearCache",
+        "test:js": "jest --config jest.js.config.js",
+        "test:js:watch": "jest --config jest.js.config.js --watchAll"
+    },
+    "keywords": [
+        "mparticle",
+        "analytics",
+        "cdp"
+    ],
+    "pre-commit": [
+        "lint",
+        "test"
+    ],
+    "test": "jest",
+    "author": "",
+    "license": "ISC",
+    "devDependencies": {
+        "@rollup/plugin-json": "^4.0.1",
+        "@types/faker": "^4.1.7",
+        "@types/jest": "^24.0.22",
+        "@types/mockdate": "^2.0.0",
+        "@types/node": "^12.12.6",
+        "deepmerge": "^4.2.2",
+        "faker": "^4.1.0",
+        "gts": "^1.1.2",
+        "jest": "^24.9.0",
+        "nock": "^11.7.2",
+        "pre-commit": "^1.2.2",
+        "rollup": "^1.27.14",
+        "rollup-plugin-commonjs": "^10.1.0",
+        "rollup-plugin-json": "^4.0.0",
+        "rollup-plugin-node-resolve": "^5.2.0",
+        "rollup-plugin-typescript": "^1.0.1",
+        "ts-jest": "^24.2.0",
+        "ts-node": "^8.5.4",
+        "typedoc": "^0.15.4",
+        "typedoc-default-themes": "git+ssh://git@github.com/mParticle/typedoc-default-themes.git#mp-custom",
+        "typescript": "^3.7.3"
+    },
+    "dependencies": {
+        "@mparticle/data-planning-models": "0.0.2-alpha.1",
+        "@mparticle/event-models": "^1.0.1",
+        "ajv": "^6.10.2",
+        "axios": "^0.19.0"
+    }
+}

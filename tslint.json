@@ -1,0 +1,36 @@
+{
+    "extends": "gts/tslint.json",
+    "rules": {
+        "indent": {
+            "options": ["spaces", 4]
+        },
+        "cyclomatic-complexity": [
+            true,
+            {
+                "limit": 15
+            }
+        ],
+        "max-line-length": [
+            true,
+            {
+                "limit": 80,
+                "ignore-pattern": "^import |^export {(.*?)}",
+                "check-strings": true,
+                "check-regex": true
+            }
+        ],
+        "interface-over-type-literal": false,
+        "no-default-export": false,
+        "variable-name": [
+            true,
+            "ban-keywords",
+            "check-format",
+            "allow-pascal-case",
+            "allow-snake-case",
+            "allow-leading-underscore"
+        ]
+    },
+    "linterOptions": {
+        "exclude": ["**/*.json", "tests/data_planning/fixtures"]
+    }
+}

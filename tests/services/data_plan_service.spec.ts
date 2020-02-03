@@ -10,104 +10,120 @@ import { ScreenViewEventFactory } from '../factories/event_factory';
 import nock from 'nock';
 import { config } from '../../src/utils/config';
 
+nock.disableNetConnect();
+
+let dataPlanService: DataPlanService;
+beforeEach(() => {
+    nock(config.auth.apiRoot)
+        .post(`/${config.auth.path}`)
+        .reply(200, {
+            access_token: 'DAS token',
+            expires_in: 5,
+            token_type: 'Bearer',
+        });
+
+    dataPlanService = new DataPlanService();
+});
+afterEach(() => {
+    nock.cleanAll();
+});
+
 describe('DataPlanService', () => {
-    describe('#getAllPlans', () => {
-        it('should return an array of data plans', async done => {
-            nock(config.apiRoot)
-                .get(`/${config.dataPlanningPath}/1111/1111/1111/plans/`)
-                .reply(200, [{ data_plan_versions: [] }]);
-
-            const dataPlanService = new DataPlanService();
-            expect(
-                await dataPlanService.getAllPlans(1111, 1111, 1111, '')
-            ).toEqual([
-                {
-                    data_plan_versions: [],
-                },
-            ]);
-            done();
+    describe('Fetching', () => {
+        beforeEach(() => {
+            dataPlanService = new DataPlanService({
+                orgId: 1111,
+                accountId: 2222,
+                workspaceId: 3333,
+                clientId: 'client_id',
+                clientSecret: 'client_secret',
+            });
         });
+        describe('#getAllPlans', () => {
+            it('should return an array of data plans', async done => {
+                nock(config.apiRoot)
+                    .get(`/${config.dataPlanningPath}/1111/2222/3333/plans/`)
+                    .reply(200, [{ data_plan_versions: [] }]);
 
-        it('should handle 401 Errors', async done => {
-            nock(config.apiRoot)
-                .get(`/${config.dataPlanningPath}/1111/1111/1111/plans/`)
-                .reply(401);
-
-            const dataPlanService = new DataPlanService();
-            await expect(
-                dataPlanService.getAllPlans(1111, 1111, 1111, '')
-            ).rejects.toThrowError('Request failed with status code 401');
-
-            done();
-        });
-    });
-
-    describe('#getPlan', () => {
-        it('should return a data plan', async done => {
-            nock(config.apiRoot)
-                .get(`/${config.dataPlanningPath}/1111/1111/1111/plans/test`)
-                .reply(200, { data_plan_versions: [] });
-
-            const dataPlanService = new DataPlanService();
-
-            expect(
-                await dataPlanService.getPlan(1111, 1111, 'test', 1111, '')
-            ).toEqual({
-                data_plan_versions: [],
+                expect(await dataPlanService.getAllPlans()).toEqual([
+                    {
+                        data_plan_versions: [],
+                    },
+                ]);
+                done();
             });
 
-            done();
+            it('should handle 401 Errors', async done => {
+                nock(config.apiRoot)
+                    .get(`/${config.dataPlanningPath}/1111/2222/3333/plans/`)
+                    .reply(401);
+
+                await expect(
+                    dataPlanService.getAllPlans()
+                ).rejects.toThrowError('Request failed with status code 401');
+
+                done();
+            });
         });
 
-        it('should handle 401 Errors', async done => {
-            nock(config.apiRoot)
-                .get(`/${config.dataPlanningPath}/1111/1111/1111/plans/test`)
-                .reply(401);
+        describe('#getPlan', () => {
+            it('should return a data plan', async done => {
+                nock(config.apiRoot)
+                    .get(
+                        `/${config.dataPlanningPath}/1111/2222/3333/plans/test`
+                    )
+                    .reply(200, { data_plan_versions: [] });
 
-            const dataPlanService = new DataPlanService();
-            await expect(
-                dataPlanService.getPlan(1111, 1111, 'test', 1111, '')
-            ).rejects.toThrowError('Request failed with status code 401');
+                expect(await dataPlanService.getPlan('test')).toEqual({
+                    data_plan_versions: [],
+                });
 
-            done();
+                done();
+            });
+
+            it('should handle 401 Errors', async done => {
+                nock(config.apiRoot)
+                    .get(
+                        `/${config.dataPlanningPath}/1111/2222/3333/plans/test`
+                    )
+                    .reply(401);
+
+                await expect(
+                    dataPlanService.getPlan('test')
+                ).rejects.toThrowError('Request failed with status code 401');
+
+                done();
+            });
         });
-    });
 
-    describe('#getVersionDocument', () => {
-        it('should return a version document', async done => {
-            nock(config.apiRoot)
-                .get(
-                    // tslint:disable-next-line: max-line-length
-                    `/${config.dataPlanningPath}/1111/1111/1111/plans/test/versions/2`
-                )
-                .reply(200, {
+        describe('#getVersionDocument', () => {
+            it('should return a version document', async done => {
+                nock(config.apiRoot)
+                    .get(
+                        // tslint:disable-next-line: max-line-length
+                        `/${config.dataPlanningPath}/1111/2222/3333/plans/test/versions/2`
+                    )
+                    .reply(200, {
+                        version: 2,
+                        data_plan_id: 'amazing_really_cool_plan',
+                        version_document: {},
+                    });
+
+                expect(
+                    await dataPlanService.getVersionDocument('test', 2)
+                ).toEqual({
                     version: 2,
                     data_plan_id: 'amazing_really_cool_plan',
                     version_document: {},
                 });
 
-            const dataPlanService = new DataPlanService();
-            expect(
-                await dataPlanService.getVersionDocument(
-                    1111,
-                    1111,
-                    'test',
-                    1111,
-                    2,
-                    ''
-                )
-            ).toEqual({
-                version: 2,
-                data_plan_id: 'amazing_really_cool_plan',
-                version_document: {},
+                done();
             });
-
-            done();
         });
     });
+
     describe('#validateEvent', () => {
         it('returns a validation results for an invalid event', () => {
-            const dataPlanService = new DataPlanService();
             const event = ScreenViewEventFactory.getOne({});
 
             const eventDataPoint = DataPlanPointFactory.getOne({
@@ -174,7 +190,6 @@ describe('DataPlanService', () => {
 
     describe('#validateBatch', () => {
         it('returns an empty validation result for a valid batch', () => {
-            const dataPlanService = new DataPlanService();
             const event = ScreenViewEventFactory.getOne({
                 data: {
                     custom_flags: {
@@ -238,7 +253,6 @@ describe('DataPlanService', () => {
             });
         });
         it('returns validation results for an invalid batch', () => {
-            const dataPlanService = new DataPlanService();
             const event = ScreenViewEventFactory.getOne({});
 
             const eventDataPoint = DataPlanPointFactory.getOne({

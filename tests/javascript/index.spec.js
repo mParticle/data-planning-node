@@ -1,44 +1,88 @@
 const {
     DataPlanService,
-    config,
-    apiRoot,
 } = require('../../dist/mparticle-data-planning.common');
 
 const nock = require('nock');
 
+let dataPlanService;
+
+beforeEach(() => {
+    nock('https://sso.auth.mparticle.com')
+        .post('/oauth/token')
+        .reply(200, {
+            access_token: 'DAS token',
+            expires_in: 5,
+            token_type: 'Bearer',
+        });
+    dataPlanService = new DataPlanService();
+});
+
+afterEach(() => {
+    nock.cleanAll();
+});
+
 describe('JS Imports', () => {
     describe('DataPlanService', () => {
-        describe('#getAllPlans', () => {
-            it('should return an array of data plans', async done => {
-                nock('https://api.mparticle.com')
-                    .get(`/planning/v1/1111/2222/3333/plans/`)
-                    .reply(200, [{ data_plan_versions: [] }]);
-
-                const dataPlanService = new DataPlanService();
-                expect(
-                    await dataPlanService.getAllPlans(1111, 2222, 3333)
-                ).toEqual([
-                    {
-                        data_plan_versions: [],
-                    },
-                ]);
-                done();
-            });
-        });
-
-        describe('#getPlan', () => {
-            it('should return a data plan', async done => {
-                nock('https://api.mparticle.com')
-                    .get(`/planning/v1/1111/2222/3333/plans/my-slug`)
-                    .reply(200, { data_plan_versions: [] });
-
-                const dataPlanService = new DataPlanService();
-                expect(
-                    await dataPlanService.getPlan(1111, 2222, 'my-slug', 3333)
-                ).toEqual({
-                    data_plan_versions: [],
+        describe('fetching', () => {
+            beforeEach(() => {
+                dataPlanService = new DataPlanService({
+                    orgId: 1111,
+                    accountId: 2222,
+                    workspaceId: 3333,
+                    clientId: 'client_id',
+                    clientSecret: 'client_secret',
                 });
-                done();
+            });
+            describe('#getAllPlans', () => {
+                it('should return an array of data plans', async done => {
+                    nock('https://api.mparticle.com')
+                        .get(`/planning/v1/1111/2222/3333/plans/`)
+                        .reply(200, [{ data_plan_versions: [] }]);
+
+                    expect(await dataPlanService.getAllPlans()).toEqual([
+                        {
+                            data_plan_versions: [],
+                        },
+                    ]);
+                    done();
+                });
+            });
+
+            describe('#getPlan', () => {
+                it('should return a data plan', async done => {
+                    nock('https://api.mparticle.com')
+                        .get(`/planning/v1/1111/2222/3333/plans/my-slug`)
+                        .reply(200, { data_plan_versions: [] });
+
+                    expect(await dataPlanService.getPlan('my-slug')).toEqual({
+                        data_plan_versions: [],
+                    });
+                    done();
+                });
+            });
+
+            describe('#getVersionDocument', () => {
+                it('should return a version document', async done => {
+                    nock('https://api.mparticle.com')
+                        .get(
+                            `/planning/v1/1111/2222/3333/plans/my-slug/versions/2`
+                        )
+                        .reply(200, {
+                            version: 2,
+                            data_plan_id: 'my-slug',
+                            version_document: {},
+                        });
+
+                    expect(
+                        await dataPlanService.getVersionDocument('my-slug', 2)
+                    ).toEqual({
+                        version: 2,
+                        data_plan_id: 'my-slug',
+                        version_document: {},
+                    });
+
+                    done();
+                });
             });
         });
 

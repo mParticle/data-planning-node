@@ -1,6 +1,7 @@
+import path from 'path';
+import url, { URL as URL$1 } from 'url';
 import http from 'http';
 import https from 'https';
-import url from 'url';
 import assert from 'assert';
 import stream from 'stream';
 import tty from 'tty';
@@ -3169,13 +3170,70 @@ var ApiClient = /** @class */ (function () {
     ApiClient.prototype.fetch = function () {
         var headers = {};
         if (this.token) {
-            headers['Authorization'] = "bearer " + this.token;
+            if (this.token.type.toUpperCase() === 'BEARER') {
+                headers['Authorization'] = this.token.type + " " + this.token.value;
+            }
+            else {
+                console.error('Received non-Bearer Token', this.token);
+                throw new Error('Invalid Auth token type');
+            }
         }
         return axios$1.get("" + this.rootUrl, {
             headers: headers,
         });
     };
+    // tslint:disable-next-line: no-any
+    ApiClient.prototype.post = function (body) {
+        return axios$1.post("" + this.rootUrl, body);
+    };
     return ApiClient;
+}());
+
+var config = {
+    apiRoot: 'https://api.mparticle.com',
+    dataPlanningPath: 'planning/v1',
+    auth: {
+        url: 'https://sso.auth.mparticle.com/oauth/token',
+        apiRoot: 'https://sso.auth.mparticle.com',
+        path: 'oauth/token',
+        audienceUrl: 'https://api.mparticle.com',
+        grant_type: 'client_credentials',
+    },
+};
+
+var AuthClient = /** @class */ (function () {
+    function AuthClient(clientId, clientSecret) {
+        this.clientId = clientId;
+        this.clientSecret = clientSecret;
+    }
+    AuthClient.prototype.getToken = function () {
+        return __awaiter(this, void 0, Promise, function () {
+            var api, body;
+            return __generator(this, function (_a) {
+                api = new ApiClient(config.auth.url);
+                body = {
+                    client_id: this.clientId,
+                    client_secret: this.clientSecret,
+                    audience: config.auth.audienceUrl,
+                    grant_type: config.auth.grant_type,
+                };
+                try {
+                    return [2 /*return*/, api.post(body).then(function (response) {
+                            var _a, _b, _c, _d;
+                            return ({
+                                type: (_b = (_a = response) === null || _a === void 0 ? void 0 : _a.data) === null || _b === void 0 ? void 0 : _b.token_type,
+                                value: (_d = (_c = response) === null || _c === void 0 ? void 0 : _c.data) === null || _d === void 0 ? void 0 : _d.access_token,
+                            });
+                        })];
+                }
+                catch (error) {
+                    return [2 /*return*/, error.response];
+                }
+                return [2 /*return*/];
+            });
+        });
+    };
+    return AuthClient;
 }());
 
 var validation_error_type = createCommonjsModule(function (module, exports) {
@@ -11197,68 +11255,109 @@ var DataPlanEventValidator = /** @class */ (function () {
     return DataPlanEventValidator;
 }());
 
-var config = {
-    apiRoot: 'https://api.mparticle.com',
-    dataPlanningPath: 'planning/v1',
-};
-
 var DataPlanService = /** @class */ (function () {
-    function DataPlanService() {
+    function DataPlanService(credentials) {
+        if (credentials) {
+            var orgId = credentials.orgId, accountId = credentials.accountId, workspaceId = credentials.workspaceId, clientId = credentials.clientId, clientSecret = credentials.clientSecret;
+            this.orgId = orgId;
+            this.accountId = accountId;
+            this.workspaceId = workspaceId;
+            this.clientId = clientId;
+            this.clientSecret = clientSecret;
+            this.apiURL = this.getAPIURL();
+        }
     }
-    DataPlanService.prototype.getAPIURL = function (orgId, accountId, workspaceId) {
-        return [
-            config.apiRoot + "/" + config.dataPlanningPath + "/",
-            orgId + "/",
-            accountId + "/",
-            workspaceId + "/",
-            "plans/",
-        ].join('');
-    };
-    DataPlanService.prototype.getPlan = function (orgId, accountId, dataPlanId, workspaceId, token) {
+    DataPlanService.prototype.getToken = function () {
         return __awaiter(this, void 0, Promise, function () {
-            var url, api;
             return __generator(this, function (_a) {
-                url = this.getAPIURL(orgId, accountId, workspaceId);
-                api = new ApiClient(url + dataPlanId, token);
-                try {
-                    return [2 /*return*/, api.fetch().then(function (response) { return response.data; })];
+                if (this.clientId && this.clientSecret) {
+                    return [2 /*return*/, new AuthClient(this.clientId, this.clientSecret).getToken()];
                 }
-                catch (error) {
-                    return [2 /*return*/, error.response];
+                else {
+                    return [2 /*return*/, undefined];
                 }
-                return [2 /*return*/];
             });
         });
     };
-    DataPlanService.prototype.getAllPlans = function (orgId, accountId, workspaceId, token) {
+    DataPlanService.prototype.buildUrl = function (base, path) {
+        return new URL$1(path, base).toString();
+    };
+    DataPlanService.prototype.getAPIURL = function () {
+        var _a = this, orgId = _a.orgId, accountId = _a.accountId, workspaceId = _a.workspaceId;
+        if (orgId && accountId && workspaceId) {
+            var urlPath = path.join(config.dataPlanningPath, "" + orgId, "" + accountId, "" + workspaceId, "plans/");
+            return this.buildUrl(config.apiRoot, urlPath);
+        }
+        throw new Error('Invalid Credentials for generating API Request');
+    };
+    DataPlanService.prototype.getPlan = function (dataPlanId) {
         return __awaiter(this, void 0, Promise, function () {
-            var url, api;
+            var token, api;
             return __generator(this, function (_a) {
-                url = this.getAPIURL(orgId, accountId, workspaceId);
-                api = new ApiClient(url, token);
-                try {
-                    return [2 /*return*/, api.fetch().then(function (response) { return response.data; })];
+                switch (_a.label) {
+                    case 0:
+                        if (!this.apiURL) {
+                            throw new Error('Invalid API URL');
+                        }
+                        return [4 /*yield*/, this.getToken()];
+                    case 1:
+                        token = _a.sent();
+                        api = new ApiClient(this.buildUrl(this.apiURL, dataPlanId), token);
+                        try {
+                            return [2 /*return*/, api.fetch().then(function (response) { return response.data; })];
+                        }
+                        catch (error) {
+                            return [2 /*return*/, error.response];
+                        }
+                        return [2 /*return*/];
                 }
-                catch (error) {
-                    return [2 /*return*/, error.response];
-                }
-                return [2 /*return*/];
             });
         });
     };
-    DataPlanService.prototype.getVersionDocument = function (orgId, accountId, dataPlanId, workspaceId, versionNumber, token) {
+    DataPlanService.prototype.getAllPlans = function () {
         return __awaiter(this, void 0, Promise, function () {
-            var url, api;
+            var token, api;
             return __generator(this, function (_a) {
-                url = this.getAPIURL(orgId, accountId, workspaceId);
-                api = new ApiClient("" + url + dataPlanId + "/versions/" + versionNumber, token);
-                try {
-                    return [2 /*return*/, api.fetch().then(function (response) { return response.data; })];
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.getToken()];
+                    case 1:
+                        token = _a.sent();
+                        if (!this.apiURL) {
+                            throw new Error('Invalid API URL');
+                        }
+                        api = new ApiClient(this.apiURL, token);
+                        try {
+                            return [2 /*return*/, api.fetch().then(function (response) { return response.data; })];
+                        }
+                        catch (error) {
+                            return [2 /*return*/, error.response];
+                        }
+                        return [2 /*return*/];
                 }
-                catch (error) {
-                    return [2 /*return*/, error.response];
+            });
+        });
+    };
+    DataPlanService.prototype.getVersionDocument = function (dataPlanId, versionNumber) {
+        return __awaiter(this, void 0, Promise, function () {
+            var token, api;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        if (!this.apiURL) {
+                            throw new Error('Invalid API URL');
+                        }
+                        return [4 /*yield*/, this.getToken()];
+                    case 1:
+                        token = _a.sent();
+                        api = new ApiClient(this.buildUrl(this.apiURL, dataPlanId + "/versions/" + versionNumber), token);
+                        try {
+                            return [2 /*return*/, api.fetch().then(function (response) { return response.data; })];
+                        }
+                        catch (error) {
+                            return [2 /*return*/, error.response];
+                        }
+                        return [2 /*return*/];
                 }
-                return [2 /*return*/];
             });
         });
     };

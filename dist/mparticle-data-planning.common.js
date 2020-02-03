@@ -4,9 +4,11 @@ Object.defineProperty(exports, '__esModule', { value: true });
 
 function _interopDefault (ex) { return (ex && (typeof ex === 'object') && 'default' in ex) ? ex['default'] : ex; }
 
+var path = _interopDefault(require('path'));
+var url = require('url');
+var url__default = _interopDefault(url);
 var http = _interopDefault(require('http'));
 var https = _interopDefault(require('https'));
-var url = _interopDefault(require('url'));
 var assert = _interopDefault(require('assert'));
 var stream = _interopDefault(require('stream'));
 var tty = _interopDefault(require('tty'));
@@ -1762,7 +1764,7 @@ RedirectableRequest.prototype._performRequest = function () {
   // Create the native request
   var request = this._currentRequest =
         nativeProtocol.request(this._options, this._onNativeResponse);
-  this._currentUrl = url.format(this._options);
+  this._currentUrl = url__default.format(this._options);
 
   // Set up event handlers
   request._redirectable = this;
@@ -1848,9 +1850,9 @@ RedirectableRequest.prototype._processResponse = function (response) {
     }
 
     // Perform the redirected request
-    var redirectUrl = url.resolve(this._currentUrl, location);
+    var redirectUrl = url__default.resolve(this._currentUrl, location);
     debug$1("redirecting to", redirectUrl);
-    Object.assign(this._options, url.parse(redirectUrl));
+    Object.assign(this._options, url__default.parse(redirectUrl));
     this._isRedirect = true;
     this._performRequest();
 
@@ -1886,7 +1888,7 @@ function wrap(protocols) {
     // Executes a request, following redirects
     wrappedProtocol.request = function (options, callback) {
       if (typeof options === "string") {
-        options = url.parse(options);
+        options = url__default.parse(options);
         options.maxRedirects = exports.maxRedirects;
       }
       else {
@@ -2154,7 +2156,7 @@ var http_1 = function httpAdapter(config) {
     }
 
     // Parse url
-    var parsed = url.parse(config.url);
+    var parsed = url__default.parse(config.url);
     var protocol = parsed.protocol || 'http:';
 
     if (!auth && parsed.auth) {
@@ -2191,7 +2193,7 @@ var http_1 = function httpAdapter(config) {
       var proxyEnv = protocol.slice(0, -1) + '_proxy';
       var proxyUrl = process.env[proxyEnv] || process.env[proxyEnv.toUpperCase()];
       if (proxyUrl) {
-        var parsedProxyUrl = url.parse(proxyUrl);
+        var parsedProxyUrl = url__default.parse(proxyUrl);
         var noProxyEnv = process.env.no_proxy || process.env.NO_PROXY;
         var shouldProxy = true;
 
@@ -3175,13 +3177,70 @@ var ApiClient = /** @class */ (function () {
     ApiClient.prototype.fetch = function () {
         var headers = {};
         if (this.token) {
-            headers['Authorization'] = "bearer " + this.token;
+            if (this.token.type.toUpperCase() === 'BEARER') {
+                headers['Authorization'] = this.token.type + " " + this.token.value;
+            }
+            else {
+                console.error('Received non-Bearer Token', this.token);
+                throw new Error('Invalid Auth token type');
+            }
         }
         return axios$1.get("" + this.rootUrl, {
             headers: headers,
         });
     };
+    // tslint:disable-next-line: no-any
+    ApiClient.prototype.post = function (body) {
+        return axios$1.post("" + this.rootUrl, body);
+    };
     return ApiClient;
+}());
+
+var config = {
+    apiRoot: 'https://api.mparticle.com',
+    dataPlanningPath: 'planning/v1',
+    auth: {
+        url: 'https://sso.auth.mparticle.com/oauth/token',
+        apiRoot: 'https://sso.auth.mparticle.com',
+        path: 'oauth/token',
+        audienceUrl: 'https://api.mparticle.com',
+        grant_type: 'client_credentials',
+    },
+};
+
+var AuthClient = /** @class */ (function () {
+    function AuthClient(clientId, clientSecret) {
+        this.clientId = clientId;
+        this.clientSecret = clientSecret;
+    }
+    AuthClient.prototype.getToken = function () {
+        return __awaiter(this, void 0, Promise, function () {
+            var api, body;
+            return __generator(this, function (_a) {
+                api = new ApiClient(config.auth.url);
+                body = {
+                    client_id: this.clientId,
+                    client_secret: this.clientSecret,
+                    audience: config.auth.audienceUrl,
+                    grant_type: config.auth.grant_type,
+                };
+                try {
+                    return [2 /*return*/, api.post(body).then(function (response) {
+                            var _a, _b, _c, _d;
+                            return ({
+                                type: (_b = (_a = response) === null || _a === void 0 ? void 0 : _a.data) === null || _b === void 0 ? void 0 : _b.token_type,
+                                value: (_d = (_c = response) === null || _c === void 0 ? void 0 : _c.data) === null || _d === void 0 ? void 0 : _d.access_token,
+                            });
+                        })];
+                }
+                catch (error) {
+                    return [2 /*return*/, error.response];
+                }
+                return [2 /*return*/];
+            });
+        });
+    };
+    return AuthClient;
 }());
 
 var validation_error_type = createCommonjsModule(function (module, exports) {
@@ -11203,68 +11262,109 @@ var DataPlanEventValidator = /** @class */ (function () {
     return DataPlanEventValidator;
 }());
 
-var config = {
-    apiRoot: 'https://api.mparticle.com',
-    dataPlanningPath: 'planning/v1',
-};
-
 var DataPlanService = /** @class */ (function () {
-    function DataPlanService() {
+    function DataPlanService(credentials) {
+        if (credentials) {
+            var orgId = credentials.orgId, accountId = credentials.accountId, workspaceId = credentials.workspaceId, clientId = credentials.clientId, clientSecret = credentials.clientSecret;
+            this.orgId = orgId;
+            this.accountId = accountId;
+            this.workspaceId = workspaceId;
+            this.clientId = clientId;
+            this.clientSecret = clientSecret;
+            this.apiURL = this.getAPIURL();
+        }
     }
-    DataPlanService.prototype.getAPIURL = function (orgId, accountId, workspaceId) {
-        return [
-            config.apiRoot + "/" + config.dataPlanningPath + "/",
-            orgId + "/",
-            accountId + "/",
-            workspaceId + "/",
-            "plans/",
-        ].join('');
-    };
-    DataPlanService.prototype.getPlan = function (orgId, accountId, dataPlanId, workspaceId, token) {
+    DataPlanService.prototype.getToken = function () {
         return __awaiter(this, void 0, Promise, function () {
-            var url, api;
             return __generator(this, function (_a) {
-                url = this.getAPIURL(orgId, accountId, workspaceId);
-                api = new ApiClient(url + dataPlanId, token);
-                try {
-                    return [2 /*return*/, api.fetch().then(function (response) { return response.data; })];
+                if (this.clientId && this.clientSecret) {
+                    return [2 /*return*/, new AuthClient(this.clientId, this.clientSecret).getToken()];
                 }
-                catch (error) {
-                    return [2 /*return*/, error.response];
+                else {
+                    return [2 /*return*/, undefined];
                 }
-                return [2 /*return*/];
             });
         });
     };
-    DataPlanService.prototype.getAllPlans = function (orgId, accountId, workspaceId, token) {
+    DataPlanService.prototype.buildUrl = function (base, path) {
+        return new url.URL(path, base).toString();
+    };
+    DataPlanService.prototype.getAPIURL = function () {
+        var _a = this, orgId = _a.orgId, accountId = _a.accountId, workspaceId = _a.workspaceId;
+        if (orgId && accountId && workspaceId) {
+            var urlPath = path.join(config.dataPlanningPath, "" + orgId, "" + accountId, "" + workspaceId, "plans/");
+            return this.buildUrl(config.apiRoot, urlPath);
+        }
+        throw new Error('Invalid Credentials for generating API Request');
+    };
+    DataPlanService.prototype.getPlan = function (dataPlanId) {
         return __awaiter(this, void 0, Promise, function () {
-            var url, api;
+            var token, api;
             return __generator(this, function (_a) {
-                url = this.getAPIURL(orgId, accountId, workspaceId);
-                api = new ApiClient(url, token);
-                try {
-                    return [2 /*return*/, api.fetch().then(function (response) { return response.data; })];
+                switch (_a.label) {
+                    case 0:
+                        if (!this.apiURL) {
+                            throw new Error('Invalid API URL');
+                        }
+                        return [4 /*yield*/, this.getToken()];
+                    case 1:
+                        token = _a.sent();
+                        api = new ApiClient(this.buildUrl(this.apiURL, dataPlanId), token);
+                        try {
+                            return [2 /*return*/, api.fetch().then(function (response) { return response.data; })];
+                        }
+                        catch (error) {
+                            return [2 /*return*/, error.response];
+                        }
+                        return [2 /*return*/];
                 }
-                catch (error) {
-                    return [2 /*return*/, error.response];
-                }
-                return [2 /*return*/];
             });
         });
     };
-    DataPlanService.prototype.getVersionDocument = function (orgId, accountId, dataPlanId, workspaceId, versionNumber, token) {
+    DataPlanService.prototype.getAllPlans = function () {
         return __awaiter(this, void 0, Promise, function () {
-            var url, api;
+            var token, api;
             return __generator(this, function (_a) {
-                url = this.getAPIURL(orgId, accountId, workspaceId);
-                api = new ApiClient("" + url + dataPlanId + "/versions/" + versionNumber, token);
-                try {
-                    return [2 /*return*/, api.fetch().then(function (response) { return response.data; })];
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.getToken()];
+                    case 1:
+                        token = _a.sent();
+                        if (!this.apiURL) {
+                            throw new Error('Invalid API URL');
+                        }
+                        api = new ApiClient(this.apiURL, token);
+                        try {
+                            return [2 /*return*/, api.fetch().then(function (response) { return response.data; })];
+                        }
+                        catch (error) {
+                            return [2 /*return*/, error.response];
+                        }
+                        return [2 /*return*/];
                 }
-                catch (error) {
-                    return [2 /*return*/, error.response];
+            });
+        });
+    };
+    DataPlanService.prototype.getVersionDocument = function (dataPlanId, versionNumber) {
+        return __awaiter(this, void 0, Promise, function () {
+            var token, api;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        if (!this.apiURL) {
+                            throw new Error('Invalid API URL');
+                        }
+                        return [4 /*yield*/, this.getToken()];
+                    case 1:
+                        token = _a.sent();
+                        api = new ApiClient(this.buildUrl(this.apiURL, dataPlanId + "/versions/" + versionNumber), token);
+                        try {
+                            return [2 /*return*/, api.fetch().then(function (response) { return response.data; })];
+                        }
+                        catch (error) {
+                            return [2 /*return*/, error.response];
+                        }
+                        return [2 /*return*/];
                 }
-                return [2 /*return*/];
             });
         });
     };

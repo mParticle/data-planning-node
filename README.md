@@ -1,6 +1,6 @@
 <img src="https://static.mparticle.com/sdk/mp_logo_black.svg" width="280"><br>
 
-[![npm](https://img.shields.io/npm/v/@mparticle/data-planning-node.svg?maxAge=2592000)](https://www.npmjs.com/package/@mparticle/data-planning-node)
+[![npm](https://img.shields.io/npm/v/@mparticle/data-planning-node.svg?maxAge=2592000)](https://www.npmjs.com/package/@mparticle/data-planning-node) [![Build Status](https://travis-ci.com/mParticle/data-planning-node.svg?branch=master)](https://travis-ci.com/mParticle/data-planning-node)
 
 # mParticle Data Planning Node SDK
 

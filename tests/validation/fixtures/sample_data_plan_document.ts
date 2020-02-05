@@ -1,8 +1,6 @@
-import { Dictionary } from '../../../src/types';
+// tslint:disable: no-any
 
-// TODO: This should become a sample batch
-// TODO: Create faker for Batches
-export const sample_data_plan_document: Dictionary = {
+export const sample_data_plan_document: { [key: string]: any } = {
     document: {
         data_points: [
             {

@@ -3,7 +3,6 @@ import {
     ValidationErrorType,
     ValidationError,
 } from '@mparticle/data-planning-models';
-import { Dictionary } from '../types';
 import Ajv, {
     ErrorObject,
     AdditionalPropertiesParams,
@@ -67,7 +66,12 @@ export class JSONSchemaValidator {
      * @param schema A valid JSON Schema
      * @returns An array of [[ValidationError]] Objects
      */
-    static validate(data: Dictionary, schema: Dictionary): ValidationError[] {
+    static validate(
+        // tslint:disable-next-line: no-any
+        data: { [key: string]: any },
+        // tslint:disable-next-line: no-any
+        schema: { [key: string]: any }
+    ): ValidationError[] {
         const errors: ValidationError[] = [];
 
         const ajv = new Ajv({
@@ -95,7 +99,8 @@ export class JSONSchemaValidator {
      */
     private static generateValidationError(
         args: ErrorObject,
-        data: Dictionary
+        // tslint:disable-next-line: no-any
+        data: { [key: string]: any }
     ): ValidationError {
         const error: ValidationError = {};
         const nodes = splitJsonPath(args.dataPath);
@@ -210,7 +215,12 @@ const lastNode = (nodes: any[]) => nodes[nodes.length - 1];
  * @param element
  * @param keys
  */
-const digin = (element: Dictionary, keys: string[]): Dictionary | null => {
+const digin = (
+    // tslint:disable-next-line: no-any
+    element: { [key: string]: any },
+    keys: string[]
+    // tslint:disable-next-line: no-any
+): { [key: string]: any } | null => {
     keys.forEach(key => {
         if (key in element) {
             element = element[key];

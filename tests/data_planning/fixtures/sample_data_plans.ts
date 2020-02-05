@@ -1,6 +1,6 @@
-import { Dictionary } from '../../../src/types';
+// tslint:disable: no-any
 
-export const sample_data_plans: Dictionary[] = [
+export const sample_data_plans: Array<{ [key: string]: any }> = [
     {
         data_plan_id: 'dhtest',
         data_plan_name: 'dhtest',

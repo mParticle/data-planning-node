@@ -1,10 +1,10 @@
+// tslint:disable: no-any
 import faker from 'faker';
 
 import {
-    Dictionary,
     ActivatedEnvironment,
     DataPlanMatchType,
-} from '../../../src/types';
+} from '@mparticle/data-planning-models';
 
 // tslint:disable-next-line: no-any
 const MatchCombos: { [key: string]: any } = {
@@ -63,7 +63,7 @@ const MatchCombos: { [key: string]: any } = {
     },
 };
 
-const getFakeDataPoint = (): Dictionary => {
+const getFakeDataPoint = (): { [key: string]: any } => {
     const key = faker.random.arrayElement(Object.keys(MatchCombos));
     const type = MatchCombos[key].type;
     const criteria = MatchCombos[key].criteria;
@@ -77,7 +77,7 @@ const getFakeDataPoint = (): Dictionary => {
     };
 };
 
-const getFakeDocument = (): Dictionary => {
+const getFakeDocument = (): { [key: string]: any } => {
     return {
         data_points: [
             getFakeDataPoint(),
@@ -87,7 +87,7 @@ const getFakeDocument = (): Dictionary => {
     };
 };
 
-const getFakeFullVersion = (index = 1): Dictionary => {
+const getFakeFullVersion = (index = 1): { [key: string]: any } => {
     const name = faker.company.bs();
     return {
         data_plan_id: faker.helpers.slugify(name),
@@ -111,7 +111,7 @@ const getFakeFullVersion = (index = 1): Dictionary => {
         last_modified_by: faker.internet.exampleEmail(),
     };
 };
-export const fake_version_list: Dictionary[] = (() =>
+export const fake_version_list: Array<{ [key: string]: any }> = (() =>
     [...new Array(5)].map((version, index) => {
         const name = faker.company.bs();
         return {
@@ -135,7 +135,7 @@ export const fake_version_list: Dictionary[] = (() =>
             last_modified_by: faker.internet.exampleEmail(),
         };
     }))();
-export const fake_plans: Dictionary[] = (() =>
+export const fake_plans: Array<{ [key: string]: any }> = (() =>
     [...new Array(5)].map(() => {
         const name = faker.company.bs();
         return {
@@ -151,7 +151,7 @@ export const fake_plans: Dictionary[] = (() =>
         };
     }))();
 
-export const fake_data_plan: Dictionary = (() => {
+export const fake_data_plan: { [key: string]: any } = (() => {
     const name = faker.company.bs();
     return {
         data_plan_id: faker.helpers.slugify(name),

@@ -1,6 +1,7 @@
-import { Dictionary } from '../../../src/types';
+// tslint:disable: no-any
+// tslint:disable: max-line-length
 
-export const sample_data_plan: Dictionary = {
+export const sample_data_plan: { [key: string]: any} = {
     data_plan_id: 'amazing_really_cool_plan',
     data_plan_name: 'amazing really cool plan',
     data_plan_description: 'amazing_really_cool_plan',

@@ -63,8 +63,8 @@
         "typescript": "^3.7.3"
     },
     "dependencies": {
-        "@mparticle/data-planning-models": "0.0.2-alpha.1",
-        "@mparticle/event-models": "^1.0.1",
+        "@mparticle/data-planning-models": "0.0.2-alpha.3",
+        "@mparticle/event-models": "^1.0.2",
         "ajv": "^6.10.2",
         "axios": "^0.19.0"
     }

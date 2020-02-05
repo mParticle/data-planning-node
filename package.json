@@ -20,6 +20,7 @@
         "gts:compile": "tsc -p .",
         "gts:fix": "gts fix",
         "docs": "typedoc src/",
+        "coverage": "jest --config jest.ts.config.js --coverage",
         "test": "npm run build && npm run test:ts && npm run test:js",
         "test:ts": "jest --config jest.ts.config.js",
         "test:ts:watch": "jest --config jest.ts.config.js --watchAll",

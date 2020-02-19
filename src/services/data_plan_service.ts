@@ -76,7 +76,7 @@ export class DataPlanService {
         throw new Error('Invalid Credentials for generating API Request');
     }
 
-    async getPlan(dataPlanId: string): Promise<DataPlan> {
+    async getDataPlan(dataPlanId: string): Promise<DataPlan> {
         if (!this.apiURL) {
             throw new Error('Invalid API URL');
         }
@@ -94,7 +94,7 @@ export class DataPlanService {
         }
     }
 
-    async getAllPlans(): Promise<DataPlan[]> {
+    async getDataPlans(): Promise<DataPlan[]> {
         const token = await this.getToken();
 
         if (!this.apiURL) {
@@ -110,7 +110,7 @@ export class DataPlanService {
         }
     }
 
-    async getVersionDocument(
+    async getDataPlanVersion(
         dataPlanId: string,
         versionNumber: number
     ): Promise<DataPlanDocument> {

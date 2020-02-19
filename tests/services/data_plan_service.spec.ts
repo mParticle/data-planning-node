@@ -39,13 +39,13 @@ describe('DataPlanService', () => {
                 clientSecret: 'client_secret',
             });
         });
-        describe('#getAllPlans', () => {
+        describe('#getDataPlans', () => {
             it('should return an array of data plans', async done => {
                 nock(config.apiRoot)
                     .get(`/${config.dataPlanningPath}/1111/2222/3333/plans/`)
                     .reply(200, [{ data_plan_versions: [] }]);
 
-                expect(await dataPlanService.getAllPlans()).toEqual([
+                expect(await dataPlanService.getDataPlans()).toEqual([
                     {
                         data_plan_versions: [],
                     },
@@ -59,14 +59,14 @@ describe('DataPlanService', () => {
                     .reply(401);
 
                 await expect(
-                    dataPlanService.getAllPlans()
+                    dataPlanService.getDataPlans()
                 ).rejects.toThrowError('Request failed with status code 401');
 
                 done();
             });
         });
 
-        describe('#getPlan', () => {
+        describe('#getDataPlan', () => {
             it('should return a data plan', async done => {
                 nock(config.apiRoot)
                     .get(
@@ -74,7 +74,7 @@ describe('DataPlanService', () => {
                     )
                     .reply(200, { data_plan_versions: [] });
 
-                expect(await dataPlanService.getPlan('test')).toEqual({
+                expect(await dataPlanService.getDataPlan('test')).toEqual({
                     data_plan_versions: [],
                 });
 
@@ -89,14 +89,14 @@ describe('DataPlanService', () => {
                     .reply(401);
 
                 await expect(
-                    dataPlanService.getPlan('test')
+                    dataPlanService.getDataPlan('test')
                 ).rejects.toThrowError('Request failed with status code 401');
 
                 done();
             });
         });
 
-        describe('#getVersionDocument', () => {
+        describe('#getDataPlanVersion', () => {
             it('should return a version document', async done => {
                 nock(config.apiRoot)
                     .get(
@@ -110,7 +110,7 @@ describe('DataPlanService', () => {
                     });
 
                 expect(
-                    await dataPlanService.getVersionDocument('test', 2)
+                    await dataPlanService.getDataPlanVersion('test', 2)
                 ).toEqual({
                     version: 2,
                     data_plan_id: 'amazing_really_cool_plan',

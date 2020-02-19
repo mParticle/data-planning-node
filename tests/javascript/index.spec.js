@@ -33,13 +33,13 @@ describe('JS Imports', () => {
                     clientSecret: 'client_secret',
                 });
             });
-            describe('#getAllPlans', () => {
+            describe('#getDataPlans', () => {
                 it('should return an array of data plans', async done => {
                     nock('https://api.mparticle.com')
                         .get(`/planning/v1/1111/2222/3333/plans/`)
                         .reply(200, [{ data_plan_versions: [] }]);
 
-                    expect(await dataPlanService.getAllPlans()).toEqual([
+                    expect(await dataPlanService.getDataPlans()).toEqual([
                         {
                             data_plan_versions: [],
                         },
@@ -48,20 +48,22 @@ describe('JS Imports', () => {
                 });
             });
 
-            describe('#getPlan', () => {
+            describe('#getDataPlan', () => {
                 it('should return a data plan', async done => {
                     nock('https://api.mparticle.com')
                         .get(`/planning/v1/1111/2222/3333/plans/my-slug`)
                         .reply(200, { data_plan_versions: [] });
 
-                    expect(await dataPlanService.getPlan('my-slug')).toEqual({
+                    expect(
+                        await dataPlanService.getDataPlan('my-slug')
+                    ).toEqual({
                         data_plan_versions: [],
                     });
                     done();
                 });
             });
 
-            describe('#getVersionDocument', () => {
+            describe('#getDataPlanVersion', () => {
                 it('should return a version document', async done => {
                     nock('https://api.mparticle.com')
                         .get(
@@ -74,7 +76,7 @@ describe('JS Imports', () => {
                         });
 
                     expect(
-                        await dataPlanService.getVersionDocument('my-slug', 2)
+                        await dataPlanService.getDataPlanVersion('my-slug', 2)
                     ).toEqual({
                         version: 2,
                         data_plan_id: 'my-slug',

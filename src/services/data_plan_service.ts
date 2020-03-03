@@ -6,6 +6,7 @@ import {
     DataPlan,
     DataPlanDocument,
     DataPlanResults,
+    DataPlanVersion,
 } from '@mparticle/data-planning-models';
 import { Batch, BaseEvent } from '@mparticle/event-models';
 import { ApiClient } from '../utils/ApiClient';
@@ -27,7 +28,7 @@ export class DataPlanService {
     private workspaceId?: number;
     private clientId?: string;
     private clientSecret?: string;
-    private apiURL?: string;
+    private apiURL = '';
 
     constructor(credentials?: AccessCredentials) {
         if (credentials) {
@@ -39,13 +40,20 @@ export class DataPlanService {
                 clientSecret,
             } = credentials;
 
-            this.orgId = orgId;
-            this.accountId = accountId;
-            this.workspaceId = workspaceId;
-            this.clientId = clientId;
-            this.clientSecret = clientSecret;
+            if (orgId && accountId && workspaceId && clientId && clientSecret) {
+                this.orgId = orgId;
+                this.accountId = accountId;
+                this.workspaceId = workspaceId;
 
-            this.apiURL = this.getAPIURL();
+                this.clientId = clientId;
+                this.clientSecret = clientSecret;
+
+                this.apiURL = this.getAPIURL();
+            } else {
+                throw new Error(
+                    'Invalid Credentials for generating API Request'
+                );
+            }
         }
     }
 
@@ -63,29 +71,79 @@ export class DataPlanService {
 
     private getAPIURL(): string {
         const { orgId, accountId, workspaceId } = this;
-        if (orgId && accountId && workspaceId) {
-            const urlPath = path.join(
-                config.dataPlanningPath,
-                `${orgId}`,
-                `${accountId}`,
-                `${workspaceId}`,
-                `plans/`
-            );
-            return this.buildUrl(config.apiRoot, urlPath);
+        const urlPath = path.join(
+            config.dataPlanningPath,
+            `${orgId}`,
+            `${accountId}`,
+            `${workspaceId}`,
+            `plans`
+        );
+        return this.buildUrl(config.apiRoot, urlPath);
+    }
+
+    async createDataPlan(dataPlanToCreate: DataPlan): Promise<DataPlan> {
+        const token = await this.getToken();
+        const api = new ApiClient<DataPlan>(this.apiURL, token);
+
+        try {
+            return api
+                .post(dataPlanToCreate)
+                .then((response: AxiosResponse) => response.data);
+        } catch (error) {
+            return error.response;
         }
-        throw new Error('Invalid Credentials for generating API Request');
+    }
+
+    async createDataPlanVersion(
+        dataPlanId: string,
+        dataPlanVersion: DataPlanVersion
+    ): Promise<DataPlanVersion> {
+        const token = await this.getToken();
+        const url = this.apiURL + `/${dataPlanId}/versions`;
+        const api = new ApiClient<DataPlan>(url, token);
+
+        try {
+            return api
+                .post(dataPlanVersion)
+                .then((response: AxiosResponse) => response.data);
+        } catch (error) {
+            return error.response;
+        }
+    }
+
+    async deleteDataPlan(dataPlanId: string): Promise<boolean> {
+        const token = await this.getToken();
+        const url = this.apiURL + `/${dataPlanId}`;
+        const api = new ApiClient<DataPlan>(url, token);
+
+        try {
+            // If this doesn't throw an arror, it should return true
+            return api.delete().then((response: AxiosResponse) => true);
+        } catch (error) {
+            return error.response;
+        }
+    }
+
+    async deleteDataPlanVersion(
+        dataPlanId: string,
+        versionNumber: number
+    ): Promise<boolean> {
+        const token = await this.getToken();
+        const url = this.apiURL + `/${dataPlanId}/versions/${versionNumber}`;
+        const api = new ApiClient<DataPlan>(url, token);
+
+        try {
+            // If this doesn't throw an arror, it should return true
+            return api.delete().then((response: AxiosResponse) => true);
+        } catch (error) {
+            return error.response;
+        }
     }
 
     async getDataPlan(dataPlanId: string): Promise<DataPlan> {
-        if (!this.apiURL) {
-            throw new Error('Invalid API URL');
-        }
-
         const token = await this.getToken();
-        const api = new ApiClient<DataPlan>(
-            this.buildUrl(this.apiURL, dataPlanId),
-            token
-        );
+        const url = this.apiURL + `/${dataPlanId}`;
+        const api = new ApiClient<DataPlan>(url, token);
 
         try {
             return api.fetch().then((response: AxiosResponse) => response.data);
@@ -96,11 +154,6 @@ export class DataPlanService {
 
     async getDataPlans(): Promise<DataPlan[]> {
         const token = await this.getToken();
-
-        if (!this.apiURL) {
-            throw new Error('Invalid API URL');
-        }
-
         const api = new ApiClient<DataPlan[]>(this.apiURL, token);
 
         try {
@@ -114,21 +167,47 @@ export class DataPlanService {
         dataPlanId: string,
         versionNumber: number
     ): Promise<DataPlanDocument> {
-        if (!this.apiURL) {
-            throw new Error('Invalid API URL');
-        }
-
         const token = await this.getToken();
-        const api = new ApiClient<DataPlan>(
-            this.buildUrl(
-                this.apiURL,
-                `${dataPlanId}/versions/${versionNumber}`
-            ),
-            token
-        );
+        const url = this.apiURL + `/${dataPlanId}/versions/${versionNumber}`;
+        const api = new ApiClient<DataPlan>(url, token);
 
         try {
             return api.fetch().then((response: AxiosResponse) => response.data);
+        } catch (error) {
+            return error.response;
+        }
+    }
+
+    async updateDataPlan(
+        dataPlanId: string,
+        dataPlan: DataPlan
+    ): Promise<DataPlan> {
+        const token = await this.getToken();
+        const url = this.apiURL + `/${dataPlanId}`;
+        const api = new ApiClient<DataPlan>(url, token);
+
+        try {
+            return api
+                .patch(dataPlan)
+                .then((response: AxiosResponse) => response.data);
+        } catch (error) {
+            return error.response;
+        }
+    }
+
+    async updateDataPlanVersion(
+        dataPlanId: string,
+        versionNumber: number,
+        dataPlanVersion: DataPlanVersion
+    ): Promise<DataPlanVersion> {
+        const token = await this.getToken();
+        const url = this.apiURL + `/${dataPlanId}/versions/${versionNumber}`;
+        const api = new ApiClient<DataPlanVersion>(url, token);
+
+        try {
+            return api
+                .patch(dataPlanVersion)
+                .then((response: AxiosResponse) => response.data);
         } catch (error) {
             return error.response;
         }

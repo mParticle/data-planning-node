@@ -20,6 +20,10 @@ interface AccessCredentials {
     clientSecret: string;
 }
 
+interface ValidationOptions {
+    serverMode: boolean;
+}
+
 export class DataPlanService {
     private workspaceId?: number;
     private clientId?: string;
@@ -202,7 +206,8 @@ export class DataPlanService {
 
     validateEvent(
         event: BaseEvent,
-        dataPlanVersion: DataPlanVersion
+        dataPlanVersion: DataPlanVersion,
+        options?: ValidationOptions
     ): DataPlanResults {
         if (!event || !dataPlanVersion) {
             throw new Error(
@@ -229,7 +234,8 @@ export class DataPlanService {
 
     validateBatch(
         batch: Batch,
-        dataPlanVersion: DataPlanVersion
+        dataPlanVersion: DataPlanVersion,
+        options?: ValidationOptions
     ): DataPlanResults {
         if (!batch || !dataPlanVersion) {
             throw new Error(

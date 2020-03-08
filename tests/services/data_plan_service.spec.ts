@@ -451,6 +451,75 @@ describe('DataPlanService', () => {
                 ],
             });
         });
+        it('supports validationOptions', () => {
+            const event = ScreenViewEventFactory.getOne({});
+
+            const eventDataPoint = DataPlanPointFactory.getOne({
+                match: {
+                    type: DataPlanMatchType.ScreenView,
+                    criteria: {
+                        screen_name: event.data?.screen_name,
+                    },
+                },
+                validator: {
+                    type: 'json_schema',
+                    definition: {
+                        properties: {
+                            data: {
+                                required: ['custom_flags'],
+                            },
+                        },
+                    },
+                },
+            });
+
+            const userDataPoint = DataPlanPointFactory.getOne({
+                match: {
+                    type: DataPlanMatchType.UserAttributes,
+                },
+                validator: {
+                    type: 'json_schema',
+                    definition: {
+                        properties: {},
+                    },
+                },
+            });
+
+            const dataPlanVersion: DataPlanVersion = {
+                version_document: {
+                    data_points: [eventDataPoint, userDataPoint],
+                },
+            };
+
+            expect(
+                dataPlanService.validateEvent(event, dataPlanVersion, {
+                    serverMode: true,
+                })
+            ).toEqual({
+                results: [
+                    {
+                        data: {
+                            match: {
+                                type: 'screen_view',
+                                criteria: {
+                                    screen_name: 'Test Screen View',
+                                },
+                            },
+                            validation_errors: [
+                                {
+                                    error_pointer: '#/data',
+                                    key: 'data',
+                                    expected: 'custom_flags',
+                                    schema_keyword: 'required',
+                                    validation_error_type: 'missing_required',
+                                },
+                            ],
+                        },
+                        event_type: 'validation_result',
+                    },
+                ],
+            });
+        });
     });
 
     describe('#validateBatch', () => {
@@ -597,6 +666,76 @@ describe('DataPlanService', () => {
                         event_type: 'validation_result',
                     },
                 ],
+                batch: {
+                    events: [event],
+                    environment: batch.environment,
+                    mpid: batch.mpid,
+                    user_attributes: {
+                        $Age: 42,
+                    },
+                },
+            });
+        });
+
+        it('supports validationOptions', () => {
+            const event = ScreenViewEventFactory.getOne({
+                data: {
+                    custom_flags: {
+                        black_flag: 'rocks',
+                    },
+                },
+            });
+
+            const eventDataPoint = DataPlanPointFactory.getOne({
+                match: {
+                    type: DataPlanMatchType.ScreenView,
+                    criteria: {
+                        screen_name: event.data?.screen_name,
+                    },
+                },
+                validator: {
+                    type: 'json_schema',
+                    definition: {
+                        properties: {
+                            data: {
+                                required: ['custom_flags'],
+                            },
+                        },
+                    },
+                },
+            });
+
+            const userDataPoint = DataPlanPointFactory.getOne({
+                match: {
+                    type: DataPlanMatchType.UserAttributes,
+                },
+                validator: {
+                    type: 'json_schema',
+                    definition: {
+                        properties: {},
+                    },
+                },
+            });
+
+            const dataPlanVersion: DataPlanVersion = {
+                version_document: {
+                    data_points: [eventDataPoint, userDataPoint],
+                },
+            };
+
+            const batch: Batch = BatchFactory.getOne({
+                events: [event],
+                user_attributes: {
+                    $Age: 42,
+                },
+            });
+
+            expect(
+                dataPlanService.validateBatch(batch, dataPlanVersion, {
+                    serverMode: true,
+                })
+            ).toEqual({
+                results: [],
                 batch: {
                     events: [event],
                     environment: batch.environment,

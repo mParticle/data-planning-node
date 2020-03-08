@@ -6,7 +6,7 @@ const nock = require('nock');
 
 const config = {
     apiRoot: 'https://api.mparticle.com',
-    dataPlanningPath: 'planning/v1',
+    dataPlanningPath: 'platform/v2/workspaces',
 };
 
 let dataPlanService;
@@ -33,8 +33,6 @@ describe('JS Imports', () => {
         beforeEach(() => {
             // Create instance with credentials to test
             dataPlanService = new DataPlanService({
-                orgId: 1111,
-                accountId: 2222,
                 workspaceId: 3333,
                 clientId: 'client_id',
                 clientSecret: 'client_secret',
@@ -50,7 +48,7 @@ describe('JS Imports', () => {
                     };
                     nock(config.apiRoot)
                         .post(
-                            `/${config.dataPlanningPath}/1111/2222/3333/plans`,
+                            `/${config.dataPlanningPath}/3333/plans`,
                             sampleDataPlan
                         )
                         .reply(400);
@@ -75,7 +73,7 @@ describe('JS Imports', () => {
                     nock(config.apiRoot)
                         .post(
                             // tslint:disable-next-line: max-line-length
-                            `/${config.dataPlanningPath}/1111/2222/3333/plans/test/versions`,
+                            `/${config.dataPlanningPath}/3333/plans/test/versions`,
                             sampleDataPlanVersion
                         )
                         .reply(200, sampleDataPlanVersion);
@@ -97,7 +95,7 @@ describe('JS Imports', () => {
                     };
                     nock(config.apiRoot)
                         .post(
-                            `/${config.dataPlanningPath}/1111/2222/3333/plans`,
+                            `/${config.dataPlanningPath}/3333/plans`,
                             sampleDataPlan
                         )
                         .reply(400);
@@ -116,8 +114,8 @@ describe('JS Imports', () => {
         describe('Read', () => {
             describe('#getDataPlans', () => {
                 it('should return an array of data plans', async done => {
-                    nock('https://api.mparticle.com')
-                        .get(`/planning/v1/1111/2222/3333/plans`)
+                    nock(config.apiRoot)
+                        .get(`/${config.dataPlanningPath}/3333/plans`)
                         .reply(200, [{ data_plan_versions: [] }]);
 
                     expect(await dataPlanService.getDataPlans()).toEqual([
@@ -131,8 +129,8 @@ describe('JS Imports', () => {
 
             describe('#getDataPlan', () => {
                 it('should return a data plan', async done => {
-                    nock('https://api.mparticle.com')
-                        .get(`/planning/v1/1111/2222/3333/plans/my-slug`)
+                    nock(config.apiRoot)
+                        .get(`/${config.dataPlanningPath}/3333/plans/my-slug`)
                         .reply(200, { data_plan_versions: [] });
 
                     expect(
@@ -146,9 +144,9 @@ describe('JS Imports', () => {
 
             describe('#getDataPlanVersion', () => {
                 it('should return a version document', async done => {
-                    nock('https://api.mparticle.com')
+                    nock(config.apiRoot)
                         .get(
-                            `/planning/v1/1111/2222/3333/plans/my-slug/versions/2`
+                            `/${config.dataPlanningPath}/3333/plans/my-slug/versions/2`
                         )
                         .reply(200, {
                             version: 2,
@@ -173,7 +171,7 @@ describe('JS Imports', () => {
             describe('#getDataPlans', () => {
                 it('should return an array of data plans', async done => {
                     nock(config.apiRoot)
-                        .get(`/${config.dataPlanningPath}/1111/2222/3333/plans`)
+                        .get(`/${config.dataPlanningPath}/3333/plans`)
                         .reply(200, [{ data_plan_versions: [] }]);
 
                     expect(await dataPlanService.getDataPlans()).toEqual([
@@ -186,7 +184,7 @@ describe('JS Imports', () => {
 
                 it('should handle 401 Errors', async done => {
                     nock(config.apiRoot)
-                        .get(`/${config.dataPlanningPath}/1111/2222/3333/plans`)
+                        .get(`/${config.dataPlanningPath}/3333/plans`)
                         .reply(401);
 
                     await expect(
@@ -202,9 +200,7 @@ describe('JS Imports', () => {
             describe('#getDataPlan', () => {
                 it('should return a data plan', async done => {
                     nock(config.apiRoot)
-                        .get(
-                            `/${config.dataPlanningPath}/1111/2222/3333/plans/test`
-                        )
+                        .get(`/${config.dataPlanningPath}/3333/plans/test`)
                         .reply(200, { data_plan_versions: [] });
 
                     expect(await dataPlanService.getDataPlan('test')).toEqual({
@@ -216,9 +212,7 @@ describe('JS Imports', () => {
 
                 it('should handle 401 Errors', async done => {
                     nock(config.apiRoot)
-                        .get(
-                            `/${config.dataPlanningPath}/1111/2222/3333/plans/test`
-                        )
+                        .get(`/${config.dataPlanningPath}/3333/plans/test`)
                         .reply(401);
 
                     await expect(
@@ -236,7 +230,7 @@ describe('JS Imports', () => {
                     nock(config.apiRoot)
                         .get(
                             // tslint:disable-next-line: max-line-length
-                            `/${config.dataPlanningPath}/1111/2222/3333/plans/test/versions/2`
+                            `/${config.dataPlanningPath}/3333/plans/test/versions/2`
                         )
                         .reply(200, {
                             version: 2,
@@ -268,7 +262,7 @@ describe('JS Imports', () => {
                     nock(config.apiRoot)
                         .patch(
                             // tslint:disable-next-line: max-line-length
-                            `/${config.dataPlanningPath}/1111/2222/3333/plans/test`,
+                            `/${config.dataPlanningPath}/3333/plans/test`,
                             updatedDataPlan
                         )
                         .reply(200, updatedDataPlan);
@@ -290,7 +284,7 @@ describe('JS Imports', () => {
                     };
                     nock(config.apiRoot)
                         .patch(
-                            `/${config.dataPlanningPath}/1111/2222/3333/plans/test`,
+                            `/${config.dataPlanningPath}/3333/plans/test`,
                             sampleDataPlan
                         )
                         .reply(400);
@@ -323,7 +317,7 @@ describe('JS Imports', () => {
                     nock(config.apiRoot)
                         .patch(
                             // tslint:disable-next-line: max-line-length
-                            `/${config.dataPlanningPath}/1111/2222/3333/plans/amazing_really_cool_plan/versions/2`,
+                            `/${config.dataPlanningPath}/3333/plans/amazing_really_cool_plan/versions/2`,
                             updatedDataPlanVersion
                         )
                         .reply(200, updatedDataPlanVersion);
@@ -348,7 +342,7 @@ describe('JS Imports', () => {
                     nock(config.apiRoot)
                         .patch(
                             // tslint:disable-next-line: max-line-length
-                            `/${config.dataPlanningPath}/1111/2222/3333/plans/test/versions/2`,
+                            `/${config.dataPlanningPath}/3333/plans/test/versions/2`,
                             sampleDataPlanVersion
                         )
                         .reply(400);
@@ -374,7 +368,7 @@ describe('JS Imports', () => {
                     nock(config.apiRoot)
                         .delete(
                             // tslint:disable-next-line: max-line-length
-                            `/${config.dataPlanningPath}/1111/2222/3333/plans/test`
+                            `/${config.dataPlanningPath}/3333/plans/test`
                         )
                         .reply(200);
 
@@ -389,7 +383,7 @@ describe('JS Imports', () => {
                     nock(config.apiRoot)
                         .delete(
                             // tslint:disable-next-line: max-line-length
-                            `/${config.dataPlanningPath}/1111/2222/3333/plans/test`
+                            `/${config.dataPlanningPath}/3333/plans/test`
                         )
                         .reply(400);
 
@@ -408,7 +402,7 @@ describe('JS Imports', () => {
                     nock(config.apiRoot)
                         .delete(
                             // tslint:disable-next-line: max-line-length
-                            `/${config.dataPlanningPath}/1111/2222/3333/plans/test/versions/3`
+                            `/${config.dataPlanningPath}/3333/plans/test/versions/3`
                         )
                         .reply(200);
 
@@ -423,7 +417,7 @@ describe('JS Imports', () => {
                     nock(config.apiRoot)
                         .delete(
                             // tslint:disable-next-line: max-line-length
-                            `/${config.dataPlanningPath}/1111/2222/3333/plans/test/versions/3`
+                            `/${config.dataPlanningPath}/3333/plans/test/versions/3`
                         )
                         .reply(400);
 

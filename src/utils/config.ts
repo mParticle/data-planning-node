@@ -1,6 +1,6 @@
 export const config = {
     apiRoot: 'https://api.mparticle.com',
-    dataPlanningPath: 'planning/v1',
+    dataPlanningPath: 'platform/v2/workspaces',
 
     auth: {
         url: 'https://sso.auth.mparticle.com/oauth/token',

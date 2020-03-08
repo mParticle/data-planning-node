@@ -24,8 +24,6 @@ beforeEach(() => {
         });
 
     dataPlanService = new DataPlanService({
-        orgId: 1111,
-        accountId: 2222,
         workspaceId: 3333,
         clientId: 'client_id',
         clientSecret: 'client_secret',
@@ -45,7 +43,7 @@ describe('DataPlanService', () => {
                 };
                 nock(config.apiRoot)
                     .post(
-                        `/${config.dataPlanningPath}/1111/2222/3333/plans`,
+                        `/${config.dataPlanningPath}/3333/plans`,
                         sampleDataPlan
                     )
                     .reply(200, sampleDataPlan);
@@ -64,7 +62,7 @@ describe('DataPlanService', () => {
                 };
                 nock(config.apiRoot)
                     .post(
-                        `/${config.dataPlanningPath}/1111/2222/3333/plans`,
+                        `/${config.dataPlanningPath}/3333/plans`,
                         sampleDataPlan
                     )
                     .reply(400);
@@ -87,7 +85,7 @@ describe('DataPlanService', () => {
                 nock(config.apiRoot)
                     .post(
                         // tslint:disable-next-line: max-line-length
-                        `/${config.dataPlanningPath}/1111/2222/3333/plans/test/versions`,
+                        `/${config.dataPlanningPath}/3333/plans/test/versions`,
                         sampleDataPlanVersion
                     )
                     .reply(200, sampleDataPlanVersion);
@@ -111,7 +109,7 @@ describe('DataPlanService', () => {
                 nock(config.apiRoot)
                     .post(
                         // tslint:disable-next-line: max-line-length
-                        `/${config.dataPlanningPath}/1111/2222/3333/plans/test/versions`,
+                        `/${config.dataPlanningPath}/3333/plans/test/versions`,
                         sampleDataPlanVersion
                     )
                     .reply(400);
@@ -132,7 +130,7 @@ describe('DataPlanService', () => {
         describe('#getDataPlans', () => {
             it('should return an array of data plans', async done => {
                 nock(config.apiRoot)
-                    .get(`/${config.dataPlanningPath}/1111/2222/3333/plans`)
+                    .get(`/${config.dataPlanningPath}/3333/plans`)
                     .reply(200, [{ data_plan_versions: [] }]);
 
                 expect(await dataPlanService.getDataPlans()).toEqual([
@@ -145,7 +143,7 @@ describe('DataPlanService', () => {
 
             it('should handle 401 Errors', async done => {
                 nock(config.apiRoot)
-                    .get(`/${config.dataPlanningPath}/1111/2222/3333/plans`)
+                    .get(`/${config.dataPlanningPath}/3333/plans`)
                     .reply(401);
 
                 await expect(
@@ -159,9 +157,7 @@ describe('DataPlanService', () => {
         describe('#getDataPlan', () => {
             it('should return a data plan', async done => {
                 nock(config.apiRoot)
-                    .get(
-                        `/${config.dataPlanningPath}/1111/2222/3333/plans/test`
-                    )
+                    .get(`/${config.dataPlanningPath}/3333/plans/test`)
                     .reply(200, { data_plan_versions: [] });
 
                 expect(await dataPlanService.getDataPlan('test')).toEqual({
@@ -173,9 +169,7 @@ describe('DataPlanService', () => {
 
             it('should handle 401 Errors', async done => {
                 nock(config.apiRoot)
-                    .get(
-                        `/${config.dataPlanningPath}/1111/2222/3333/plans/test`
-                    )
+                    .get(`/${config.dataPlanningPath}/3333/plans/test`)
                     .reply(401);
 
                 await expect(
@@ -191,7 +185,7 @@ describe('DataPlanService', () => {
                 nock(config.apiRoot)
                     .get(
                         // tslint:disable-next-line: max-line-length
-                        `/${config.dataPlanningPath}/1111/2222/3333/plans/test/versions/2`
+                        `/${config.dataPlanningPath}/3333/plans/test/versions/2`
                     )
                     .reply(200, {
                         version: 2,
@@ -228,7 +222,7 @@ describe('DataPlanService', () => {
                 nock(config.apiRoot)
                     .patch(
                         // tslint:disable-next-line: max-line-length
-                        `/${config.dataPlanningPath}/1111/2222/3333/plans/test`,
+                        `/${config.dataPlanningPath}/3333/plans/test`,
                         sampleDataPlan
                     )
                     .reply(200, updatedDataPlan);
@@ -247,7 +241,7 @@ describe('DataPlanService', () => {
                 };
                 nock(config.apiRoot)
                     .patch(
-                        `/${config.dataPlanningPath}/1111/2222/3333/plans/test`,
+                        `/${config.dataPlanningPath}/3333/plans/test`,
                         sampleDataPlan
                     )
                     .reply(400);
@@ -278,7 +272,7 @@ describe('DataPlanService', () => {
                 nock(config.apiRoot)
                     .patch(
                         // tslint:disable-next-line: max-line-length
-                        `/${config.dataPlanningPath}/1111/2222/3333/plans/amazing_really_cool_plan/versions/2`,
+                        `/${config.dataPlanningPath}/3333/plans/amazing_really_cool_plan/versions/2`,
                         updatedDataPlanVersion
                     )
                     .reply(200, updatedDataPlanVersion);
@@ -303,7 +297,7 @@ describe('DataPlanService', () => {
                 nock(config.apiRoot)
                     .patch(
                         // tslint:disable-next-line: max-line-length
-                        `/${config.dataPlanningPath}/1111/2222/3333/plans/test/versions/2`,
+                        `/${config.dataPlanningPath}/3333/plans/test/versions/2`,
                         sampleDataPlanVersion
                     )
                     .reply(400);
@@ -327,7 +321,7 @@ describe('DataPlanService', () => {
                 nock(config.apiRoot)
                     .delete(
                         // tslint:disable-next-line: max-line-length
-                        `/${config.dataPlanningPath}/1111/2222/3333/plans/test`
+                        `/${config.dataPlanningPath}/3333/plans/test`
                     )
                     .reply(200);
 
@@ -342,7 +336,7 @@ describe('DataPlanService', () => {
                 nock(config.apiRoot)
                     .delete(
                         // tslint:disable-next-line: max-line-length
-                        `/${config.dataPlanningPath}/1111/2222/3333/plans/test`
+                        `/${config.dataPlanningPath}/3333/plans/test`
                     )
                     .reply(400);
 
@@ -359,7 +353,7 @@ describe('DataPlanService', () => {
                 nock(config.apiRoot)
                     .delete(
                         // tslint:disable-next-line: max-line-length
-                        `/${config.dataPlanningPath}/1111/2222/3333/plans/test/versions/3`
+                        `/${config.dataPlanningPath}/3333/plans/test/versions/3`
                     )
                     .reply(200);
 
@@ -374,7 +368,7 @@ describe('DataPlanService', () => {
                 nock(config.apiRoot)
                     .delete(
                         // tslint:disable-next-line: max-line-length
-                        `/${config.dataPlanningPath}/1111/2222/3333/plans/test/versions/3`
+                        `/${config.dataPlanningPath}/3333/plans/test/versions/3`
                     )
                     .reply(400);
 

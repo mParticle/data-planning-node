@@ -15,16 +15,12 @@ import { DataPlanEventValidator } from '../data_planning/data_plan_event_validat
 import { config } from '../utils/config';
 
 interface AccessCredentials {
-    orgId: number;
-    accountId: number;
     workspaceId: number;
     clientId: string;
     clientSecret: string;
 }
 
 export class DataPlanService {
-    private orgId?: number;
-    private accountId?: number;
     private workspaceId?: number;
     private clientId?: string;
     private clientSecret?: string;
@@ -32,17 +28,9 @@ export class DataPlanService {
 
     constructor(credentials?: AccessCredentials) {
         if (credentials) {
-            const {
-                orgId,
-                accountId,
-                workspaceId,
-                clientId,
-                clientSecret,
-            } = credentials;
+            const { workspaceId, clientId, clientSecret } = credentials;
 
-            if (orgId && accountId && workspaceId && clientId && clientSecret) {
-                this.orgId = orgId;
-                this.accountId = accountId;
+            if (workspaceId && clientId && clientSecret) {
                 this.workspaceId = workspaceId;
 
                 this.clientId = clientId;
@@ -70,11 +58,9 @@ export class DataPlanService {
     }
 
     private getAPIURL(): string {
-        const { orgId, accountId, workspaceId } = this;
+        const { workspaceId } = this;
         const urlPath = path.join(
             config.dataPlanningPath,
-            `${orgId}`,
-            `${accountId}`,
             `${workspaceId}`,
             `plans`
         );
@@ -154,7 +140,8 @@ export class DataPlanService {
 
     async getDataPlans(): Promise<DataPlan[]> {
         const token = await this.getToken();
-        const api = new ApiClient<DataPlan[]>(this.apiURL, token);
+        const url = this.apiURL;
+        const api = new ApiClient<DataPlan[]>(url, token);
 
         try {
             return api.fetch().then((response: AxiosResponse) => response.data);

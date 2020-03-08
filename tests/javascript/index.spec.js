@@ -480,8 +480,10 @@ describe('JS Imports', () => {
                     },
                 };
 
-                const document = {
-                    data_points: [eventDataPoint, userDataPoint],
+                const dataPlanVersion = {
+                    version_document: {
+                        data_points: [eventDataPoint, userDataPoint],
+                    },
                 };
 
                 const batch = {
@@ -491,7 +493,9 @@ describe('JS Imports', () => {
                     },
                 };
 
-                expect(dataPlanService.validateBatch(batch, document)).toEqual({
+                expect(
+                    dataPlanService.validateBatch(batch, dataPlanVersion)
+                ).toEqual({
                     results: [],
                     batch: {
                         events: [event],
@@ -543,8 +547,10 @@ describe('JS Imports', () => {
                     },
                 };
 
-                const document = {
-                    data_points: [eventDataPoint, userDataPoint],
+                const dataPlanDocument = {
+                    version_document: {
+                        data_points: [eventDataPoint, userDataPoint],
+                    },
                 };
 
                 const batch = {
@@ -554,7 +560,9 @@ describe('JS Imports', () => {
                     },
                 };
 
-                expect(dataPlanService.validateBatch(batch, document)).toEqual({
+                expect(
+                    dataPlanService.validateBatch(batch, dataPlanDocument)
+                ).toEqual({
                     results: [
                         {
                             data: {

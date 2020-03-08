@@ -3,6 +3,7 @@ import { Batch } from '@mparticle/event-models';
 import {
     DataPlanDocument,
     DataPlanMatchType,
+    DataPlanVersion,
 } from '@mparticle/data-planning-models';
 import { BatchFactory } from '../factories/batch_factory';
 import { DataPlanPointFactory } from '../factories/data_plan_factory';
@@ -425,7 +426,13 @@ describe('DataPlanService', () => {
                 data_points: [eventDataPoint, userDataPoint],
             };
 
-            expect(dataPlanService.validateEvent(event, document)).toEqual({
+            const dataPlanVersion: DataPlanVersion = {
+                version_document: document,
+            };
+
+            expect(
+                dataPlanService.validateEvent(event, dataPlanVersion)
+            ).toEqual({
                 results: [
                     {
                         data: {
@@ -497,6 +504,10 @@ describe('DataPlanService', () => {
                 data_points: [eventDataPoint, userDataPoint],
             };
 
+            const dataPlanVersion: DataPlanVersion = {
+                version_document: document,
+            };
+
             const batch: Batch = BatchFactory.getOne({
                 events: [event],
                 user_attributes: {
@@ -504,7 +515,9 @@ describe('DataPlanService', () => {
                 },
             });
 
-            expect(dataPlanService.validateBatch(batch, document)).toEqual({
+            expect(
+                dataPlanService.validateBatch(batch, dataPlanVersion)
+            ).toEqual({
                 results: [],
                 batch: {
                     events: [event],
@@ -554,6 +567,10 @@ describe('DataPlanService', () => {
                 data_points: [eventDataPoint, userDataPoint],
             };
 
+            const dataPlanVersion: DataPlanVersion = {
+                version_document: document,
+            };
+
             const batch: Batch = BatchFactory.getOne({
                 events: [event],
                 user_attributes: {
@@ -561,7 +578,9 @@ describe('DataPlanService', () => {
                 },
             });
 
-            expect(dataPlanService.validateBatch(batch, document)).toEqual({
+            expect(
+                dataPlanService.validateBatch(batch, dataPlanVersion)
+            ).toEqual({
                 results: [
                     {
                         data: {

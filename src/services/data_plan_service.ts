@@ -215,11 +215,19 @@ export class DataPlanService {
 
     validateEvent(
         event: BaseEvent,
-        document: DataPlanDocument
+        dataPlanVersion: DataPlanVersion
     ): DataPlanResults {
-        if (!event || !document) {
+        if (!event || !dataPlanVersion) {
             throw new Error(
-                'Data Plan Document and Event are missing and required'
+                'Data Plan Version or Event is missing and required'
+            );
+        }
+
+        const document = dataPlanVersion.version_document;
+
+        if (!document) {
+            throw new Error(
+                'Data Plan Version does not contain a valid Version Document'
             );
         }
 
@@ -232,10 +240,21 @@ export class DataPlanService {
         return resultsDto;
     }
 
-    validateBatch(batch: Batch, document: DataPlanDocument): DataPlanResults {
-        if (!batch || !document) {
+    validateBatch(
+        batch: Batch,
+        dataPlanVersion: DataPlanVersion
+    ): DataPlanResults {
+        if (!batch || !dataPlanVersion) {
             throw new Error(
-                'Data Plan Document and Batch are missing and required'
+                'Data Plan Version or Batch is missing and required'
+            );
+        }
+
+        const document = dataPlanVersion.version_document;
+
+        if (!document) {
+            throw new Error(
+                'Data Plan Version does not contain a valid Version Document'
             );
         }
 

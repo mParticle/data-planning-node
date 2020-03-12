@@ -13,13 +13,15 @@ const defaultOutput = {
         commonjs({
             namedExports: {
                 '@mparticle/data-planning-models': [
-                    'ErrorType',
+                    'SchemaKeywordErrorTypeEnum',
                     'ValidationErrorType',
                     'ValidationError',
                     'MessageType',
                     'DataPlanMatchType',
                     'ScreenViewEventCriteria',
                     'CustomEventCriteria',
+                    'ValidationErrorTypeEnum',
+                    'ValidationResultEventEventTypeEnum',
                 ],
             },
         }),

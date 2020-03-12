@@ -11,6 +11,11 @@ import {
     CommerceEvent,
     BaseEvent,
     CustomEvent,
+    EventTypeEnum,
+    CustomEventDataCustomEventTypeEnum,
+    ApplicationStateTransitionEventDataApplicationTransitionTypeEnum,
+    PromotionActionActionEnum,
+    ProductActionActionEnum,
 } from '@mparticle/event-models';
 import {
     DataPlanMatchType,
@@ -110,10 +115,6 @@ describe('DataPlanEventValidator', () => {
     });
     describe('#addToMatchLookups', () => {
         it('should add to dataPlanMatchLookups', () => {
-            const batch = BatchFactory.getOne({
-                events: [ScreenViewEventFactory.getOne()],
-            });
-
             const dataPlanPoint = DataPlanPointFactory.getOne({
                 match: {
                     type: DataPlanMatchType.CustomEvent,
@@ -209,7 +210,7 @@ describe('DataPlanEventValidator', () => {
     describe('#synthesizeMatch', () => {
         it('returns session start matches', () => {
             const event: SessionStartEvent = {
-                event_type: 'session_start',
+                event_type: EventTypeEnum.sessionStart,
             };
             expect(DataPlanEventValidator.synthesizeMatch(event)).toEqual({
                 type: 'session_start',
@@ -217,7 +218,7 @@ describe('DataPlanEventValidator', () => {
         });
         it('returns session end matches', () => {
             const event: SessionEndEvent = {
-                event_type: 'session_end',
+                event_type: EventTypeEnum.sessionEnd,
             };
             expect(DataPlanEventValidator.synthesizeMatch(event)).toEqual({
                 type: 'session_end',
@@ -225,7 +226,7 @@ describe('DataPlanEventValidator', () => {
         });
         it('returns screen view event matches', () => {
             const event: ScreenViewEvent = {
-                event_type: 'screen_view',
+                event_type: EventTypeEnum.screenView,
                 data: {
                     screen_name: 'My Screen',
                 },
@@ -239,10 +240,10 @@ describe('DataPlanEventValidator', () => {
         });
         it('returns custom event matches', () => {
             const event: CustomEvent = {
-                event_type: 'custom_event',
+                event_type: EventTypeEnum.customEvent,
                 data: {
                     event_name: 'My Custom Event',
-                    custom_event_type: 'other',
+                    custom_event_type: CustomEventDataCustomEventTypeEnum.other,
                     custom_flags: {
                         secret: 'This is a secret',
                     },
@@ -259,7 +260,7 @@ describe('DataPlanEventValidator', () => {
 
         it('returns crash report matches', () => {
             const event: CrashReportEvent = {
-                event_type: 'crash_report',
+                event_type: EventTypeEnum.crashReport,
             };
             expect(DataPlanEventValidator.synthesizeMatch(event)).toEqual({
                 type: 'crash_report',
@@ -268,7 +269,7 @@ describe('DataPlanEventValidator', () => {
 
         it('returns opt out matches', () => {
             const event: OptOutEvent = {
-                event_type: 'opt_out',
+                event_type: EventTypeEnum.optOut,
             };
             expect(DataPlanEventValidator.synthesizeMatch(event)).toEqual({
                 type: 'opt_out',
@@ -287,7 +288,7 @@ describe('DataPlanEventValidator', () => {
 
         it('returns network performance matches', () => {
             const event: NetworkPerformanceEvent = {
-                event_type: 'network_performance',
+                event_type: EventTypeEnum.networkPerformance,
             };
             expect(DataPlanEventValidator.synthesizeMatch(event)).toEqual({
                 type: 'network_performance',
@@ -296,7 +297,7 @@ describe('DataPlanEventValidator', () => {
 
         it('returns breadcrumb matches', () => {
             const event: BreadcrumbEvent = {
-                event_type: 'breadcrumb',
+                event_type: EventTypeEnum.breadcrumb,
             };
             expect(DataPlanEventValidator.synthesizeMatch(event)).toEqual({
                 type: 'breadcrumb',
@@ -315,9 +316,10 @@ describe('DataPlanEventValidator', () => {
 
         it('returns app state transition event matches', () => {
             const event: ApplicationStateTransitionEvent = {
-                event_type: 'application_state_transition',
+                event_type: EventTypeEnum.applicationStateTransition,
                 data: {
-                    application_transition_type: 'application_foreground',
+                    application_transition_type:
+                        ApplicationStateTransitionEventDataApplicationTransitionTypeEnum.applicationForeground,
                     is_first_run: false,
                     is_upgrade: false,
                 },
@@ -332,10 +334,10 @@ describe('DataPlanEventValidator', () => {
 
         it('returns product action matches', () => {
             const event: CommerceEvent = {
-                event_type: 'commerce_event',
+                event_type: EventTypeEnum.commerceEvent,
                 data: {
                     product_action: {
-                        action: 'add_to_cart',
+                        action: ProductActionActionEnum.addToCart,
                     },
                 },
             };
@@ -349,10 +351,10 @@ describe('DataPlanEventValidator', () => {
 
         it('returns promotion action matches', () => {
             const event: CommerceEvent = {
-                event_type: 'commerce_event',
+                event_type: EventTypeEnum.commerceEvent,
                 data: {
                     promotion_action: {
-                        action: 'click',
+                        action: PromotionActionActionEnum.click,
                         promotions: [
                             {
                                 id: '74633',
@@ -374,7 +376,7 @@ describe('DataPlanEventValidator', () => {
 
         it('returns product impression matches', () => {
             const event: CommerceEvent = {
-                event_type: 'commerce_event',
+                event_type: EventTypeEnum.commerceEvent,
                 data: {
                     product_impressions: [
                         {
@@ -394,10 +396,12 @@ describe('DataPlanEventValidator', () => {
         });
 
         it('returns unknown for unknown events', () => {
-            const event: BaseEvent = {
+            const event = {
                 event_type: 'unknown',
             };
-            expect(DataPlanEventValidator.synthesizeMatch(event)).toEqual({
+            expect(
+                DataPlanEventValidator.synthesizeMatch(event as BaseEvent)
+            ).toEqual({
                 type: 'unknown',
             });
         });
@@ -806,7 +810,8 @@ describe('DataPlanEventValidator', () => {
                     type: DataPlanMatchType.CustomEvent,
                     criteria: {
                         event_name: 'My Test Event',
-                        custom_event_type: 'navigation',
+                        custom_event_type:
+                            CustomEventDataCustomEventTypeEnum.navigation,
                     },
                 },
                 validator: {
@@ -863,7 +868,8 @@ describe('DataPlanEventValidator', () => {
                 match: {
                     type: DataPlanMatchType.CustomEvent,
                     criteria: {
-                        custom_event_type: 'other',
+                        custom_event_type:
+                            CustomEventDataCustomEventTypeEnum.other,
                         event_name: 'Planned Event',
                     },
                 },
@@ -955,7 +961,7 @@ describe('DataPlanEventValidator', () => {
             const event = CustomEventFactory.getOne({
                 data: {
                     event_name: 'Planned Event',
-                    custom_event_type: 'other',
+                    custom_event_type: CustomEventDataCustomEventTypeEnum.other,
                 },
             });
 

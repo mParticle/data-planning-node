@@ -1,7 +1,9 @@
 import {
-    ErrorType,
+    SchemaKeywordErrorType,
     ValidationErrorType,
     ValidationError,
+    ValidationErrorTypeEnum,
+    SchemaKeywordErrorTypeEnum,
 } from '@mparticle/data-planning-models';
 import Ajv, {
     ErrorObject,
@@ -109,26 +111,27 @@ export class JSONSchemaValidator {
         error.actual = getActualValue(value);
 
         error.error_pointer = joinJsonPointer(nodes);
-        error.schema_keyword = args.keyword;
+        error.schema_keyword = args.keyword as SchemaKeywordErrorType;
         error.key = lastNode(nodes);
 
         switch (args.keyword) {
-            case ErrorType.MultipleOf:
-            case ErrorType.Maximum:
-            case ErrorType.ExclusiveMaximum:
-            case ErrorType.Minimum:
-            case ErrorType.ExclusiveMinimum:
-            case ErrorType.MaxLength:
-            case ErrorType.MinLength:
-            case ErrorType.Pattern:
-            case ErrorType.Format:
-                error.validation_error_type = ValidationErrorType.InvalidValue;
+            case SchemaKeywordErrorTypeEnum.MultipleOf:
+            case SchemaKeywordErrorTypeEnum.Maximum:
+            case SchemaKeywordErrorTypeEnum.ExclusiveMaximum:
+            case SchemaKeywordErrorTypeEnum.Minimum:
+            case SchemaKeywordErrorTypeEnum.ExclusiveMinimum:
+            case SchemaKeywordErrorTypeEnum.MaxLength:
+            case SchemaKeywordErrorTypeEnum.MinLength:
+            case SchemaKeywordErrorTypeEnum.Pattern:
+            case SchemaKeywordErrorTypeEnum.Format:
+                error.validation_error_type =
+                    ValidationErrorTypeEnum.InvalidValue;
                 error.expected = args.message;
                 break;
 
-            case ErrorType.AdditionalItems:
-            case ErrorType.AdditionalProperties:
-                error.validation_error_type = ValidationErrorType.Unplanned;
+            case SchemaKeywordErrorTypeEnum.AdditionalItems:
+            case SchemaKeywordErrorTypeEnum.AdditionalProperties:
+                error.validation_error_type = ValidationErrorTypeEnum.Unplanned;
                 const {
                     additionalProperty,
                 } = args.params as AdditionalPropertiesParams;
@@ -136,33 +139,35 @@ export class JSONSchemaValidator {
                 error.actual = additionalProperty;
                 break;
 
-            case ErrorType.Required:
+            case SchemaKeywordErrorTypeEnum.Required:
                 const { missingProperty } = args.params as RequiredParams;
                 error.validation_error_type =
-                    ValidationErrorType.MissingRequired;
+                    ValidationErrorTypeEnum.MissingRequired;
                 error.expected = missingProperty;
                 error.actual = undefined;
                 break;
 
-            case ErrorType.Type:
-            case ErrorType.Const:
-            case ErrorType.Enum:
-                error.validation_error_type = ValidationErrorType.InvalidValue;
-                error.expected = args.message;
-                break;
-
-            case ErrorType.Dependencies:
+            case SchemaKeywordErrorTypeEnum.Type:
+            case SchemaKeywordErrorTypeEnum.Const:
+            case SchemaKeywordErrorTypeEnum.Enum:
                 error.validation_error_type =
-                    ValidationErrorType.MissingRequired;
+                    ValidationErrorTypeEnum.InvalidValue;
                 error.expected = args.message;
                 break;
 
-            case ErrorType.PatternProperties:
-                error.validation_error_type = ValidationErrorType.InvalidValue;
+            case SchemaKeywordErrorTypeEnum.Dependencies:
+                error.validation_error_type =
+                    ValidationErrorTypeEnum.MissingRequired;
+                error.expected = args.message;
+                break;
+
+            case SchemaKeywordErrorTypeEnum.PatternProperties:
+                error.validation_error_type =
+                    ValidationErrorTypeEnum.InvalidValue;
                 break;
 
             default:
-                error.validation_error_type = ValidationErrorType.Unknown;
+                error.validation_error_type = ValidationErrorTypeEnum.Unknown;
                 error.expected = args.message;
                 break;
         }

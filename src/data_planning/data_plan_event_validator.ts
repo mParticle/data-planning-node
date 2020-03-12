@@ -5,6 +5,11 @@ import {
     ApplicationStateTransitionEvent,
     CommerceEvent,
     Batch,
+    EventTypeEnum,
+    ApplicationStateTransitionEventData,
+    ScreenViewEventData,
+    CommerceEventData,
+    CustomEventData,
 } from '@mparticle/event-models';
 import {
     MessageType,
@@ -21,6 +26,10 @@ import {
     ValidationErrorType,
     ValidationResultEvent,
     ValidationError,
+    ValidationResultEventData,
+    ValidationErrorTypeEnum,
+    ValidationResultEventEventTypeEnum,
+    EventType,
 } from '@mparticle/data-planning-models';
 import { JSONSchemaValidator } from '../validation/JSONSchemaValidator';
 
@@ -265,13 +274,13 @@ export class DataPlanEventValidator {
     validateEvent(event: BaseEvent): ValidationResultEvent {
         const matchKey = DataPlanEventValidator.getMatchKey(event);
 
-        const result: ValidationResultEvent = {};
+        const result: ValidationResultEventData = {};
         const errors: ValidationError[] = [];
 
         // Handle Unplannable Events
         if (!matchKey || !matchKey.trim()) {
             const validationError: ValidationError = {
-                validation_error_type: 'unplanned',
+                validation_error_type: ValidationErrorTypeEnum.Unplanned,
                 key: 'unknown',
                 error_pointer: '#',
             };
@@ -279,7 +288,7 @@ export class DataPlanEventValidator {
 
             result.validation_errors = errors;
             return {
-                event_type: 'validation_results',
+                event_type: EventTypeEnum.validationResult,
                 data: result,
             };
         }
@@ -287,7 +296,7 @@ export class DataPlanEventValidator {
         // Handle Unplanned Events
         if (matchKey && !(matchKey in this.dataPlanMatchLookups)) {
             const validationError: ValidationError = {
-                validation_error_type: 'unplanned',
+                validation_error_type: ValidationErrorTypeEnum.Unplanned,
                 key: this.getEventKey(event),
                 error_pointer: '#',
             };
@@ -302,7 +311,7 @@ export class DataPlanEventValidator {
             result.validation_errors = errors;
 
             return {
-                event_type: 'validation_result',
+                event_type: EventTypeEnum.validationResult,
                 data: result,
             };
         }
@@ -319,7 +328,7 @@ export class DataPlanEventValidator {
         if (errors.length > 0) {
             result.validation_errors = errors;
             return {
-                event_type: 'validation_result',
+                event_type: EventTypeEnum.validationResult,
                 data: result,
             };
         }
@@ -343,7 +352,7 @@ export class DataPlanEventValidator {
     }
 
     validateUserAttributes(eventBatch: Batch): ValidationResultEvent {
-        const result: ValidationResultEvent = {};
+        const result: ValidationResultEventData = {};
         const point = this.dataPlanMatchLookups['user_attributes'];
         const schema = point?.schema;
 
@@ -352,14 +361,14 @@ export class DataPlanEventValidator {
                 type: DataPlanMatchType.UserAttributes,
             };
             const error: ValidationError = {
-                validation_error_type: ValidationErrorType.Unknown,
+                validation_error_type: ValidationErrorTypeEnum.Unknown,
                 error_pointer: '#',
                 actual: 'Invalid JSON Schema',
                 key: 'user_attributes',
             };
 
             return {
-                event_type: 'validation_result',
+                event_type: EventTypeEnum.validationResult,
                 data: {
                     match: result.match,
                     validation_errors: [error],
@@ -380,7 +389,7 @@ export class DataPlanEventValidator {
         }
 
         return {
-            event_type: 'validation_result',
+            event_type: EventTypeEnum.validationResult,
             data: {
                 match: result.match,
                 validation_errors: validationErrors,
@@ -459,7 +468,7 @@ export class DataPlanEventValidator {
      * @returns A `matchKey` as a string
      */
     static getMatchKey(eventToMatch: BaseEvent): string | null {
-        switch (eventToMatch.event_type) {
+        switch (eventToMatch.event_type as string) {
             case MessageType.Breadcrumb:
                 return DataPlanMatchType.Breadcrumb;
             case MessageType.CrashReport:
@@ -479,31 +488,30 @@ export class DataPlanEventValidator {
 
             case MessageType.ApplicationStateTransition:
                 // tslint:disable-next-line: max-line-length
-                const appStateTransitionEvent = eventToMatch as ApplicationStateTransitionEvent;
+                const appStateTransitionEventData = eventToMatch.data as ApplicationStateTransitionEventData;
                 return [
                     DataPlanMatchType.ApplicationStateTransition,
-                    appStateTransitionEvent.data?.application_transition_type,
+                    appStateTransitionEventData?.application_transition_type,
                 ].join(':');
             case MessageType.ScreenView:
-                const screenViewEvent = eventToMatch as ScreenViewEvent;
-                if (screenViewEvent.data) {
-                    return [
-                        DataPlanMatchType.ScreenView,
-                        '',
-                        screenViewEvent.data.screen_name,
-                    ].join(':');
-                }
-                return null;
+                // tslint:disable-next-line: max-line-length
+                const screenViewEventData = eventToMatch.data as ScreenViewEventData;
+                return [
+                    DataPlanMatchType.ScreenView,
+                    '',
+                    screenViewEventData?.screen_name,
+                ].join(':');
             case MessageType.Commerce:
-                const commerceEvent = eventToMatch as CommerceEvent;
+                // tslint:disable-next-line: max-line-length
+                const commerceEventData = eventToMatch.data as CommerceEventData;
                 const matchKey: string[] = [];
 
-                if (commerceEvent && commerceEvent.data) {
+                if (commerceEventData) {
                     const {
                         product_action,
                         product_impressions,
                         promotion_action,
-                    } = commerceEvent.data;
+                    } = commerceEventData;
 
                     if (product_action) {
                         matchKey.push(DataPlanMatchType.ProductAction);
@@ -517,12 +525,12 @@ export class DataPlanEventValidator {
                 }
                 return matchKey.join(':');
             case MessageType.CustomEvent:
-                const customEvent = eventToMatch as CustomEvent;
-                if (customEvent.data) {
+                const customEventData = eventToMatch.data as CustomEventData;
+                if (customEventData) {
                     return [
                         DataPlanMatchType.CustomEvent,
-                        customEvent.data.custom_event_type,
-                        customEvent.data.event_name,
+                        customEventData.custom_event_type,
+                        customEventData.event_name,
                     ].join(':');
                 }
                 return null;
@@ -538,15 +546,16 @@ export class DataPlanEventValidator {
      */
     static synthesizeMatch(eventToMatch: BaseEvent): DataPlanMatch {
         switch (eventToMatch.event_type) {
-            case MessageType.SessionStart:
+            case EventTypeEnum.sessionStart:
                 return { type: DataPlanMatchType.SessionStart };
-            case MessageType.SessionEnd:
+            case EventTypeEnum.sessionEnd:
                 return { type: DataPlanMatchType.SessionEnd };
-            case MessageType.ScreenView:
-                const screenViewEvent = eventToMatch as ScreenViewEvent;
+            case EventTypeEnum.screenView:
+                // tslint:disable-next-line: max-line-length
+                const screenViewEventData = eventToMatch.data as ScreenViewEventData;
                 let screenName = '';
-                if (screenViewEvent.data) {
-                    screenName = screenViewEvent.data.screen_name;
+                if (screenViewEventData) {
+                    screenName = screenViewEventData.screen_name;
                 }
                 const screenViewCriteria: ScreenViewEventCriteria = {
                     screen_name: screenName,
@@ -555,64 +564,66 @@ export class DataPlanEventValidator {
                     type: DataPlanMatchType.ScreenView,
                     criteria: screenViewCriteria,
                 };
-            case MessageType.CustomEvent:
-                const customEvent: CustomEvent = eventToMatch as CustomEvent;
+            case EventTypeEnum.customEvent:
+                const customEventData = eventToMatch.data as CustomEventData;
                 const customEventCriteria: CustomEventCriteria = {
-                    event_name: customEvent?.data?.event_name || 'Custom Event',
+                    event_name: customEventData?.event_name || 'Custom Event',
                     // tslint:disable-next-line: max-line-length
                     custom_event_type:
-                        customEvent?.data?.custom_event_type || 'other',
+                        customEventData?.custom_event_type || 'other',
                 };
 
                 return {
                     type: DataPlanMatchType.CustomEvent,
                     criteria: customEventCriteria,
                 };
-            case MessageType.CrashReport:
+            case EventTypeEnum.crashReport:
                 return { type: DataPlanMatchType.CrashReport };
-            case MessageType.OptOut:
+            case EventTypeEnum.optOut:
                 return { type: DataPlanMatchType.OptOut };
-            case MessageType.FirstRun:
+            case EventTypeEnum.firstRun:
                 return { type: DataPlanMatchType.FirstRun };
-            case MessageType.ApplicationStateTransition:
+            case EventTypeEnum.applicationStateTransition:
                 // tslint:disable-next-line: max-line-length
-                const appStateTransitionEvent = eventToMatch as ApplicationStateTransitionEvent;
+                const appStateTransitionEventData = eventToMatch.data as ApplicationStateTransitionEventData;
                 // tslint:disable-next-line: max-line-length
                 const appStateTransitionCriteria: ApplicationStateTransitionEventCriteria = {
                     application_transition_type:
-                        appStateTransitionEvent?.data
-                            ?.application_transition_type || 'unknown',
+                        // tslint:disable-next-line: max-line-length
+                        appStateTransitionEventData?.application_transition_type ||
+                        'unknown',
                 };
                 return {
                     type: DataPlanMatchType.ApplicationStateTransition,
                     criteria: appStateTransitionCriteria,
                 };
-            case MessageType.NetworkPerformance:
+            case EventTypeEnum.networkPerformance:
                 return { type: DataPlanMatchType.NetworkPerformance };
-            case MessageType.Breadcrumb:
+            case EventTypeEnum.breadcrumb:
                 return { type: DataPlanMatchType.Breadcrumb };
-            case MessageType.Uninstall:
+            case EventTypeEnum.uninstall:
                 return { type: DataPlanMatchType.Uninstall };
-            case MessageType.Commerce:
-                const commerceEvent = eventToMatch as CommerceEvent;
-                if (commerceEvent.data) {
-                    if (commerceEvent.data.product_action) {
+            case EventTypeEnum.commerceEvent:
+                // tslint:disable-next-line: max-line-length
+                const commerceEventData = eventToMatch.data as CommerceEventData;
+                if (commerceEventData) {
+                    if (commerceEventData.product_action) {
                         const criteria: ProductActionEventCriteria = {
-                            action: commerceEvent.data.product_action.action,
+                            action: commerceEventData.product_action.action,
                         };
                         return {
                             type: DataPlanMatchType.ProductAction,
                             criteria,
                         };
-                    } else if (commerceEvent.data.promotion_action) {
+                    } else if (commerceEventData.promotion_action) {
                         const criteria: PromotionActionEventCriteria = {
-                            action: commerceEvent.data.promotion_action.action,
+                            action: commerceEventData.promotion_action.action,
                         };
                         return {
                             type: DataPlanMatchType.PromotionAction,
                             criteria,
                         };
-                    } else if (commerceEvent.data.product_impressions) {
+                    } else if (commerceEventData.product_impressions) {
                         return { type: DataPlanMatchType.ProductImpression };
                     }
                 }
@@ -627,12 +638,13 @@ export class DataPlanEventValidator {
         let key;
         switch (eventToConvert.event_type) {
             case 'custom_event':
-                const customEvent = eventToConvert as CustomEvent;
-                key = customEvent?.data?.event_name;
+                const customEventData = eventToConvert.data as CustomEventData;
+                key = customEventData?.event_name;
                 break;
             case 'screen_view':
-                const screenViewEvent = eventToConvert as ScreenViewEvent;
-                key = screenViewEvent?.data?.screen_name;
+                // tslint:disable-next-line: max-line-length
+                const screenViewEventData = eventToConvert.data as ScreenViewEventData;
+                key = screenViewEventData?.screen_name;
                 break;
             default:
                 break;

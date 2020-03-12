@@ -5,6 +5,8 @@ import {
     ScreenViewEvent,
     ScreenViewEventData,
     CommonEventData,
+    CustomEventDataCustomEventTypeEnum,
+    EventTypeEnum,
 } from '@mparticle/event-models';
 import faker from 'faker';
 
@@ -14,7 +16,7 @@ const commonEventData = (): CommonEventData => ({
 
 export const EventFactory = new TestDataFactory<BaseEvent>(() => {
     return {
-        event_type: 'custom_event',
+        event_type: EventTypeEnum.customEvent,
         data: {},
     };
 });
@@ -22,11 +24,11 @@ export const EventFactory = new TestDataFactory<BaseEvent>(() => {
 export const CustomEventFactory = new TestDataFactory<BaseEvent>(() => {
     const data: CustomEventData = {
         event_name: 'Test User Content',
-        custom_event_type: 'user_content',
+        custom_event_type: CustomEventDataCustomEventTypeEnum.userContent,
     };
 
     return {
-        event_type: 'custom_event',
+        event_type: EventTypeEnum.customEvent,
         data,
     };
 });
@@ -38,7 +40,7 @@ export const ScreenViewEventFactory = new TestDataFactory<ScreenViewEvent>(
         };
 
         return {
-            event_type: 'screen_view',
+            event_type: EventTypeEnum.screenView,
             data,
         };
     }

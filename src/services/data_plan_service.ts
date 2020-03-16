@@ -8,7 +8,11 @@ import {
     DataPlanResults,
     DataPlanVersion,
 } from '@mparticle/data-planning-models';
-import { Batch, BaseEvent } from '@mparticle/event-models';
+import {
+    Batch,
+    BaseEvent,
+    BatchEnvironmentEnum,
+} from '@mparticle/event-models';
 import { ApiClient } from '../utils/ApiClient';
 import { AuthClient, Token } from '../utils/AuthClient';
 import { DataPlanEventValidator } from '../data_planning/data_plan_event_validator';
@@ -21,7 +25,7 @@ interface AccessCredentials {
 }
 
 interface ValidationOptions {
-    serverMode: boolean;
+    serverMode?: boolean;
 }
 
 export class DataPlanService {
@@ -67,6 +71,17 @@ export class DataPlanService {
             config.dataPlanningPath,
             `${workspaceId}`,
             `plans`
+        );
+        return this.buildUrl(config.apiRoot, urlPath);
+    }
+
+    // TODO: Refactor this with getAPIUrl
+    private getValidationAPIURL(): string {
+        const { workspaceId } = this;
+        const urlPath = path.join(
+            config.dataPlanningPath,
+            `${workspaceId}`,
+            `test`
         );
         return this.buildUrl(config.apiRoot, urlPath);
     }
@@ -208,9 +223,9 @@ export class DataPlanService {
         event: BaseEvent,
         dataPlanVersion: DataPlanVersion,
         options?: ValidationOptions
-    ): DataPlanResults {
+    ): Promise<DataPlanResults> {
         if (!event || !dataPlanVersion) {
-            throw new Error(
+            return Promise.reject(
                 'Data Plan Version or Event is missing and required'
             );
         }
@@ -218,31 +233,75 @@ export class DataPlanService {
         const document = dataPlanVersion.version_document;
 
         if (!document) {
-            throw new Error(
+            return Promise.reject(
                 'Data Plan Version does not contain a valid Version Document'
             );
         }
 
-        const resultsDto: DataPlanResults = {};
-        const validator = new DataPlanEventValidator(document);
-        const result = validator.validateEvent(event);
+        const serverMode = options?.serverMode;
 
-        resultsDto.results = [result];
+        // Create a mock batch so we can pass an event to the server
+        const mpid = '';
+        const environment = BatchEnvironmentEnum.unknown;
 
-        return resultsDto;
+        if (serverMode) {
+            const batch: Batch = {
+                events: [event],
+                mpid,
+                environment,
+            };
+            return this.validateOnServer(batch, dataPlanVersion, options);
+        } else {
+            const resultsDto: DataPlanResults = {};
+            const validator = new DataPlanEventValidator(document);
+            const result = validator.validateEvent(event);
+
+            resultsDto.results = [result];
+
+            return Promise.resolve(resultsDto);
+        }
     }
 
     validateBatch(
         batch: Batch,
         dataPlanVersion: DataPlanVersion,
         options?: ValidationOptions
-    ): DataPlanResults {
+    ): Promise<DataPlanResults> {
         if (!batch || !dataPlanVersion) {
-            throw new Error(
+            return Promise.reject(
                 'Data Plan Version or Batch is missing and required'
             );
         }
 
+        const document = dataPlanVersion.version_document;
+
+        if (!document) {
+            return Promise.reject(
+                'Data Plan Version does not contain a valid Version Document'
+            );
+        }
+
+        const serverMode = options?.serverMode;
+
+        if (serverMode) {
+            return this.validateOnServer(batch, dataPlanVersion, options);
+        } else {
+            const resultsDto: DataPlanResults = {};
+            const validator = new DataPlanEventValidator(document, batch);
+            const results = validator.validateEventBatch(batch);
+
+            resultsDto.batch = batch;
+            resultsDto.results = results;
+
+            return Promise.resolve(resultsDto);
+        }
+    }
+
+    private async validateOnServer(
+        batch: Batch,
+        dataPlanVersion: DataPlanVersion,
+        options?: ValidationOptions
+    ): Promise<DataPlanResults> {
         const document = dataPlanVersion.version_document;
 
         if (!document) {
@@ -251,13 +310,19 @@ export class DataPlanService {
             );
         }
 
-        const resultsDto: DataPlanResults = {};
-        const validator = new DataPlanEventValidator(document, batch);
-        const results = validator.validateEventBatch(batch);
+        const token = await this.getToken();
+        const url = this.getValidationAPIURL();
+        const api = new ApiClient<DataPlan>(url, token);
 
-        resultsDto.batch = batch;
-        resultsDto.results = results;
-
-        return resultsDto;
+        try {
+            return api
+                .post({
+                    document,
+                    batch,
+                })
+                .then((response: AxiosResponse) => response.data);
+        } catch (error) {
+            return error.response;
+        }
     }
 }

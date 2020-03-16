@@ -433,7 +433,7 @@ describe('JS Imports', () => {
         });
 
         describe('#validate', () => {
-            it('returns an empty validation result for a valid batch', () => {
+            it('returns an empty validation result for a valid batch', async done => {
                 const event = {
                     event_type: 'screen_view',
                     data: {
@@ -488,7 +488,7 @@ describe('JS Imports', () => {
                 };
 
                 expect(
-                    dataPlanService.validateBatch(batch, dataPlanVersion)
+                    await dataPlanService.validateBatch(batch, dataPlanVersion)
                 ).toEqual({
                     results: [],
                     batch: {
@@ -500,8 +500,10 @@ describe('JS Imports', () => {
                         },
                     },
                 });
+
+                done();
             });
-            it('returns validation results for an invalid batch', () => {
+            it('returns validation results for an invalid batch', async done => {
                 const dataPlanService = new DataPlanService();
                 const event = {
                     event_type: 'screen_view',
@@ -555,7 +557,7 @@ describe('JS Imports', () => {
                 };
 
                 expect(
-                    dataPlanService.validateBatch(batch, dataPlanDocument)
+                    await dataPlanService.validateBatch(batch, dataPlanDocument)
                 ).toEqual({
                     results: [
                         {
@@ -589,6 +591,51 @@ describe('JS Imports', () => {
                         },
                     },
                 });
+
+                done();
+            });
+
+            it('should allow server-side validation', async done => {
+                const dataPlanVersion = {
+                    version_document: {
+                        data_points: [],
+                    },
+                };
+
+                const batch = {};
+
+                const mockResults = {
+                    document: {
+                        data_points: [],
+                    },
+                    batch,
+                };
+
+                const expectedResults = {
+                    results: [],
+                    batch,
+                };
+
+                const scope = nock(config.apiRoot)
+                    .post(`/${config.dataPlanningPath}/3333/test`, mockResults)
+                    .reply(200, expectedResults);
+
+                expect(
+                    await dataPlanService.validateBatch(
+                        batch,
+                        dataPlanVersion,
+                        {
+                            serverMode: true,
+                        }
+                    )
+                ).toEqual(expectedResults);
+
+                expect(
+                    scope.isDone(),
+                    'validateBatch never made a server request'
+                ).toBeTruthy();
+
+                done();
             });
         });
     });

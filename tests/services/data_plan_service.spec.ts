@@ -8,7 +8,7 @@ import {
 import { BatchFactory } from '../factories/batch_factory';
 import { DataPlanPointFactory } from '../factories/data_plan_factory';
 import { ScreenViewEventFactory } from '../factories/event_factory';
-import nock, { isActive } from 'nock';
+import nock from 'nock';
 import { config } from '../../src/utils/config';
 
 nock.disableNetConnect();
@@ -382,7 +382,7 @@ describe('DataPlanService', () => {
     });
 
     describe('#validateEvent', () => {
-        it('returns a validation results for an invalid event', () => {
+        it('returns a validation results for an invalid event', async done => {
             const event = ScreenViewEventFactory.getOne({});
 
             const eventDataPoint = DataPlanPointFactory.getOne({
@@ -425,7 +425,7 @@ describe('DataPlanService', () => {
             };
 
             expect(
-                dataPlanService.validateEvent(event, dataPlanVersion)
+                await dataPlanService.validateEvent(event, dataPlanVersion)
             ).toEqual({
                 results: [
                     {
@@ -450,80 +450,61 @@ describe('DataPlanService', () => {
                     },
                 ],
             });
+            done();
         });
-        it('supports validationOptions', () => {
+
+        // tslint:disable-next-line: max-line-length
+        it('should allow validation options for server side validation', async done => {
             const event = ScreenViewEventFactory.getOne({});
 
-            const eventDataPoint = DataPlanPointFactory.getOne({
-                match: {
-                    type: DataPlanMatchType.ScreenView,
-                    criteria: {
-                        screen_name: event.data?.screen_name,
-                    },
-                },
-                validator: {
-                    type: 'json_schema',
-                    definition: {
-                        properties: {
-                            data: {
-                                required: ['custom_flags'],
-                            },
-                        },
-                    },
-                },
-            });
-
-            const userDataPoint = DataPlanPointFactory.getOne({
-                match: {
-                    type: DataPlanMatchType.UserAttributes,
-                },
-                validator: {
-                    type: 'json_schema',
-                    definition: {
-                        properties: {},
-                    },
-                },
-            });
-
-            const dataPlanVersion: DataPlanVersion = {
+            const dataPlanVersion = {
                 version_document: {
-                    data_points: [eventDataPoint, userDataPoint],
+                    data_points: [],
                 },
             };
 
+            const expectedResults = {
+                results: [],
+                batch: {
+                    events: [event],
+                },
+            };
+
+            const mockResults = {
+                document: dataPlanVersion.version_document,
+                batch: {
+                    events: [event],
+                    mpid: '',
+                    environment: 'unknown',
+                },
+            };
+
+            const scope = nock(config.apiRoot)
+                .post(
+                    `/${config.dataPlanningPath}/3333/test`,
+                    // tslint:disable-next-line: no-any
+                    mockResults as any
+                )
+                .reply(200, expectedResults);
+
             expect(
-                dataPlanService.validateEvent(event, dataPlanVersion, {
+                await dataPlanService.validateEvent(event, dataPlanVersion, {
                     serverMode: true,
                 })
-            ).toEqual({
-                results: [
-                    {
-                        data: {
-                            match: {
-                                type: 'screen_view',
-                                criteria: {
-                                    screen_name: 'Test Screen View',
-                                },
-                            },
-                            validation_errors: [
-                                {
-                                    error_pointer: '#/data',
-                                    key: 'data',
-                                    expected: 'custom_flags',
-                                    schema_keyword: 'required',
-                                    validation_error_type: 'missing_required',
-                                },
-                            ],
-                        },
-                        event_type: 'validation_result',
-                    },
-                ],
-            });
+            ).toEqual(expectedResults);
+
+            expect(
+                scope.isDone(),
+                'validateBatch never made a server request'
+            ).toBeTruthy();
+
+            done();
         });
     });
 
     describe('#validateBatch', () => {
-        it('returns an empty validation result for a valid batch', () => {
+        // tslint:disable-next-line: max-line-length
+        it('returns an empty validation result for a valid batch', async done => {
             const event = ScreenViewEventFactory.getOne({
                 data: {
                     custom_flags: {
@@ -579,7 +560,7 @@ describe('DataPlanService', () => {
             });
 
             expect(
-                dataPlanService.validateBatch(batch, dataPlanVersion)
+                await dataPlanService.validateBatch(batch, dataPlanVersion)
             ).toEqual({
                 results: [],
                 batch: {
@@ -591,8 +572,9 @@ describe('DataPlanService', () => {
                     },
                 },
             });
+            done();
         });
-        it('returns validation results for an invalid batch', () => {
+        it('returns validation results for an invalid batch', async done => {
             const event = ScreenViewEventFactory.getOne({});
 
             const eventDataPoint = DataPlanPointFactory.getOne({
@@ -642,7 +624,7 @@ describe('DataPlanService', () => {
             });
 
             expect(
-                dataPlanService.validateBatch(batch, dataPlanVersion)
+                await dataPlanService.validateBatch(batch, dataPlanVersion)
             ).toEqual({
                 results: [
                     {
@@ -675,76 +657,53 @@ describe('DataPlanService', () => {
                     },
                 },
             });
+
+            done();
         });
 
-        it('supports validationOptions', () => {
-            const event = ScreenViewEventFactory.getOne({
-                data: {
-                    custom_flags: {
-                        black_flag: 'rocks',
-                    },
-                },
-            });
-
-            const eventDataPoint = DataPlanPointFactory.getOne({
-                match: {
-                    type: DataPlanMatchType.ScreenView,
-                    criteria: {
-                        screen_name: event.data?.screen_name,
-                    },
-                },
-                validator: {
-                    type: 'json_schema',
-                    definition: {
-                        properties: {
-                            data: {
-                                required: ['custom_flags'],
-                            },
-                        },
-                    },
-                },
-            });
-
-            const userDataPoint = DataPlanPointFactory.getOne({
-                match: {
-                    type: DataPlanMatchType.UserAttributes,
-                },
-                validator: {
-                    type: 'json_schema',
-                    definition: {
-                        properties: {},
-                    },
-                },
-            });
-
-            const dataPlanVersion: DataPlanVersion = {
+        // tslint:disable-next-line: max-line-length
+        it('should allow validation options for server side validation', async done => {
+            const dataPlanVersion = {
                 version_document: {
-                    data_points: [eventDataPoint, userDataPoint],
+                    data_points: [],
                 },
             };
 
-            const batch: Batch = BatchFactory.getOne({
-                events: [event],
-                user_attributes: {
-                    $Age: 42,
+            const batch: Batch = BatchFactory.getOne();
+
+            const mockResults = {
+                document: {
+                    data_points: [],
                 },
-            });
+                batch,
+            };
+
+            const expectedResults = {
+                results: [],
+                batch,
+            };
+
+            const scope = nock(config.apiRoot)
+                .post(
+                    `/${config.dataPlanningPath}/3333/test`,
+
+                    // tslint:disable-next-line: no-any
+                    mockResults as any
+                )
+                .reply(200, expectedResults);
 
             expect(
-                dataPlanService.validateBatch(batch, dataPlanVersion, {
+                await dataPlanService.validateBatch(batch, dataPlanVersion, {
                     serverMode: true,
                 })
-            ).toEqual({
-                results: [],
-                batch: {
-                    events: [event],
-                    environment: batch.environment,
-                    mpid: batch.mpid,
-                    user_attributes: {
-                        $Age: 42,
-                    },
-                },
-            });
+            ).toEqual(expectedResults);
+
+            expect(
+                scope.isDone(),
+                'validateBatch never made a server request'
+            ).toBeTruthy();
+
+            done();
         });
     });
 });

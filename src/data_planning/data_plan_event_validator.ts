@@ -1,9 +1,5 @@
 import {
     BaseEvent,
-    ScreenViewEvent,
-    CustomEvent,
-    ApplicationStateTransitionEvent,
-    CommerceEvent,
     Batch,
     EventTypeEnum,
     ApplicationStateTransitionEventData,
@@ -23,13 +19,10 @@ import {
     DataPlanMatch,
     DataPlanPoint,
     DataPlanPointSchema,
-    ValidationErrorType,
     ValidationResultEvent,
     ValidationError,
     ValidationResultEventData,
     ValidationErrorTypeEnum,
-    ValidationResultEventEventTypeEnum,
-    EventType,
 } from '@mparticle/data-planning-models';
 import { JSONSchemaValidator } from '../validation/JSONSchemaValidator';
 

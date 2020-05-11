@@ -1,6 +1,6 @@
 {
     "name": "@mparticle/data-planning-node",
-    "version": "1.0.0-alpha.1",
+    "version": "1.0.1-alpha.0",
     "description": "A Node Interface for Data Planning",
     "main": "dist/mparticle-data-planning.common.js",
     "types": "dist/index.d.ts",

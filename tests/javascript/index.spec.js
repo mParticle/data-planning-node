@@ -617,7 +617,10 @@ describe('JS Imports', () => {
                 };
 
                 const scope = nock(config.apiRoot)
-                    .post(`/${config.dataPlanningPath}/3333/test`, mockResults)
+                    .post(
+                        `/${config.dataPlanningPath}/3333/plans/validate`,
+                        mockResults
+                    )
                     .reply(200, expectedResults);
 
                 expect(

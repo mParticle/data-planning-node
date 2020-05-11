@@ -4,7 +4,6 @@ import { AxiosResponse } from 'axios';
 
 import {
     DataPlan,
-    DataPlanDocument,
     DataPlanResults,
     DataPlanVersion,
 } from '@mparticle/data-planning-models';
@@ -18,14 +17,20 @@ import { AuthClient, Token } from '../utils/AuthClient';
 import { DataPlanEventValidator } from '../data_planning/data_plan_event_validator';
 import { config } from '../utils/config';
 
-interface AccessCredentials {
+export interface AccessCredentials {
     workspaceId: number;
     clientId: string;
     clientSecret: string;
 }
 
-interface ValidationOptions {
+export interface ValidationOptions {
     serverMode?: boolean;
+}
+
+export interface DataPlanServiceErrors {
+    errors: {
+        message: string;
+    };
 }
 
 export class DataPlanService {
@@ -47,7 +52,7 @@ export class DataPlanService {
                 this.apiURL = this.getAPIURL();
             } else {
                 throw new Error(
-                    'Invalid Credentials for generating API Request'
+                    'Missing Credentials for generating API Request'
                 );
             }
         }
@@ -75,17 +80,6 @@ export class DataPlanService {
         return this.buildUrl(config.apiRoot, urlPath);
     }
 
-    // TODO: Refactor this with getAPIUrl
-    private getValidationAPIURL(): string {
-        const { workspaceId } = this;
-        const urlPath = path.join(
-            config.dataPlanningPath,
-            `${workspaceId}`,
-            `test`
-        );
-        return this.buildUrl(config.apiRoot, urlPath);
-    }
-
     async createDataPlan(dataPlanToCreate: DataPlan): Promise<DataPlan> {
         const token = await this.getToken();
         const api = new ApiClient<DataPlan>(this.apiURL, token);
@@ -93,9 +87,16 @@ export class DataPlanService {
         try {
             return api
                 .post(dataPlanToCreate)
-                .then((response: AxiosResponse) => response.data);
+                .then((response: AxiosResponse) => response.data)
+                .catch(error =>
+                    Promise.reject(
+                        error.response.data
+                            ? (error.response.data as DataPlanServiceErrors)
+                            : error
+                    )
+                );
         } catch (error) {
-            return error.response;
+            throw new Error(error);
         }
     }
 
@@ -104,28 +105,53 @@ export class DataPlanService {
         dataPlanVersion: DataPlanVersion
     ): Promise<DataPlanVersion> {
         const token = await this.getToken();
+
+        if (!dataPlanId) {
+            throw new Error(`Missing dataPlanId (${dataPlanId})`);
+        }
+
         const url = this.apiURL + `/${dataPlanId}/versions`;
         const api = new ApiClient<DataPlan>(url, token);
 
         try {
             return api
                 .post(dataPlanVersion)
-                .then((response: AxiosResponse) => response.data);
+                .then((response: AxiosResponse) => response.data)
+                .catch(error =>
+                    Promise.reject(
+                        error.response.data
+                            ? (error.response.data as DataPlanServiceErrors)
+                            : error
+                    )
+                );
         } catch (error) {
-            return error.response;
+            throw new Error(error);
         }
     }
 
     async deleteDataPlan(dataPlanId: string): Promise<boolean> {
         const token = await this.getToken();
+
+        if (!dataPlanId) {
+            throw new Error(`Missing dataPlanId (${dataPlanId})`);
+        }
+
         const url = this.apiURL + `/${dataPlanId}`;
         const api = new ApiClient<DataPlan>(url, token);
 
         try {
-            // If this doesn't throw an arror, it should return true
-            return api.delete().then((response: AxiosResponse) => true);
+            return api
+                .delete()
+                .then((response: AxiosResponse) => true)
+                .catch(error =>
+                    Promise.reject(
+                        error.response.data
+                            ? (error.response.data as DataPlanServiceErrors)
+                            : error
+                    )
+                );
         } catch (error) {
-            return error.response;
+            throw new Error(error);
         }
     }
 
@@ -134,26 +160,57 @@ export class DataPlanService {
         versionNumber: number
     ): Promise<boolean> {
         const token = await this.getToken();
+
+        if (!dataPlanId) {
+            throw new Error(`Missing dataPlanId (${dataPlanId})`);
+        }
+
+        if (!versionNumber) {
+            throw new Error(`Missing versionNumber (${versionNumber})`);
+        }
+
         const url = this.apiURL + `/${dataPlanId}/versions/${versionNumber}`;
         const api = new ApiClient<DataPlan>(url, token);
 
         try {
-            // If this doesn't throw an arror, it should return true
-            return api.delete().then((response: AxiosResponse) => true);
+            return api
+                .delete()
+                .then(() => true)
+                .catch(error =>
+                    Promise.reject(
+                        error.response.data
+                            ? (error.response.data as DataPlanServiceErrors)
+                            : error
+                    )
+                );
         } catch (error) {
-            return error.response;
+            throw new Error(error);
         }
     }
 
     async getDataPlan(dataPlanId: string): Promise<DataPlan> {
         const token = await this.getToken();
+
+        if (!dataPlanId) {
+            throw new Error(`Missing dataPlanId (${dataPlanId})`);
+        }
+
         const url = this.apiURL + `/${dataPlanId}`;
         const api = new ApiClient<DataPlan>(url, token);
 
         try {
-            return api.fetch().then((response: AxiosResponse) => response.data);
+            return api
+                .fetch()
+                .then((response: AxiosResponse) => response.data)
+                .catch(error =>
+                    Promise.reject(
+                        error.response.data
+                            ? (error.response.data as DataPlanServiceErrors)
+                            : error
+                    )
+                );
         } catch (error) {
-            return error.response;
+            throw new Error(error);
         }
     }
 
@@ -163,24 +220,51 @@ export class DataPlanService {
         const api = new ApiClient<DataPlan[]>(url, token);
 
         try {
-            return api.fetch().then((response: AxiosResponse) => response.data);
+            return api
+                .fetch()
+                .then((response: AxiosResponse) => response.data)
+                .catch(error =>
+                    Promise.reject(
+                        error.response.data
+                            ? (error.response.data as DataPlanServiceErrors)
+                            : error
+                    )
+                );
         } catch (error) {
-            return error.response;
+            throw new Error(error);
         }
     }
 
     async getDataPlanVersion(
         dataPlanId: string,
         versionNumber: number
-    ): Promise<DataPlanDocument> {
+    ): Promise<DataPlanVersion> {
         const token = await this.getToken();
+
+        if (!dataPlanId) {
+            throw new Error(`Missing dataPlanId (${dataPlanId})`);
+        }
+
+        if (!versionNumber) {
+            throw new Error(`Missing versionNumber (${versionNumber})`);
+        }
+
         const url = this.apiURL + `/${dataPlanId}/versions/${versionNumber}`;
         const api = new ApiClient<DataPlan>(url, token);
 
         try {
-            return api.fetch().then((response: AxiosResponse) => response.data);
+            return api
+                .fetch()
+                .then((response: AxiosResponse) => response.data)
+                .catch(error =>
+                    Promise.reject(
+                        error.response.data
+                            ? (error.response.data as DataPlanServiceErrors)
+                            : error
+                    )
+                );
         } catch (error) {
-            return error.response;
+            throw new Error(error);
         }
     }
 
@@ -189,15 +273,27 @@ export class DataPlanService {
         dataPlan: DataPlan
     ): Promise<DataPlan> {
         const token = await this.getToken();
+
+        if (!dataPlanId) {
+            throw new Error(`Missing dataPlanId (${dataPlanId})`);
+        }
+
         const url = this.apiURL + `/${dataPlanId}`;
         const api = new ApiClient<DataPlan>(url, token);
 
         try {
             return api
                 .patch(dataPlan)
-                .then((response: AxiosResponse) => response.data);
+                .then((response: AxiosResponse) => response.data)
+                .catch(error =>
+                    Promise.reject(
+                        error.response.data
+                            ? (error.response.data as DataPlanServiceErrors)
+                            : error
+                    )
+                );
         } catch (error) {
-            return error.response;
+            throw new Error(error);
         }
     }
 
@@ -207,15 +303,31 @@ export class DataPlanService {
         dataPlanVersion: DataPlanVersion
     ): Promise<DataPlanVersion> {
         const token = await this.getToken();
+
+        if (!dataPlanId) {
+            throw new Error(`Missing dataPlanId (${dataPlanId})`);
+        }
+
+        if (!versionNumber) {
+            throw new Error(`Missing versionNumber (${versionNumber})`);
+        }
+
         const url = this.apiURL + `/${dataPlanId}/versions/${versionNumber}`;
         const api = new ApiClient<DataPlanVersion>(url, token);
 
         try {
             return api
                 .patch(dataPlanVersion)
-                .then((response: AxiosResponse) => response.data);
+                .then((response: AxiosResponse) => response.data)
+                .catch(error =>
+                    Promise.reject(
+                        error.response.data
+                            ? (error.response.data as DataPlanServiceErrors)
+                            : error
+                    )
+                );
         } catch (error) {
-            return error.response;
+            throw new Error(error);
         }
     }
 
@@ -311,7 +423,7 @@ export class DataPlanService {
         }
 
         const token = await this.getToken();
-        const url = this.getValidationAPIURL();
+        const url = this.getAPIURL() + '/validate';
         const api = new ApiClient<DataPlan>(url, token);
 
         try {
@@ -320,9 +432,16 @@ export class DataPlanService {
                     document,
                     batch,
                 })
-                .then((response: AxiosResponse) => response.data);
+                .then((response: AxiosResponse) => response.data)
+                .catch(error =>
+                    Promise.reject(
+                        error.response.data
+                            ? (error.response.data as DataPlanServiceErrors)
+                            : error
+                    )
+                );
         } catch (error) {
-            return error.response;
+            throw new Error(error);
         }
     }
 }

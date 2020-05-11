@@ -1,3 +1,4 @@
+// tslint:disable: max-line-length
 import { DataPlanService } from '../../src/index';
 import { Batch } from '@mparticle/event-models';
 import {
@@ -55,23 +56,50 @@ describe('DataPlanService', () => {
                 done();
             });
 
+            it('should handle 401 Errors', async done => {
+                nock(config.apiRoot)
+                    .post(`/${config.dataPlanningPath}/3333/plans`, {})
+                    .reply(401);
+
+                await expect(
+                    dataPlanService.createDataPlan({})
+                ).rejects.toThrowError('Request failed with status code 401');
+
+                done();
+            });
             it('should handle HTTP Errors', async done => {
                 const sampleDataPlan = {
                     data_plan_id: 'test',
                     data_plan_name: 'Test',
                 };
+
+                const errorMessages = [
+                    {
+                        message: 'Plan ID is already in use.',
+                    },
+                    {
+                        message: 'Something else is wrong',
+                    },
+                ];
+
                 nock(config.apiRoot)
                     .post(
                         `/${config.dataPlanningPath}/3333/plans`,
                         sampleDataPlan
                     )
-                    .reply(400);
+                    .reply(400, {
+                        errors: errorMessages,
+                    });
 
-                await expect(
-                    dataPlanService.createDataPlan(sampleDataPlan)
-                ).rejects.toThrowError('Request failed with status code 400');
+                await dataPlanService
+                    .createDataPlan(sampleDataPlan)
+                    .catch(rejected => {
+                        expect(rejected.errors).toHaveLength(2);
 
-                done();
+                        expect(rejected.errors).toEqual(errorMessages);
+
+                        done();
+                    });
             });
         });
 
@@ -84,7 +112,6 @@ describe('DataPlanService', () => {
                 };
                 nock(config.apiRoot)
                     .post(
-                        // tslint:disable-next-line: max-line-length
                         `/${config.dataPlanningPath}/3333/plans/test/versions`,
                         sampleDataPlanVersion
                     )
@@ -100,28 +127,57 @@ describe('DataPlanService', () => {
                 done();
             });
 
+            it('should handle 401 Errors', async done => {
+                nock(config.apiRoot)
+                    .post(
+                        `/${config.dataPlanningPath}/3333/plans/foo/versions`,
+                        {}
+                    )
+                    .reply(401);
+
+                await expect(
+                    dataPlanService.createDataPlanVersion('foo', {})
+                ).rejects.toThrowError('Request failed with status code 401');
+
+                done();
+            });
             it('should handle HTTP Errors', async done => {
-                const sampleDataPlanVersion = {
+                const sampleDataPlan = {
                     data_plan_id: 'test',
                     data_plan_name: 'Test',
-                    version: 2,
                 };
                 nock(config.apiRoot)
                     .post(
-                        // tslint:disable-next-line: max-line-length
-                        `/${config.dataPlanningPath}/3333/plans/test/versions`,
-                        sampleDataPlanVersion
+                        `/${config.dataPlanningPath}/3333/plans`,
+                        sampleDataPlan
                     )
-                    .reply(400);
+                    .reply(400, {
+                        errors: [
+                            {
+                                message: 'Plan ID is already in use.',
+                            },
+                            {
+                                message: 'Something else is wrong',
+                            },
+                        ],
+                    });
 
-                await expect(
-                    dataPlanService.createDataPlanVersion(
-                        'test',
-                        sampleDataPlanVersion
-                    )
-                ).rejects.toThrowError('Request failed with status code 400');
+                await dataPlanService
+                    .createDataPlan(sampleDataPlan)
+                    .catch(rejected => {
+                        expect(rejected.errors).toHaveLength(2);
 
-                done();
+                        expect(rejected.errors).toEqual([
+                            {
+                                message: 'Plan ID is already in use.',
+                            },
+                            {
+                                message: 'Something else is wrong',
+                            },
+                        ]);
+
+                        done();
+                    });
             });
         });
     });
@@ -184,7 +240,6 @@ describe('DataPlanService', () => {
             it('should return a version document', async done => {
                 nock(config.apiRoot)
                     .get(
-                        // tslint:disable-next-line: max-line-length
                         `/${config.dataPlanningPath}/3333/plans/test/versions/2`
                     )
                     .reply(200, {
@@ -200,6 +255,20 @@ describe('DataPlanService', () => {
                     data_plan_id: 'amazing_really_cool_plan',
                     version_document: {},
                 });
+
+                done();
+            });
+
+            it('should handle 401 Errors', async done => {
+                nock(config.apiRoot)
+                    .get(
+                        `/${config.dataPlanningPath}/3333/plans/test/versions/2`
+                    )
+                    .reply(401);
+
+                await expect(
+                    dataPlanService.getDataPlanVersion('test', 2)
+                ).rejects.toThrowError('Request failed with status code 401');
 
                 done();
             });
@@ -221,7 +290,6 @@ describe('DataPlanService', () => {
                 };
                 nock(config.apiRoot)
                     .patch(
-                        // tslint:disable-next-line: max-line-length
                         `/${config.dataPlanningPath}/3333/plans/test`,
                         sampleDataPlan
                     )
@@ -252,6 +320,26 @@ describe('DataPlanService', () => {
 
                 done();
             });
+
+            it('should handle 401 Errors', async done => {
+                const sampleDataPlan = {
+                    data_plan_id: 'test',
+                    data_plan_name: 'Test',
+                };
+
+                nock(config.apiRoot)
+                    .patch(
+                        `/${config.dataPlanningPath}/3333/plans/test`,
+                        sampleDataPlan
+                    )
+                    .reply(401);
+
+                await expect(
+                    dataPlanService.updateDataPlan('test', sampleDataPlan)
+                ).rejects.toThrowError('Request failed with status code 401');
+
+                done();
+            });
         });
 
         describe('#updateDataPlanVersion', () => {
@@ -271,7 +359,6 @@ describe('DataPlanService', () => {
 
                 nock(config.apiRoot)
                     .patch(
-                        // tslint:disable-next-line: max-line-length
                         `/${config.dataPlanningPath}/3333/plans/amazing_really_cool_plan/versions/2`,
                         updatedDataPlanVersion
                     )
@@ -296,7 +383,6 @@ describe('DataPlanService', () => {
                 };
                 nock(config.apiRoot)
                     .patch(
-                        // tslint:disable-next-line: max-line-length
                         `/${config.dataPlanningPath}/3333/plans/test/versions/2`,
                         sampleDataPlanVersion
                     )
@@ -312,6 +398,31 @@ describe('DataPlanService', () => {
 
                 done();
             });
+
+            it('should handle 401 Errors', async done => {
+                const sampleDataPlanVersion = {
+                    version: 2,
+                    data_plan_id: 'amazing_really_cool_plan',
+                    version_document: {},
+                };
+
+                nock(config.apiRoot)
+                    .patch(
+                        `/${config.dataPlanningPath}/3333/plans/test/versions/2`,
+                        sampleDataPlanVersion
+                    )
+                    .reply(401);
+
+                await expect(
+                    dataPlanService.updateDataPlanVersion(
+                        'test',
+                        2,
+                        sampleDataPlanVersion
+                    )
+                ).rejects.toThrowError('Request failed with status code 401');
+
+                done();
+            });
         });
     });
 
@@ -319,10 +430,7 @@ describe('DataPlanService', () => {
         describe('#deleteDataPlan', () => {
             it('should delete a data plan', async done => {
                 nock(config.apiRoot)
-                    .delete(
-                        // tslint:disable-next-line: max-line-length
-                        `/${config.dataPlanningPath}/3333/plans/test`
-                    )
+                    .delete(`/${config.dataPlanningPath}/3333/plans/test`)
                     .reply(200);
 
                 expect(
@@ -334,15 +442,24 @@ describe('DataPlanService', () => {
 
             it('should handle HTTP Errors', async done => {
                 nock(config.apiRoot)
-                    .delete(
-                        // tslint:disable-next-line: max-line-length
-                        `/${config.dataPlanningPath}/3333/plans/test`
-                    )
+                    .delete(`/${config.dataPlanningPath}/3333/plans/test`)
                     .reply(400);
 
                 await expect(
                     dataPlanService.deleteDataPlan('test')
                 ).rejects.toThrowError('Request failed with status code 400');
+
+                done();
+            });
+
+            it('should handle 401 Errors', async done => {
+                nock(config.apiRoot)
+                    .delete(`/${config.dataPlanningPath}/3333/plans/test`)
+                    .reply(401);
+
+                await expect(
+                    dataPlanService.deleteDataPlan('test')
+                ).rejects.toThrowError('Request failed with status code 401');
 
                 done();
             });
@@ -352,7 +469,6 @@ describe('DataPlanService', () => {
             it('should delete a data plan version', async done => {
                 nock(config.apiRoot)
                     .delete(
-                        // tslint:disable-next-line: max-line-length
                         `/${config.dataPlanningPath}/3333/plans/test/versions/3`
                     )
                     .reply(200);
@@ -367,7 +483,6 @@ describe('DataPlanService', () => {
             it('should handle HTTP Errors', async done => {
                 nock(config.apiRoot)
                     .delete(
-                        // tslint:disable-next-line: max-line-length
                         `/${config.dataPlanningPath}/3333/plans/test/versions/3`
                     )
                     .reply(400);
@@ -375,6 +490,20 @@ describe('DataPlanService', () => {
                 await expect(
                     dataPlanService.deleteDataPlanVersion('test', 3)
                 ).rejects.toThrowError('Request failed with status code 400');
+
+                done();
+            });
+
+            it('should handle 401 Errors', async done => {
+                nock(config.apiRoot)
+                    .delete(
+                        `/${config.dataPlanningPath}/3333/plans/test/versions/5`
+                    )
+                    .reply(401);
+
+                await expect(
+                    dataPlanService.deleteDataPlanVersion('test', 5)
+                ).rejects.toThrowError('Request failed with status code 401');
 
                 done();
             });
@@ -453,7 +582,6 @@ describe('DataPlanService', () => {
             done();
         });
 
-        // tslint:disable-next-line: max-line-length
         it('should allow validation options for server side validation', async done => {
             const event = ScreenViewEventFactory.getOne({});
 
@@ -481,7 +609,7 @@ describe('DataPlanService', () => {
 
             const scope = nock(config.apiRoot)
                 .post(
-                    `/${config.dataPlanningPath}/3333/test`,
+                    `/${config.dataPlanningPath}/3333/plans/validate`,
                     // tslint:disable-next-line: no-any
                     mockResults as any
                 )
@@ -503,7 +631,6 @@ describe('DataPlanService', () => {
     });
 
     describe('#validateBatch', () => {
-        // tslint:disable-next-line: max-line-length
         it('returns an empty validation result for a valid batch', async done => {
             const event = ScreenViewEventFactory.getOne({
                 data: {
@@ -661,7 +788,6 @@ describe('DataPlanService', () => {
             done();
         });
 
-        // tslint:disable-next-line: max-line-length
         it('should allow validation options for server side validation', async done => {
             const dataPlanVersion = {
                 version_document: {
@@ -685,7 +811,7 @@ describe('DataPlanService', () => {
 
             const scope = nock(config.apiRoot)
                 .post(
-                    `/${config.dataPlanningPath}/3333/test`,
+                    `/${config.dataPlanningPath}/3333/plans/validate`,
 
                     // tslint:disable-next-line: no-any
                     mockResults as any
@@ -702,6 +828,134 @@ describe('DataPlanService', () => {
                 scope.isDone(),
                 'validateBatch never made a server request'
             ).toBeTruthy();
+
+            done();
+        });
+
+        it('returns HTTP errors if Validation fails', async done => {
+            const dataPlanVersion = {
+                version_document: {
+                    data_points: [],
+                },
+            };
+
+            const batch: Batch = BatchFactory.getOne();
+
+            const mockResults = {
+                document: {
+                    data_points: [],
+                },
+                batch,
+            };
+
+            const response = {
+                errors: [
+                    {
+                        message: 'A required value was missing.',
+                    },
+                ],
+            };
+
+            nock(config.apiRoot)
+                .post(
+                    `/${config.dataPlanningPath}/3333/plans/validate`,
+
+                    // tslint:disable-next-line: no-any
+                    mockResults as any
+                )
+                .reply(400, response);
+
+            dataPlanService
+                .validateBatch(batch, dataPlanVersion, {
+                    serverMode: true,
+                })
+                .catch(rejected => {
+                    expect(rejected.errors).toEqual(response.errors);
+                    done();
+                });
+        });
+
+        it('returns an error object if there is a non-validation error', async done => {
+            const dataPlanVersion = {
+                version_document: {
+                    data_points: [],
+                },
+            };
+
+            const batch: Batch = BatchFactory.getOne();
+
+            const mockResults = {
+                document: {
+                    data_points: [],
+                },
+                batch,
+            };
+
+            nock(config.apiRoot)
+                .post(
+                    `/${config.dataPlanningPath}/3333/plans/validate`,
+
+                    // tslint:disable-next-line: no-any
+                    mockResults as any
+                )
+                .reply(401, {
+                    errors: [
+                        {
+                            message: 'Plan ID is already in use.',
+                        },
+                        {
+                            message: 'Something else is wrong',
+                        },
+                    ],
+                });
+            dataPlanService
+                .validateBatch(batch, dataPlanVersion, {
+                    serverMode: true,
+                })
+                .catch(rejected => {
+                    expect(rejected.errors).toHaveLength(2);
+                    expect(rejected.errors).toEqual([
+                        {
+                            message: 'Plan ID is already in use.',
+                        },
+                        {
+                            message: 'Something else is wrong',
+                        },
+                    ]);
+                    done();
+                });
+        });
+
+        it('returns a 401 Error if server validation is not authenticated', async done => {
+            const dataPlanVersion = {
+                version_document: {
+                    data_points: [],
+                },
+            };
+
+            const batch: Batch = BatchFactory.getOne();
+
+            const mockResults = {
+                document: {
+                    data_points: [],
+                },
+                batch,
+            };
+
+            nock(config.apiRoot)
+                .post(
+                    `/${config.dataPlanningPath}/3333/plans/validate`,
+
+                    // tslint:disable-next-line: no-any
+                    mockResults as any
+                )
+                .reply(401);
+
+            await expect(
+                dataPlanService.validateBatch(batch, dataPlanVersion, {
+                    serverMode: true,
+                })
+            ).rejects.toThrowError('Request failed with status code 401');
 
             done();
         });

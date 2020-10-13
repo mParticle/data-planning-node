@@ -48,7 +48,7 @@
         "@types/mockdate": "^2.0.0",
         "@types/node": "^12.12.6",
         "deepmerge": "^4.2.2",
-        "faker": "^4.1.0",
+        "faker": "^5.1.0",
         "gts": "^1.1.2",
         "jest": "^24.9.0",
         "jest-expect-message": "^1.0.2",

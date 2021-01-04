@@ -68,7 +68,7 @@
     "dependencies": {
         "@mparticle/data-planning-models": "0.1.0",
         "@mparticle/event-models": "^1.1.0-alpha.0",
-        "ajv": "^6.10.2",
+        "ajv": "^7.0.3",
         "axios": "^0.19.0"
     }
 }

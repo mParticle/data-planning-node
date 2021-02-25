@@ -52,7 +52,7 @@
         "gts": "^1.1.2",
         "jest": "^24.9.0",
         "jest-expect-message": "^1.0.2",
-        "nock": "^11.7.2",
+        "nock": "^13.0.8",
         "pre-commit": "^1.2.2",
         "rollup": "^1.32.1",
         "rollup-plugin-commonjs": "^10.1.0",

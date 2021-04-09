@@ -42,7 +42,7 @@
     "license": "ISC",
     "devDependencies": {
         "@rollup/plugin-json": "^4.0.1",
-        "@types/faker": "^4.1.7",
+        "@types/faker": "^5.5.1",
         "@types/jest": "^26.0.15",
         "@types/jest-expect-message": "^1.0.1",
         "@types/mockdate": "^2.0.0",

@@ -50,10 +50,6 @@ export class DataPlanService {
                 this.clientSecret = clientSecret;
 
                 this.apiURL = this.getAPIURL();
-            } else {
-                throw new Error(
-                    'Missing Credentials for generating API Request'
-                );
             }
         }
     }
@@ -62,7 +58,9 @@ export class DataPlanService {
         if (this.clientId && this.clientSecret) {
             return new AuthClient(this.clientId, this.clientSecret).getToken();
         } else {
-            return undefined;
+            throw new Error(
+                'Cannot Generate Token. Client ID and Secret are invalid'
+            );
         }
     }
 

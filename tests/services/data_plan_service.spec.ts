@@ -15,6 +15,8 @@ import { config } from '../../src/utils/config';
 nock.disableNetConnect();
 
 let dataPlanService: DataPlanService;
+let noCredentialsDataPlanService: DataPlanService;
+
 beforeEach(() => {
     nock(config.auth.apiRoot)
         .post(`/${config.auth.path}`)
@@ -29,7 +31,10 @@ beforeEach(() => {
         clientId: 'client_id',
         clientSecret: 'client_secret',
     });
+
+    noCredentialsDataPlanService = new DataPlanService();
 });
+
 afterEach(() => {
     nock.cleanAll();
 });
@@ -510,6 +515,17 @@ describe('DataPlanService', () => {
         });
     });
 
+    describe('Error Handling', () => {
+        it('should throw an error if Token Credentials are invalid', async done => {
+            await expect(
+                noCredentialsDataPlanService.getDataPlans()
+            ).rejects.toThrowError(
+                'Cannot Generate Token. Client ID and Secret are invalid'
+            );
+            done();
+        });
+    });
+
     describe('#validateEvent', () => {
         it('returns a validation results for an invalid event', async done => {
             const event = ScreenViewEventFactory.getOne({});
@@ -555,6 +571,80 @@ describe('DataPlanService', () => {
 
             expect(
                 await dataPlanService.validateEvent(event, dataPlanVersion)
+            ).toEqual({
+                results: [
+                    {
+                        data: {
+                            match: {
+                                type: 'screen_view',
+                                criteria: {
+                                    screen_name: 'Test Screen View',
+                                },
+                            },
+                            validation_errors: [
+                                {
+                                    error_pointer: '#/data',
+                                    key: 'data',
+                                    expected: 'custom_flags',
+                                    schema_keyword: 'required',
+                                    validation_error_type: 'missing_required',
+                                },
+                            ],
+                        },
+                        event_type: 'validation_result',
+                    },
+                ],
+            });
+            done();
+        });
+
+        it('should allow validation without server credentials', async done => {
+            const event = ScreenViewEventFactory.getOne({});
+
+            const eventDataPoint = DataPlanPointFactory.getOne({
+                match: {
+                    type: DataPlanMatchType.ScreenView,
+                    criteria: {
+                        screen_name: event.data?.screen_name,
+                    },
+                },
+                validator: {
+                    type: 'json_schema',
+                    definition: {
+                        properties: {
+                            data: {
+                                required: ['custom_flags'],
+                            },
+                        },
+                    },
+                },
+            });
+
+            const userDataPoint = DataPlanPointFactory.getOne({
+                match: {
+                    type: DataPlanMatchType.UserAttributes,
+                },
+                validator: {
+                    type: 'json_schema',
+                    definition: {
+                        properties: {},
+                    },
+                },
+            });
+
+            const document: DataPlanDocument = {
+                data_points: [eventDataPoint, userDataPoint],
+            };
+
+            const dataPlanVersion: DataPlanVersion = {
+                version_document: document,
+            };
+
+            expect(
+                await noCredentialsDataPlanService.validateEvent(
+                    event,
+                    dataPlanVersion
+                )
             ).toEqual({
                 results: [
                     {

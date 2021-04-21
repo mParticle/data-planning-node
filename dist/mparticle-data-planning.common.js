@@ -2291,7 +2291,7 @@ followRedirects.wrap = wrap_1;
 var _args = [
 	[
 		"axios@0.19.0",
-		"/Users/teamcity/buildAgent/work/55f1c987166613e4"
+		"/Users/alexs/DEV/data-planning"
 	]
 ];
 var _from = "axios@0.19.0";
@@ -2316,7 +2316,7 @@ var _requiredBy = [
 ];
 var _resolved = "https://registry.npmjs.org/axios/-/axios-0.19.0.tgz";
 var _spec = "0.19.0";
-var _where = "/Users/teamcity/buildAgent/work/55f1c987166613e4";
+var _where = "/Users/alexs/DEV/data-planning";
 var author = {
 	name: "Matt Zabriskie"
 };
@@ -11697,9 +11697,6 @@ var DataPlanService = /** @class */ (function () {
                 this.clientSecret = clientSecret;
                 this.apiURL = this.getAPIURL();
             }
-            else {
-                throw new Error('Missing Credentials for generating API Request');
-            }
         }
     }
     DataPlanService.prototype.getToken = function () {
@@ -11709,7 +11706,7 @@ var DataPlanService = /** @class */ (function () {
                     return [2 /*return*/, new AuthClient(this.clientId, this.clientSecret).getToken()];
                 }
                 else {
-                    return [2 /*return*/, undefined];
+                    throw new Error('Cannot Generate Token. Client ID and Secret are invalid');
                 }
             });
         });

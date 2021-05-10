@@ -43,12 +43,12 @@
     "devDependencies": {
         "@rollup/plugin-json": "^4.0.1",
         "@types/faker": "^4.1.7",
-        "@types/jest": "^24.0.22",
+        "@types/jest": "^26.0.15",
         "@types/jest-expect-message": "^1.0.1",
         "@types/mockdate": "^2.0.0",
         "@types/node": "^12.12.6",
         "deepmerge": "^4.2.2",
-        "faker": "^4.1.0",
+        "faker": "^5.1.0",
         "gts": "^1.1.2",
         "jest": "^24.9.0",
         "jest-expect-message": "^1.0.2",
@@ -60,13 +60,13 @@
         "rollup-plugin-node-resolve": "^5.2.0",
         "rollup-plugin-typescript": "^1.0.1",
         "ts-jest": "^24.2.0",
-        "ts-node": "^8.5.4",
-        "typedoc": "^0.15.4",
+        "ts-node": "^9.0.0",
+        "typedoc": "^0.16.11",
         "typedoc-default-themes": "https://github.com/mParticle/typedoc-default-themes.git#mp-custom",
         "typescript": "^3.7.3"
     },
     "dependencies": {
-        "@mparticle/data-planning-models": "0.1.0-alpha.0",
+        "@mparticle/data-planning-models": "0.1.0",
         "@mparticle/event-models": "^1.1.0-alpha.0",
         "ajv": "^6.10.2",
         "axios": "^0.19.0"

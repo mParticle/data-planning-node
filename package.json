@@ -54,7 +54,7 @@
         "jest-expect-message": "^1.0.2",
         "nock": "^11.7.2",
         "pre-commit": "^1.2.2",
-        "rollup": "^1.32.1",
+        "rollup": "^2.49.0",
         "rollup-plugin-commonjs": "^10.1.0",
         "rollup-plugin-json": "^4.0.0",
         "rollup-plugin-node-resolve": "^5.2.0",

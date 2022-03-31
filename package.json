@@ -61,9 +61,9 @@
         "rollup-plugin-typescript": "^1.0.1",
         "ts-jest": "^24.2.0",
         "ts-node": "^8.5.4",
-        "typedoc": "^0.15.4",
+        "typedoc": "^0.17.0",
         "typedoc-default-themes": "https://github.com/mParticle/typedoc-default-themes.git#mp-custom",
-        "typescript": "^3.7.3"
+        "typescript": "^3.8.3"
     },
     "dependencies": {
         "@mparticle/data-planning-models": "0.1.0-alpha.0",

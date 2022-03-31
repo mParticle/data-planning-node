@@ -2288,55 +2288,38 @@ var followRedirects = wrap({ http: http, https: https });
 var wrap_1 = wrap;
 followRedirects.wrap = wrap_1;
 
-var _args = [
-	[
-		"axios@0.19.0",
-		"/Users/alexs/DEV/data-planning"
-	]
+var name = "axios";
+var version = "0.19.0";
+var description = "Promise based HTTP client for the browser and node.js";
+var main = "index.js";
+var scripts = {
+	test: "grunt test && bundlesize",
+	start: "node ./sandbox/server.js",
+	build: "NODE_ENV=production grunt build",
+	preversion: "npm test",
+	version: "npm run build && grunt version && git add -A dist && git add CHANGELOG.md bower.json package.json",
+	postversion: "git push && git push --tags",
+	examples: "node ./examples/server.js",
+	coveralls: "cat coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js",
+	fix: "eslint --fix lib/**/*.js"
+};
+var repository = {
+	type: "git",
+	url: "https://github.com/axios/axios.git"
+};
+var keywords = [
+	"xhr",
+	"http",
+	"ajax",
+	"promise",
+	"node"
 ];
-var _from = "axios@0.19.0";
-var _id = "axios@0.19.0";
-var _inBundle = false;
-var _integrity = "sha512-1uvKqKQta3KBxIz14F2v06AEHZ/dIoeKfbTRkK1E5oqjDnuEerLmYTgJB5AiQZHJcljpg1TuRzdjDR06qNk0DQ==";
-var _location = "/axios";
-var _phantomChildren = {
-};
-var _requested = {
-	type: "version",
-	registry: true,
-	raw: "axios@0.19.0",
-	name: "axios",
-	escapedName: "axios",
-	rawSpec: "0.19.0",
-	saveSpec: null,
-	fetchSpec: "0.19.0"
-};
-var _requiredBy = [
-	"/"
-];
-var _resolved = "https://registry.npmjs.org/axios/-/axios-0.19.0.tgz";
-var _spec = "0.19.0";
-var _where = "/Users/alexs/DEV/data-planning";
-var author = {
-	name: "Matt Zabriskie"
-};
-var browser$1 = {
-	"./lib/adapters/http.js": "./lib/adapters/xhr.js"
-};
+var author = "Matt Zabriskie";
+var license = "MIT";
 var bugs = {
 	url: "https://github.com/axios/axios/issues"
 };
-var bundlesize = [
-	{
-		path: "./dist/axios.min.js",
-		threshold: "5kB"
-	}
-];
-var dependencies = {
-	"follow-redirects": "1.5.10",
-	"is-buffer": "^2.0.2"
-};
-var description = "Promise based HTTP client for the browser and node.js";
+var homepage = "https://github.com/axios/axios";
 var devDependencies = {
 	bundlesize: "^0.17.0",
 	coveralls: "^3.0.0",
@@ -2374,95 +2357,57 @@ var devDependencies = {
 	webpack: "^1.13.1",
 	"webpack-dev-server": "^1.14.1"
 };
-var homepage = "https://github.com/axios/axios";
-var keywords = [
-	"xhr",
-	"http",
-	"ajax",
-	"promise",
-	"node"
-];
-var license = "MIT";
-var main = "index.js";
-var name = "axios";
-var repository = {
-	type: "git",
-	url: "git+https://github.com/axios/axios.git"
-};
-var scripts = {
-	build: "NODE_ENV=production grunt build",
-	coveralls: "cat coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js",
-	examples: "node ./examples/server.js",
-	fix: "eslint --fix lib/**/*.js",
-	postversion: "git push && git push --tags",
-	preversion: "npm test",
-	start: "node ./sandbox/server.js",
-	test: "grunt test && bundlesize",
-	version: "npm run build && grunt version && git add -A dist && git add CHANGELOG.md bower.json package.json"
+var browser$1 = {
+	"./lib/adapters/http.js": "./lib/adapters/xhr.js"
 };
 var typings = "./index.d.ts";
-var version = "0.19.0";
+var dependencies = {
+	"follow-redirects": "1.5.10",
+	"is-buffer": "^2.0.2"
+};
+var bundlesize = [
+	{
+		path: "./dist/axios.min.js",
+		threshold: "5kB"
+	}
+];
 var _package = {
-	_args: _args,
-	_from: _from,
-	_id: _id,
-	_inBundle: _inBundle,
-	_integrity: _integrity,
-	_location: _location,
-	_phantomChildren: _phantomChildren,
-	_requested: _requested,
-	_requiredBy: _requiredBy,
-	_resolved: _resolved,
-	_spec: _spec,
-	_where: _where,
-	author: author,
-	browser: browser$1,
-	bugs: bugs,
-	bundlesize: bundlesize,
-	dependencies: dependencies,
-	description: description,
-	devDependencies: devDependencies,
-	homepage: homepage,
-	keywords: keywords,
-	license: license,
-	main: main,
 	name: name,
-	repository: repository,
+	version: version,
+	description: description,
+	main: main,
 	scripts: scripts,
+	repository: repository,
+	keywords: keywords,
+	author: author,
+	license: license,
+	bugs: bugs,
+	homepage: homepage,
+	devDependencies: devDependencies,
+	browser: browser$1,
 	typings: typings,
-	version: version
+	dependencies: dependencies,
+	bundlesize: bundlesize
 };
 
 var _package$1 = /*#__PURE__*/Object.freeze({
     __proto__: null,
-    _args: _args,
-    _from: _from,
-    _id: _id,
-    _inBundle: _inBundle,
-    _integrity: _integrity,
-    _location: _location,
-    _phantomChildren: _phantomChildren,
-    _requested: _requested,
-    _requiredBy: _requiredBy,
-    _resolved: _resolved,
-    _spec: _spec,
-    _where: _where,
-    author: author,
-    browser: browser$1,
-    bugs: bugs,
-    bundlesize: bundlesize,
-    dependencies: dependencies,
-    description: description,
-    devDependencies: devDependencies,
-    homepage: homepage,
-    keywords: keywords,
-    license: license,
-    main: main,
     name: name,
-    repository: repository,
-    scripts: scripts,
-    typings: typings,
     version: version,
+    description: description,
+    main: main,
+    scripts: scripts,
+    repository: repository,
+    keywords: keywords,
+    author: author,
+    license: license,
+    bugs: bugs,
+    homepage: homepage,
+    devDependencies: devDependencies,
+    browser: browser$1,
+    typings: typings,
+    dependencies: dependencies,
+    bundlesize: bundlesize,
     'default': _package
 });
 
@@ -3618,10 +3563,10 @@ var AuthClient = /** @class */ (function () {
                 };
                 try {
                     return [2 /*return*/, api.post(body).then(function (response) {
-                            var _a, _b, _c, _d;
+                            var _a, _b;
                             return ({
-                                type: (_b = (_a = response) === null || _a === void 0 ? void 0 : _a.data) === null || _b === void 0 ? void 0 : _b.token_type,
-                                value: (_d = (_c = response) === null || _c === void 0 ? void 0 : _c.data) === null || _d === void 0 ? void 0 : _d.access_token,
+                                type: (_a = response === null || response === void 0 ? void 0 : response.data) === null || _a === void 0 ? void 0 : _a.token_type,
+                                value: (_b = response === null || response === void 0 ? void 0 : response.data) === null || _b === void 0 ? void 0 : _b.access_token,
                             });
                         })];
                 }
@@ -11344,7 +11289,6 @@ var DataPlanEventValidator = /** @class */ (function () {
      * @returns a single Validation Result
      */
     DataPlanEventValidator.prototype.validateEvent = function (event) {
-        var _a, _b;
         var matchKey = DataPlanEventValidator.getMatchKey(event);
         var result = {};
         var errors = [];
@@ -11382,8 +11326,8 @@ var DataPlanEventValidator = /** @class */ (function () {
         }
         // Handle Planned Events
         var point = this.dataPlanMatchLookups[matchKey];
-        result.match = (_a = point) === null || _a === void 0 ? void 0 : _a.match;
-        var schema = (_b = point) === null || _b === void 0 ? void 0 : _b.schema;
+        result.match = point === null || point === void 0 ? void 0 : point.match;
+        var schema = point === null || point === void 0 ? void 0 : point.schema;
         var validationErrors = JSONSchemaValidator.validate(event, schema);
         errors.push.apply(errors, validationErrors);
         if (errors.length > 0) {
@@ -11404,16 +11348,15 @@ var DataPlanEventValidator = /** @class */ (function () {
      */
     DataPlanEventValidator.prototype.validateEvents = function (eventBatch) {
         var _this = this;
-        var _a, _b;
-        return (((_b = (_a = eventBatch) === null || _a === void 0 ? void 0 : _a.events) === null || _b === void 0 ? void 0 : _b.map(function (eventToValidate) {
+        var _a;
+        return (((_a = eventBatch === null || eventBatch === void 0 ? void 0 : eventBatch.events) === null || _a === void 0 ? void 0 : _a.map(function (eventToValidate) {
             return _this.validateEvent(eventToValidate);
         })) || []);
     };
     DataPlanEventValidator.prototype.validateUserAttributes = function (eventBatch) {
-        var _a, _b;
         var result = {};
         var point = this.dataPlanMatchLookups['user_attributes'];
-        var schema = (_a = point) === null || _a === void 0 ? void 0 : _a.schema;
+        var schema = point === null || point === void 0 ? void 0 : point.schema;
         if (!schema || Object.keys(schema).length === 0) {
             result.match = {
                 type: dist_5$1.UserAttributes,
@@ -11432,7 +11375,7 @@ var DataPlanEventValidator = /** @class */ (function () {
                 },
             };
         }
-        result.match = (_b = point) === null || _b === void 0 ? void 0 : _b.match;
+        result.match = point === null || point === void 0 ? void 0 : point.match;
         var validationErrors = JSONSchemaValidator.validate(
         // tslint:disable-next-line: no-any
         eventBatch.user_attributes, schema);
@@ -11506,7 +11449,6 @@ var DataPlanEventValidator = /** @class */ (function () {
      * @returns A `matchKey` as a string
      */
     DataPlanEventValidator.getMatchKey = function (eventToMatch) {
-        var _a, _b;
         switch (eventToMatch.event_type) {
             case dist_4$1.Breadcrumb:
                 return dist_5$1.Breadcrumb;
@@ -11529,7 +11471,7 @@ var DataPlanEventValidator = /** @class */ (function () {
                 var appStateTransitionEventData = eventToMatch.data;
                 return [
                     dist_5$1.ApplicationStateTransition,
-                    (_a = appStateTransitionEventData) === null || _a === void 0 ? void 0 : _a.application_transition_type,
+                    appStateTransitionEventData === null || appStateTransitionEventData === void 0 ? void 0 : appStateTransitionEventData.application_transition_type,
                 ].join(':');
             case dist_4$1.ScreenView:
                 // tslint:disable-next-line: max-line-length
@@ -11537,7 +11479,7 @@ var DataPlanEventValidator = /** @class */ (function () {
                 return [
                     dist_5$1.ScreenView,
                     '',
-                    (_b = screenViewEventData) === null || _b === void 0 ? void 0 : _b.screen_name,
+                    screenViewEventData === null || screenViewEventData === void 0 ? void 0 : screenViewEventData.screen_name,
                 ].join(':');
             case dist_4$1.Commerce:
                 // tslint:disable-next-line: max-line-length
@@ -11578,7 +11520,6 @@ var DataPlanEventValidator = /** @class */ (function () {
      * @returns A [[DataPlanMatch]] for the event
      */
     DataPlanEventValidator.synthesizeMatch = function (eventToMatch) {
-        var _a, _b, _c;
         switch (eventToMatch.event_type) {
             case dist_14.sessionStart:
                 return { type: dist_5$1.SessionStart };
@@ -11601,9 +11542,9 @@ var DataPlanEventValidator = /** @class */ (function () {
             case dist_14.customEvent:
                 var customEventData = eventToMatch.data;
                 var customEventCriteria = {
-                    event_name: ((_a = customEventData) === null || _a === void 0 ? void 0 : _a.event_name) || 'Custom Event',
+                    event_name: (customEventData === null || customEventData === void 0 ? void 0 : customEventData.event_name) || 'Custom Event',
                     // tslint:disable-next-line: max-line-length
-                    custom_event_type: ((_b = customEventData) === null || _b === void 0 ? void 0 : _b.custom_event_type) || 'other',
+                    custom_event_type: (customEventData === null || customEventData === void 0 ? void 0 : customEventData.custom_event_type) || 'other',
                 };
                 return {
                     type: dist_5$1.CustomEvent,
@@ -11622,7 +11563,7 @@ var DataPlanEventValidator = /** @class */ (function () {
                 var appStateTransitionCriteria = {
                     application_transition_type: 
                     // tslint:disable-next-line: max-line-length
-                    ((_c = appStateTransitionEventData) === null || _c === void 0 ? void 0 : _c.application_transition_type) ||
+                    (appStateTransitionEventData === null || appStateTransitionEventData === void 0 ? void 0 : appStateTransitionEventData.application_transition_type) ||
                         'unknown',
                 };
                 return {
@@ -11668,17 +11609,16 @@ var DataPlanEventValidator = /** @class */ (function () {
         return { type: dist_5$1.Unknown };
     };
     DataPlanEventValidator.prototype.getEventKey = function (eventToConvert) {
-        var _a, _b;
         var key;
         switch (eventToConvert.event_type) {
             case 'custom_event':
                 var customEventData = eventToConvert.data;
-                key = (_a = customEventData) === null || _a === void 0 ? void 0 : _a.event_name;
+                key = customEventData === null || customEventData === void 0 ? void 0 : customEventData.event_name;
                 break;
             case 'screen_view':
                 // tslint:disable-next-line: max-line-length
                 var screenViewEventData = eventToConvert.data;
-                key = (_b = screenViewEventData) === null || _b === void 0 ? void 0 : _b.screen_name;
+                key = screenViewEventData === null || screenViewEventData === void 0 ? void 0 : screenViewEventData.screen_name;
                 break;
         }
         return key || eventToConvert.event_type;
@@ -12001,7 +11941,6 @@ var DataPlanService = /** @class */ (function () {
         });
     };
     DataPlanService.prototype.validateEvent = function (event, dataPlanVersion, options) {
-        var _a;
         if (!event || !dataPlanVersion) {
             return Promise.reject('Data Plan Version or Event is missing and required');
         }
@@ -12009,7 +11948,7 @@ var DataPlanService = /** @class */ (function () {
         if (!document) {
             return Promise.reject('Data Plan Version does not contain a valid Version Document');
         }
-        var serverMode = (_a = options) === null || _a === void 0 ? void 0 : _a.serverMode;
+        var serverMode = options === null || options === void 0 ? void 0 : options.serverMode;
         // Create a mock batch so we can pass an event to the server
         var mpid = '';
         var environment = dist_4.unknown;
@@ -12030,7 +11969,6 @@ var DataPlanService = /** @class */ (function () {
         }
     };
     DataPlanService.prototype.validateBatch = function (batch, dataPlanVersion, options) {
-        var _a;
         if (!batch || !dataPlanVersion) {
             return Promise.reject('Data Plan Version or Batch is missing and required');
         }
@@ -12038,7 +11976,7 @@ var DataPlanService = /** @class */ (function () {
         if (!document) {
             return Promise.reject('Data Plan Version does not contain a valid Version Document');
         }
-        var serverMode = (_a = options) === null || _a === void 0 ? void 0 : _a.serverMode;
+        var serverMode = options === null || options === void 0 ? void 0 : options.serverMode;
         if (serverMode) {
             return this.validateOnServer(batch, dataPlanVersion, options);
         }

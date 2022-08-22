@@ -37,6 +37,7 @@ import {
     DataPlanPointFactory,
     DataPlanMatchFactory,
 } from '../factories/data_plan_factory';
+import { sample_event_without_user_attributes } from '../validation/fixtures/sample_event_without_user_attributes';
 
 describe('DataPlanEventValidator', () => {
     let eventValidator: DataPlanEventValidator;
@@ -998,7 +999,7 @@ describe('DataPlanEventValidator', () => {
     });
 
     describe('#validateUserAttributes', () => {
-        it('should validate a user', () => {
+        it('validates user attributes with a valid schema', () => {
             const batch = BatchFactory.getOne({
                 user_attributes: {
                     $Gender: 'male',
@@ -1093,7 +1094,7 @@ describe('DataPlanEventValidator', () => {
             );
         });
 
-        it('rejects invalid user schema', () => {
+        it('rejects user attributes if schema is invalid', () => {
             const batch = BatchFactory.getOne({
                 user_attributes: {
                     $Gender: 'male',
@@ -1101,6 +1102,16 @@ describe('DataPlanEventValidator', () => {
                     status: 'gold',
                     liveInNewYork: 'true',
                     $Age: '17',
+                },
+            });
+
+            const dataPlanPoint = DataPlanPointFactory.getOne({
+                match: {
+                    type: DataPlanMatchType.UserAttributes,
+                },
+                validator: {
+                    type: 'unknown',
+                    definition: {},
                 },
             });
 
@@ -1121,25 +1132,44 @@ describe('DataPlanEventValidator', () => {
                 },
             };
 
-            expect(eventValidator.validateUserAttributes(batch)).toEqual(
-                expectedResults
-            );
-
-            const dataPlanPoint = DataPlanPointFactory.getOne({
-                match: {
-                    type: DataPlanMatchType.UserAttributes,
-                },
-                validator: {
-                    type: 'unknown',
-                    definition: {},
-                },
-            });
-
             eventValidator.addToMatchLookups(dataPlanPoint, batch);
 
             expect(eventValidator.validateUserAttributes(batch)).toEqual(
                 expectedResults
             );
+        });
+
+        it('ignores user attribute validation when no UA schema is passed', () => {
+            const batch = BatchFactory.getOne({
+                events: [sample_event_without_user_attributes],
+            });
+
+            const dataPlanPoint = {
+                description: '',
+                match: {
+                    type: 'product_action',
+                    criteria: {
+                        action: 'purchase',
+                    },
+                },
+                validator: {
+                    type: 'json_schema',
+                    definition: {
+                        properties: {
+                            data: {
+                                additionalProperties: true,
+                                properties: {},
+                                required: [],
+                                type: 'object',
+                            },
+                        },
+                    },
+                },
+            } as DataPlanPoint;
+
+            eventValidator.addToMatchLookups(dataPlanPoint, batch);
+
+            expect(eventValidator.validateUserAttributes(batch)).toEqual({});
         });
     });
 });

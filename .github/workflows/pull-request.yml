@@ -1,0 +1,47 @@
+name: "Pull Request Checks"
+
+on: [ push, workflow_dispatch, pull_request ]
+
+jobs:
+
+  build-and-test:
+    name: Build and Test
+    runs-on: ubuntu-latest
+    steps:
+        - name: Checkout
+          uses: actions/checkout@v2
+
+        - name: NPM install
+          uses: actions/setup-node@v1
+          with:
+              node-version: 12.x
+
+        - name: Run NPM CI
+          run: npm ci
+
+        - name: Lint
+          run: npm run lint
+
+        - name: Run Core tests
+          run: npm run test
+
+  automerge-dependabot:
+    name: "Save PR Number for Dependabot Automerge"
+    needs:
+      - build-and-test
+    if: ${{ github.actor == 'dependabot[bot]' && github.event_name == 'pull_request' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Checkout PR branch"
+        uses: actions/checkout@v2
+        with:
+          submodules: recursive
+          fetch-depth: 0
+      - name: "Save Pull Request Number"
+        run: |
+          mkdir -p ./pr
+          echo ${{ github.event.number }} > ./pr/NR
+      - uses: actions/upload-artifact@v2
+        with:
+          name: pr
+          path: pr/

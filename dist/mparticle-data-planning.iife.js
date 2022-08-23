@@ -2367,6 +2367,9 @@ var DataPlanning = (function (exports, path, url, http, https, assert, stream, t
     		threshold: "5kB"
     	}
     ];
+    var _resolved = "https://registry.npmjs.org/axios/-/axios-0.19.0.tgz";
+    var _integrity = "sha512-1uvKqKQta3KBxIz14F2v06AEHZ/dIoeKfbTRkK1E5oqjDnuEerLmYTgJB5AiQZHJcljpg1TuRzdjDR06qNk0DQ==";
+    var _from = "axios@0.19.0";
     var _package = {
     	name: name,
     	version: version,
@@ -2383,7 +2386,10 @@ var DataPlanning = (function (exports, path, url, http, https, assert, stream, t
     	browser: browser$1,
     	typings: typings,
     	dependencies: dependencies,
-    	bundlesize: bundlesize
+    	bundlesize: bundlesize,
+    	_resolved: _resolved,
+    	_integrity: _integrity,
+    	_from: _from
     };
 
     var _package$1 = /*#__PURE__*/Object.freeze({
@@ -2404,6 +2410,9 @@ var DataPlanning = (function (exports, path, url, http, https, assert, stream, t
         typings: typings,
         dependencies: dependencies,
         bundlesize: bundlesize,
+        _resolved: _resolved,
+        _integrity: _integrity,
+        _from: _from,
         'default': _package
     });
 
@@ -5076,21 +5085,18 @@ var DataPlanning = (function (exports, path, url, http, https, assert, stream, t
 
     unwrapExports(uri_all);
 
-    var isArray$1 = Array.isArray;
-    var keyList = Object.keys;
-    var hasProp = Object.prototype.hasOwnProperty;
+    // do not edit .js files directly - edit src/index.jst
+
+
 
     var fastDeepEqual = function equal(a, b) {
       if (a === b) return true;
 
       if (a && b && typeof a == 'object' && typeof b == 'object') {
-        var arrA = isArray$1(a)
-          , arrB = isArray$1(b)
-          , i
-          , length
-          , key;
+        if (a.constructor !== b.constructor) return false;
 
-        if (arrA && arrB) {
+        var length, i, keys;
+        if (Array.isArray(a)) {
           length = a.length;
           if (length != b.length) return false;
           for (i = length; i-- !== 0;)
@@ -5098,35 +5104,29 @@ var DataPlanning = (function (exports, path, url, http, https, assert, stream, t
           return true;
         }
 
-        if (arrA != arrB) return false;
 
-        var dateA = a instanceof Date
-          , dateB = b instanceof Date;
-        if (dateA != dateB) return false;
-        if (dateA && dateB) return a.getTime() == b.getTime();
 
-        var regexpA = a instanceof RegExp
-          , regexpB = b instanceof RegExp;
-        if (regexpA != regexpB) return false;
-        if (regexpA && regexpB) return a.toString() == b.toString();
+        if (a.constructor === RegExp) return a.source === b.source && a.flags === b.flags;
+        if (a.valueOf !== Object.prototype.valueOf) return a.valueOf() === b.valueOf();
+        if (a.toString !== Object.prototype.toString) return a.toString() === b.toString();
 
-        var keys = keyList(a);
+        keys = Object.keys(a);
         length = keys.length;
-
-        if (length !== keyList(b).length)
-          return false;
+        if (length !== Object.keys(b).length) return false;
 
         for (i = length; i-- !== 0;)
-          if (!hasProp.call(b, keys[i])) return false;
+          if (!Object.prototype.hasOwnProperty.call(b, keys[i])) return false;
 
         for (i = length; i-- !== 0;) {
-          key = keys[i];
+          var key = keys[i];
+
           if (!equal(a[key], b[key])) return false;
         }
 
         return true;
       }
 
+      // true if both NaN, false otherwise
       return a!==a && b!==b;
     };
 
@@ -5161,8 +5161,6 @@ var DataPlanning = (function (exports, path, url, http, https, assert, stream, t
       ucs2length: ucs2length,
       varOccurences: varOccurences,
       varReplace: varReplace,
-      cleanUpCode: cleanUpCode,
-      finalCleanUpCode: finalCleanUpCode,
       schemaHasRules: schemaHasRules,
       schemaHasRulesExcept: schemaHasRulesExcept,
       schemaUnknownRules: schemaUnknownRules,
@@ -5184,7 +5182,7 @@ var DataPlanning = (function (exports, path, url, http, https, assert, stream, t
     }
 
 
-    function checkDataType(dataType, data, negate) {
+    function checkDataType(dataType, data, strictNumbers, negate) {
       var EQUAL = negate ? ' !== ' : ' === '
         , AND = negate ? ' || ' : ' && '
         , OK = negate ? '!' : ''
@@ -5197,15 +5195,18 @@ var DataPlanning = (function (exports, path, url, http, https, assert, stream, t
                               NOT + 'Array.isArray(' + data + '))';
         case 'integer': return '(typeof ' + data + EQUAL + '"number"' + AND +
                                NOT + '(' + data + ' % 1)' +
-                               AND + data + EQUAL + data + ')';
+                               AND + data + EQUAL + data +
+                               (strictNumbers ? (AND + OK + 'isFinite(' + data + ')') : '') + ')';
+        case 'number': return '(typeof ' + data + EQUAL + '"' + dataType + '"' +
+                              (strictNumbers ? (AND + OK + 'isFinite(' + data + ')') : '') + ')';
         default: return 'typeof ' + data + EQUAL + '"' + dataType + '"';
       }
     }
 
 
-    function checkDataTypes(dataTypes, data) {
+    function checkDataTypes(dataTypes, data, strictNumbers) {
       switch (dataTypes.length) {
-        case 1: return checkDataType(dataTypes[0], data, true);
+        case 1: return checkDataType(dataTypes[0], data, strictNumbers, true);
         default:
           var code = '';
           var types = toHash(dataTypes);
@@ -5218,7 +5219,7 @@ var DataPlanning = (function (exports, path, url, http, https, assert, stream, t
           }
           if (types.number) delete types.integer;
           for (var t in types)
-            code += (code ? ' && ' : '' ) + checkDataType(t, data, true);
+            code += (code ? ' && ' : '' ) + checkDataType(t, data, strictNumbers, true);
 
           return code;
       }
@@ -5281,42 +5282,6 @@ var DataPlanning = (function (exports, path, url, http, https, assert, stream, t
       dataVar += '([^0-9])';
       expr = expr.replace(/\$/g, '$$$$');
       return str.replace(new RegExp(dataVar, 'g'), expr + '$1');
-    }
-
-
-    var EMPTY_ELSE = /else\s*{\s*}/g
-      , EMPTY_IF_NO_ELSE = /if\s*\([^)]+\)\s*\{\s*\}(?!\s*else)/g
-      , EMPTY_IF_WITH_ELSE = /if\s*\(([^)]+)\)\s*\{\s*\}\s*else(?!\s*if)/g;
-    function cleanUpCode(out) {
-      return out.replace(EMPTY_ELSE, '')
-                .replace(EMPTY_IF_NO_ELSE, '')
-                .replace(EMPTY_IF_WITH_ELSE, 'if (!($1))');
-    }
-
-
-    var ERRORS_REGEXP = /[^v.]errors/g
-      , REMOVE_ERRORS = /var errors = 0;|var vErrors = null;|validate.errors = vErrors;/g
-      , REMOVE_ERRORS_ASYNC = /var errors = 0;|var vErrors = null;/g
-      , RETURN_VALID = 'return errors === 0;'
-      , RETURN_TRUE = 'validate.errors = null; return true;'
-      , RETURN_ASYNC = /if \(errors === 0\) return data;\s*else throw new ValidationError\(vErrors\);/
-      , RETURN_DATA_ASYNC = 'return data;'
-      , ROOTDATA_REGEXP = /[^A-Za-z_$]rootData[^A-Za-z0-9_$]/g
-      , REMOVE_ROOTDATA = /if \(rootData === undefined\) rootData = data;/;
-
-    function finalCleanUpCode(out, async) {
-      var matches = out.match(ERRORS_REGEXP);
-      if (matches && matches.length == 2) {
-        out = async
-              ? out.replace(REMOVE_ERRORS_ASYNC, '')
-                   .replace(RETURN_ASYNC, RETURN_DATA_ASYNC)
-              : out.replace(REMOVE_ERRORS, '')
-                   .replace(RETURN_VALID, RETURN_TRUE);
-      }
-
-      matches = out.match(ROOTDATA_REGEXP);
-      if (!matches || matches.length !== 3) return out;
-      return out.replace(REMOVE_ROOTDATA, '');
     }
 
 
@@ -5398,7 +5363,7 @@ var DataPlanning = (function (exports, path, url, http, https, assert, stream, t
 
     function joinPaths (a, b) {
       if (a == '""') return b;
-      return (a + ' + ' + b).replace(/' \+ '/g, '');
+      return (a + ' + ' + b).replace(/([^\\])' \+ '/g, '$1');
     }
 
 
@@ -6020,7 +5985,7 @@ var DataPlanning = (function (exports, path, url, http, https, assert, stream, t
           var $schemaPath = it.schemaPath + '.type',
             $errSchemaPath = it.errSchemaPath + '/type',
             $method = $typeIsArray ? 'checkDataTypes' : 'checkDataType';
-          out += ' if (' + (it.util[$method]($typeSchema, $data, true)) + ') { ';
+          out += ' if (' + (it.util[$method]($typeSchema, $data, it.opts.strictNumbers, true)) + ') { ';
           if ($coerceToTypes) {
             var $dataType = 'dataType' + $lvl,
               $coerced = 'coerced' + $lvl;
@@ -6173,7 +6138,7 @@ var DataPlanning = (function (exports, path, url, http, https, assert, stream, t
             $rulesGroup = arr2[i2 += 1];
             if ($shouldUseGroup($rulesGroup)) {
               if ($rulesGroup.type) {
-                out += ' if (' + (it.util.checkDataType($rulesGroup.type, $data)) + ') { ';
+                out += ' if (' + (it.util.checkDataType($rulesGroup.type, $data, it.opts.strictNumbers)) + ') { ';
               }
               if (it.opts.useDefaults) {
                 if ($rulesGroup.type == 'object' && it.schema.properties) {
@@ -6341,10 +6306,6 @@ var DataPlanning = (function (exports, path, url, http, https, assert, stream, t
       } else {
         out += ' var ' + ($valid) + ' = errors === errs_' + ($lvl) + ';';
       }
-      out = it.util.cleanUpCode(out);
-      if ($top) {
-        out = it.util.finalCleanUpCode(out, $async);
-      }
 
       function $shouldUseGroup($rulesGroup) {
         var rules = $rulesGroup.rules;
@@ -6470,7 +6431,7 @@ var DataPlanning = (function (exports, path, url, http, https, assert, stream, t
                        + vars(defaults, defaultCode) + vars(customRules, customRuleCode)
                        + sourceCode;
 
-        if (opts.processCode) sourceCode = opts.processCode(sourceCode);
+        if (opts.processCode) sourceCode = opts.processCode(sourceCode, _schema);
         // console.log('\n\n\n *** \n', JSON.stringify(sourceCode));
         var validate$1;
         try {
@@ -6773,8 +6734,8 @@ var DataPlanning = (function (exports, path, url, http, https, assert, stream, t
 
     var DATE = /^(\d\d\d\d)-(\d\d)-(\d\d)$/;
     var DAYS = [0,31,28,31,30,31,30,31,31,30,31,30,31];
-    var TIME = /^(\d\d):(\d\d):(\d\d)(\.\d+)?(z|[+-]\d\d:\d\d)?$/i;
-    var HOSTNAME = /^[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?(?:\.[a-z0-9](?:[-0-9a-z]{0,61}[0-9a-z])?)*$/i;
+    var TIME = /^(\d\d):(\d\d):(\d\d)(\.\d+)?(z|[+-]\d\d(?::?\d\d)?)?$/i;
+    var HOSTNAME = /^(?=.{1,253}\.?$)[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?(?:\.[a-z0-9](?:[-0-9a-z]{0,61}[0-9a-z])?)*\.?$/i;
     var URI = /^(?:[a-z][a-z0-9+\-.]*:)(?:\/?\/(?:(?:[a-z0-9\-._~!$&'()*+,;=:]|%[0-9a-f]{2})*@)?(?:\[(?:(?:(?:(?:[0-9a-f]{1,4}:){6}|::(?:[0-9a-f]{1,4}:){5}|(?:[0-9a-f]{1,4})?::(?:[0-9a-f]{1,4}:){4}|(?:(?:[0-9a-f]{1,4}:){0,1}[0-9a-f]{1,4})?::(?:[0-9a-f]{1,4}:){3}|(?:(?:[0-9a-f]{1,4}:){0,2}[0-9a-f]{1,4})?::(?:[0-9a-f]{1,4}:){2}|(?:(?:[0-9a-f]{1,4}:){0,3}[0-9a-f]{1,4})?::[0-9a-f]{1,4}:|(?:(?:[0-9a-f]{1,4}:){0,4}[0-9a-f]{1,4})?::)(?:[0-9a-f]{1,4}:[0-9a-f]{1,4}|(?:(?:25[0-5]|2[0-4]\d|[01]?\d\d?)\.){3}(?:25[0-5]|2[0-4]\d|[01]?\d\d?))|(?:(?:[0-9a-f]{1,4}:){0,5}[0-9a-f]{1,4})?::[0-9a-f]{1,4}|(?:(?:[0-9a-f]{1,4}:){0,6}[0-9a-f]{1,4})?::)|[Vv][0-9a-f]+\.[a-z0-9\-._~!$&'()*+,;=:]+)\]|(?:(?:25[0-5]|2[0-4]\d|[01]?\d\d?)\.){3}(?:25[0-5]|2[0-4]\d|[01]?\d\d?)|(?:[a-z0-9\-._~!$&'()*+,;=]|%[0-9a-f]{2})*)(?::\d*)?(?:\/(?:[a-z0-9\-._~!$&'()*+,;=:@]|%[0-9a-f]{2})*)*|\/(?:(?:[a-z0-9\-._~!$&'()*+,;=:@]|%[0-9a-f]{2})+(?:\/(?:[a-z0-9\-._~!$&'()*+,;=:@]|%[0-9a-f]{2})*)*)?|(?:[a-z0-9\-._~!$&'()*+,;=:@]|%[0-9a-f]{2})+(?:\/(?:[a-z0-9\-._~!$&'()*+,;=:@]|%[0-9a-f]{2})*)*)(?:\?(?:[a-z0-9\-._~!$&'()*+,;=:@/?]|%[0-9a-f]{2})*)?(?:#(?:[a-z0-9\-._~!$&'()*+,;=:@/?]|%[0-9a-f]{2})*)?$/i;
     var URIREF = /^(?:[a-z][a-z0-9+\-.]*:)?(?:\/?\/(?:(?:[a-z0-9\-._~!$&'()*+,;=:]|%[0-9a-f]{2})*@)?(?:\[(?:(?:(?:(?:[0-9a-f]{1,4}:){6}|::(?:[0-9a-f]{1,4}:){5}|(?:[0-9a-f]{1,4})?::(?:[0-9a-f]{1,4}:){4}|(?:(?:[0-9a-f]{1,4}:){0,1}[0-9a-f]{1,4})?::(?:[0-9a-f]{1,4}:){3}|(?:(?:[0-9a-f]{1,4}:){0,2}[0-9a-f]{1,4})?::(?:[0-9a-f]{1,4}:){2}|(?:(?:[0-9a-f]{1,4}:){0,3}[0-9a-f]{1,4})?::[0-9a-f]{1,4}:|(?:(?:[0-9a-f]{1,4}:){0,4}[0-9a-f]{1,4})?::)(?:[0-9a-f]{1,4}:[0-9a-f]{1,4}|(?:(?:25[0-5]|2[0-4]\d|[01]?\d\d?)\.){3}(?:25[0-5]|2[0-4]\d|[01]?\d\d?))|(?:(?:[0-9a-f]{1,4}:){0,5}[0-9a-f]{1,4})?::[0-9a-f]{1,4}|(?:(?:[0-9a-f]{1,4}:){0,6}[0-9a-f]{1,4})?::)|[Vv][0-9a-f]+\.[a-z0-9\-._~!$&'()*+,;=:]+)\]|(?:(?:25[0-5]|2[0-4]\d|[01]?\d\d?)\.){3}(?:25[0-5]|2[0-4]\d|[01]?\d\d?)|(?:[a-z0-9\-._~!$&'"()*+,;=]|%[0-9a-f]{2})*)(?::\d*)?(?:\/(?:[a-z0-9\-._~!$&'"()*+,;=:@]|%[0-9a-f]{2})*)*|\/(?:(?:[a-z0-9\-._~!$&'"()*+,;=:@]|%[0-9a-f]{2})+(?:\/(?:[a-z0-9\-._~!$&'"()*+,;=:@]|%[0-9a-f]{2})*)*)?|(?:[a-z0-9\-._~!$&'"()*+,;=:@]|%[0-9a-f]{2})+(?:\/(?:[a-z0-9\-._~!$&'"()*+,;=:@]|%[0-9a-f]{2})*)*)?(?:\?(?:[a-z0-9\-._~!$&'"()*+,;=:@/?]|%[0-9a-f]{2})*)?(?:#(?:[a-z0-9\-._~!$&'"()*+,;=:@/?]|%[0-9a-f]{2})*)?$/i;
     // uri-template: https://tools.ietf.org/html/rfc6570
@@ -6802,8 +6763,8 @@ var DataPlanning = (function (exports, path, url, http, https, assert, stream, t
       // date: http://tools.ietf.org/html/rfc3339#section-5.6
       date: /^\d\d\d\d-[0-1]\d-[0-3]\d$/,
       // date-time: http://tools.ietf.org/html/rfc3339#section-5.6
-      time: /^(?:[0-2]\d:[0-5]\d:[0-5]\d|23:59:60)(?:\.\d+)?(?:z|[+-]\d\d:\d\d)?$/i,
-      'date-time': /^\d\d\d\d-[0-1]\d-[0-3]\d[t\s](?:[0-2]\d:[0-5]\d:[0-5]\d|23:59:60)(?:\.\d+)?(?:z|[+-]\d\d:\d\d)$/i,
+      time: /^(?:[0-2]\d:[0-5]\d:[0-5]\d|23:59:60)(?:\.\d+)?(?:z|[+-]\d\d(?::?\d\d)?)?$/i,
+      'date-time': /^\d\d\d\d-[0-1]\d-[0-3]\d[t\s](?:[0-2]\d:[0-5]\d:[0-5]\d|23:59:60)(?:\.\d+)?(?:z|[+-]\d\d(?::?\d\d)?)$/i,
       // uri: https://github.com/mafintosh/is-my-json-valid/blob/master/formats.js
       uri: /^(?:[a-z][a-z0-9+-.]*:)(?:\/?\/)?[^\s]*$/i,
       'uri-reference': /^(?:(?:[a-z][a-z0-9+-.]*:)?\/?\/)?(?:[^\\\s#][^\s#]*)?(?:#[^\\\s]*)?$/i,
@@ -6839,7 +6800,7 @@ var DataPlanning = (function (exports, path, url, http, https, assert, stream, t
       'uri-template': URITEMPLATE,
       url: URL,
       email: /^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/i,
-      hostname: hostname,
+      hostname: HOSTNAME,
       ipv4: /^(?:(?:25[0-5]|2[0-4]\d|[01]?\d\d?)\.){3}(?:25[0-5]|2[0-4]\d|[01]?\d\d?)$/,
       ipv6: /^\s*(?:(?:(?:[0-9a-f]{1,4}:){7}(?:[0-9a-f]{1,4}|:))|(?:(?:[0-9a-f]{1,4}:){6}(?::[0-9a-f]{1,4}|(?:(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(?:\.(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3})|:))|(?:(?:[0-9a-f]{1,4}:){5}(?:(?:(?::[0-9a-f]{1,4}){1,2})|:(?:(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(?:\.(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3})|:))|(?:(?:[0-9a-f]{1,4}:){4}(?:(?:(?::[0-9a-f]{1,4}){1,3})|(?:(?::[0-9a-f]{1,4})?:(?:(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(?:\.(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(?:(?:[0-9a-f]{1,4}:){3}(?:(?:(?::[0-9a-f]{1,4}){1,4})|(?:(?::[0-9a-f]{1,4}){0,2}:(?:(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(?:\.(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(?:(?:[0-9a-f]{1,4}:){2}(?:(?:(?::[0-9a-f]{1,4}){1,5})|(?:(?::[0-9a-f]{1,4}){0,3}:(?:(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(?:\.(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(?:(?:[0-9a-f]{1,4}:){1}(?:(?:(?::[0-9a-f]{1,4}){1,6})|(?:(?::[0-9a-f]{1,4}){0,4}:(?:(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(?:\.(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(?::(?:(?:(?::[0-9a-f]{1,4}){1,7})|(?:(?::[0-9a-f]{1,4}){0,5}:(?:(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(?:\.(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:)))(?:%.+)?\s*$/i,
       regex: regex,
@@ -6889,13 +6850,6 @@ var DataPlanning = (function (exports, path, url, http, https, assert, stream, t
       // http://tools.ietf.org/html/rfc3339#section-5.6
       var dateTime = str.split(DATE_TIME_SEPARATOR);
       return dateTime.length == 2 && date(dateTime[0]) && time(dateTime[1], true);
-    }
-
-
-    function hostname(str) {
-      // https://tools.ietf.org/html/rfc1034#section-3.5
-      // https://tools.ietf.org/html/rfc1123#section-2
-      return str.length <= 255 && HOSTNAME.test(str);
     }
 
 
@@ -7080,7 +7034,6 @@ var DataPlanning = (function (exports, path, url, http, https, assert, stream, t
           out += ' ' + ($closingBraces.slice(0, -1)) + ' ';
         }
       }
-      out = it.util.cleanUpCode(out);
       return out;
     };
 
@@ -7149,7 +7102,6 @@ var DataPlanning = (function (exports, path, url, http, https, assert, stream, t
         if (it.opts.allErrors) {
           out += ' } ';
         }
-        out = it.util.cleanUpCode(out);
       } else {
         if ($breakOnError) {
           out += ' if (true) { ';
@@ -7302,7 +7254,6 @@ var DataPlanning = (function (exports, path, url, http, https, assert, stream, t
       if (it.opts.allErrors) {
         out += ' } ';
       }
-      out = it.util.cleanUpCode(out);
       return out;
     };
 
@@ -7324,6 +7275,7 @@ var DataPlanning = (function (exports, path, url, http, https, assert, stream, t
         $propertyDeps = {},
         $ownProperties = it.opts.ownProperties;
       for ($property in $schema) {
+        if ($property == '__proto__') continue;
         var $sch = $schema[$property];
         var $deps = Array.isArray($sch) ? $propertyDeps : $schemaDeps;
         $deps[$property] = $sch;
@@ -7470,7 +7422,6 @@ var DataPlanning = (function (exports, path, url, http, https, assert, stream, t
       if ($breakOnError) {
         out += '   ' + ($closingBraces) + ' if (' + ($errs) + ' == errors) {';
       }
-      out = it.util.cleanUpCode(out);
       return out;
     };
 
@@ -7781,7 +7732,6 @@ var DataPlanning = (function (exports, path, url, http, https, assert, stream, t
         if ($breakOnError) {
           out += ' else { ';
         }
-        out = it.util.cleanUpCode(out);
       } else {
         if ($breakOnError) {
           out += ' if (true) { ';
@@ -7927,7 +7877,6 @@ var DataPlanning = (function (exports, path, url, http, https, assert, stream, t
       if ($breakOnError) {
         out += ' ' + ($closingBraces) + ' if (' + ($errs) + ' == errors) {';
       }
-      out = it.util.cleanUpCode(out);
       return out;
     };
 
@@ -7956,6 +7905,12 @@ var DataPlanning = (function (exports, path, url, http, https, assert, stream, t
         $op = $isMax ? '<' : '>',
         $notOp = $isMax ? '>' : '<',
         $errorKeyword = undefined;
+      if (!($isData || typeof $schema == 'number' || $schema === undefined)) {
+        throw new Error($keyword + ' must be number');
+      }
+      if (!($isDataExcl || $schemaExcl === undefined || typeof $schemaExcl == 'number' || typeof $schemaExcl == 'boolean')) {
+        throw new Error($exclusiveKeyword + ' must be number or boolean');
+      }
       if ($isDataExcl) {
         var $schemaValueExcl = it.util.getData($schemaExcl.$data, $dataLvl, it.dataPathArr),
           $exclusive = 'exclusive' + $lvl,
@@ -8106,6 +8061,9 @@ var DataPlanning = (function (exports, path, url, http, https, assert, stream, t
       } else {
         $schemaValue = $schema;
       }
+      if (!($isData || typeof $schema == 'number')) {
+        throw new Error($keyword + ' must be number');
+      }
       var $op = $keyword == 'maxItems' ? '>' : '<';
       out += 'if ( ';
       if ($isData) {
@@ -8182,6 +8140,9 @@ var DataPlanning = (function (exports, path, url, http, https, assert, stream, t
         $schemaValue = 'schema' + $lvl;
       } else {
         $schemaValue = $schema;
+      }
+      if (!($isData || typeof $schema == 'number')) {
+        throw new Error($keyword + ' must be number');
       }
       var $op = $keyword == 'maxLength' ? '>' : '<';
       out += 'if ( ';
@@ -8265,6 +8226,9 @@ var DataPlanning = (function (exports, path, url, http, https, assert, stream, t
       } else {
         $schemaValue = $schema;
       }
+      if (!($isData || typeof $schema == 'number')) {
+        throw new Error($keyword + ' must be number');
+      }
       var $op = $keyword == 'maxProperties' ? '>' : '<';
       out += 'if ( ';
       if ($isData) {
@@ -8340,6 +8304,9 @@ var DataPlanning = (function (exports, path, url, http, https, assert, stream, t
         $schemaValue = 'schema' + $lvl;
       } else {
         $schemaValue = $schema;
+      }
+      if (!($isData || typeof $schema == 'number')) {
+        throw new Error($keyword + ' must be number');
       }
       out += 'var division' + ($lvl) + ';if (';
       if ($isData) {
@@ -8652,9 +8619,9 @@ var DataPlanning = (function (exports, path, url, http, https, assert, stream, t
         $dataNxt = $it.dataLevel = it.dataLevel + 1,
         $nextData = 'data' + $dataNxt,
         $dataProperties = 'dataProperties' + $lvl;
-      var $schemaKeys = Object.keys($schema || {}),
+      var $schemaKeys = Object.keys($schema || {}).filter(notProto),
         $pProperties = it.schema.patternProperties || {},
-        $pPropertyKeys = Object.keys($pProperties),
+        $pPropertyKeys = Object.keys($pProperties).filter(notProto),
         $aProperties = it.schema.additionalProperties,
         $someProperties = $schemaKeys.length || $pPropertyKeys.length,
         $noAdditional = $aProperties === false,
@@ -8664,7 +8631,13 @@ var DataPlanning = (function (exports, path, url, http, https, assert, stream, t
         $ownProperties = it.opts.ownProperties,
         $currentBaseId = it.baseId;
       var $required = it.schema.required;
-      if ($required && !(it.opts.$data && $required.$data) && $required.length < it.opts.loopRequired) var $requiredHash = it.util.toHash($required);
+      if ($required && !(it.opts.$data && $required.$data) && $required.length < it.opts.loopRequired) {
+        var $requiredHash = it.util.toHash($required);
+      }
+
+      function notProto(p) {
+        return p !== '__proto__';
+      }
       out += 'var ' + ($errs) + ' = errors;var ' + ($nextValid) + ' = true;';
       if ($ownProperties) {
         out += ' var ' + ($dataProperties) + ' = undefined;';
@@ -8959,7 +8932,6 @@ var DataPlanning = (function (exports, path, url, http, https, assert, stream, t
       if ($breakOnError) {
         out += ' ' + ($closingBraces) + ' if (' + ($errs) + ' == errors) {';
       }
-      out = it.util.cleanUpCode(out);
       return out;
     };
 
@@ -9041,7 +9013,6 @@ var DataPlanning = (function (exports, path, url, http, https, assert, stream, t
       if ($breakOnError) {
         out += ' ' + ($closingBraces) + ' if (' + ($errs) + ' == errors) {';
       }
-      out = it.util.cleanUpCode(out);
       return out;
     };
 
@@ -9341,7 +9312,7 @@ var DataPlanning = (function (exports, path, url, http, https, assert, stream, t
         } else {
           out += ' var itemIndices = {}, item; for (;i--;) { var item = ' + ($data) + '[i]; ';
           var $method = 'checkDataType' + ($typeIsArray ? 's' : '');
-          out += ' if (' + (it.util[$method]($itemType, 'item', true)) + ') continue; ';
+          out += ' if (' + (it.util[$method]($itemType, 'item', it.opts.strictNumbers, true)) + ') continue; ';
           if ($typeIsArray) {
             out += ' if (typeof item == \'string\') item = \'"\' + item; ';
           }
@@ -9531,7 +9502,7 @@ var DataPlanning = (function (exports, path, url, http, https, assert, stream, t
             keywords[key] = {
               anyOf: [
                 schema,
-                { $ref: 'https://raw.githubusercontent.com/epoberezkin/ajv/master/lib/refs/data.json#' }
+                { $ref: 'https://raw.githubusercontent.com/ajv-validator/ajv/master/lib/refs/data.json#' }
               ]
             };
           }
@@ -10124,7 +10095,7 @@ var DataPlanning = (function (exports, path, url, http, https, assert, stream, t
     var require$$2 = getCjsExportFromNamespace(jsonSchemaDraft07$1);
 
     var definition_schema = {
-      $id: 'https://github.com/epoberezkin/ajv/blob/master/lib/definition_schema.js',
+      $id: 'https://github.com/ajv-validator/ajv/blob/master/lib/definition_schema.js',
       definitions: {
         simpleTypes: require$$2.definitions.simpleTypes
       },
@@ -10203,7 +10174,7 @@ var DataPlanning = (function (exports, path, url, http, https, assert, stream, t
             metaSchema = {
               anyOf: [
                 metaSchema,
-                { '$ref': 'https://raw.githubusercontent.com/epoberezkin/ajv/master/lib/refs/data.json#' }
+                { '$ref': 'https://raw.githubusercontent.com/ajv-validator/ajv/master/lib/refs/data.json#' }
               ]
             };
           }
@@ -10303,7 +10274,7 @@ var DataPlanning = (function (exports, path, url, http, https, assert, stream, t
     }
 
     var $schema$1 = "http://json-schema.org/draft-07/schema#";
-    var $id$1 = "https://raw.githubusercontent.com/epoberezkin/ajv/master/lib/refs/data.json#";
+    var $id$1 = "https://raw.githubusercontent.com/ajv-validator/ajv/master/lib/refs/data.json#";
     var description$1 = "Meta-schema for $data reference (JSON Schema extension proposal)";
     var type$1 = "object";
     var required$1 = [
@@ -10406,6 +10377,7 @@ var DataPlanning = (function (exports, path, url, http, https, assert, stream, t
       this._metaOpts = getMetaSchemaOptions(this);
 
       if (opts.formats) addInitialFormats(this);
+      if (opts.keywords) addInitialKeywords(this);
       addDefaultMetaSchema(this);
       if (typeof opts.meta == 'object') this.addMetaSchema(opts.meta);
       if (opts.nullable) this.addKeyword('nullable', {metaSchema: {type: 'boolean'}});
@@ -10800,6 +10772,14 @@ var DataPlanning = (function (exports, path, url, http, https, assert, stream, t
       for (var name in self._opts.formats) {
         var format = self._opts.formats[name];
         self.addFormat(name, format);
+      }
+    }
+
+
+    function addInitialKeywords(self) {
+      for (var name in self._opts.keywords) {
+        var keyword = self._opts.keywords[name];
+        self.addKeyword(name, keyword);
       }
     }
 
@@ -11353,6 +11333,13 @@ var DataPlanning = (function (exports, path, url, http, https, assert, stream, t
             var result = {};
             var point = this.dataPlanMatchLookups['user_attributes'];
             var schema = point === null || point === void 0 ? void 0 : point.schema;
+            // Only validate user attributes if `dataPlanMatchLookups`
+            // specifically contains 'user attributes'
+            if (!point) {
+                return {};
+            }
+            // Reject schema if not present when user attribute
+            // validation is required
             if (!schema || Object.keys(schema).length === 0) {
                 result.match = {
                     type: dist_5$1.UserAttributes,
@@ -11372,6 +11359,7 @@ var DataPlanning = (function (exports, path, url, http, https, assert, stream, t
                 };
             }
             result.match = point === null || point === void 0 ? void 0 : point.match;
+            // Attempt User Attribute Validation
             var validationErrors = JSONSchemaValidator.validate(
             // tslint:disable-next-line: no-any
             eventBatch.user_attributes, schema);

@@ -349,6 +349,14 @@ export class DataPlanEventValidator {
         const point = this.dataPlanMatchLookups['user_attributes'];
         const schema = point?.schema;
 
+        // Only validate user attributes if `dataPlanMatchLookups`
+        // specifically contains 'user attributes'
+        if (!point) {
+            return {};
+        }
+
+        // Reject schema if not present when user attribute
+        // validation is required
         if (!schema || Object.keys(schema).length === 0) {
             result.match = {
                 type: DataPlanMatchType.UserAttributes,
@@ -371,6 +379,7 @@ export class DataPlanEventValidator {
 
         result.match = point?.match;
 
+        // Attempt User Attribute Validation
         const validationErrors = JSONSchemaValidator.validate(
             // tslint:disable-next-line: no-any
             eventBatch.user_attributes as { [key: string]: any },

@@ -2,19 +2,29 @@
 
 Object.defineProperty(exports, '__esModule', { value: true });
 
-function _interopDefault (ex) { return (ex && (typeof ex === 'object') && 'default' in ex) ? ex['default'] : ex; }
-
-var path = _interopDefault(require('path'));
+var path = require('path');
 var url = require('url');
-var url__default = _interopDefault(url);
-var http = _interopDefault(require('http'));
-var https = _interopDefault(require('https'));
-var assert = _interopDefault(require('assert'));
-var stream = _interopDefault(require('stream'));
-var tty = _interopDefault(require('tty'));
-var util$1 = _interopDefault(require('util'));
-var os = _interopDefault(require('os'));
-var zlib = _interopDefault(require('zlib'));
+var http = require('http');
+var https = require('https');
+var assert = require('assert');
+var stream = require('stream');
+var tty = require('tty');
+var util$1 = require('util');
+var os = require('os');
+var zlib = require('zlib');
+
+function _interopDefaultLegacy (e) { return e && typeof e === 'object' && 'default' in e ? e : { 'default': e }; }
+
+var path__default = /*#__PURE__*/_interopDefaultLegacy(path);
+var url__default = /*#__PURE__*/_interopDefaultLegacy(url);
+var http__default = /*#__PURE__*/_interopDefaultLegacy(http);
+var https__default = /*#__PURE__*/_interopDefaultLegacy(https);
+var assert__default = /*#__PURE__*/_interopDefaultLegacy(assert);
+var stream__default = /*#__PURE__*/_interopDefaultLegacy(stream);
+var tty__default = /*#__PURE__*/_interopDefaultLegacy(tty);
+var util__default = /*#__PURE__*/_interopDefaultLegacy(util$1);
+var os__default = /*#__PURE__*/_interopDefaultLegacy(os);
+var zlib__default = /*#__PURE__*/_interopDefaultLegacy(zlib);
 
 /*! *****************************************************************************
 Copyright (c) Microsoft Corporation. All rights reserved.
@@ -82,12 +92,8 @@ function getCjsExportFromNamespace (n) {
 	return n && n['default'] || n;
 }
 
-var dist = createCommonjsModule(function (module, exports) {
+var dist$1 = createCommonjsModule(function (module, exports) {
 Object.defineProperty(exports, "__esModule", { value: true });
-/**
- * Enum for the os property.
- */
-var ApplicationInformationOsEnum;
 (function (ApplicationInformationOsEnum) {
     ApplicationInformationOsEnum["unknown"] = "Unknown";
     ApplicationInformationOsEnum["iOS"] = "IOS";
@@ -104,51 +110,27 @@ var ApplicationInformationOsEnum;
     ApplicationInformationOsEnum["smartTV"] = "SmartTV";
     ApplicationInformationOsEnum["fireTV"] = "FireTV";
     ApplicationInformationOsEnum["xbox"] = "Xbox";
-})(ApplicationInformationOsEnum = exports.ApplicationInformationOsEnum || (exports.ApplicationInformationOsEnum = {}));
-/**
- * Enum for the event_type property.
- */
-var ApplicationStateTransitionEventEventTypeEnum;
+})(exports.ApplicationInformationOsEnum || (exports.ApplicationInformationOsEnum = {}));
 (function (ApplicationStateTransitionEventEventTypeEnum) {
     ApplicationStateTransitionEventEventTypeEnum["applicationStateTransition"] = "application_state_transition";
-})(ApplicationStateTransitionEventEventTypeEnum = exports.ApplicationStateTransitionEventEventTypeEnum || (exports.ApplicationStateTransitionEventEventTypeEnum = {}));
-/**
- * Enum for the application_transition_type property.
- */
-var ApplicationStateTransitionEventDataApplicationTransitionTypeEnum;
+})(exports.ApplicationStateTransitionEventEventTypeEnum || (exports.ApplicationStateTransitionEventEventTypeEnum = {}));
 (function (ApplicationStateTransitionEventDataApplicationTransitionTypeEnum) {
     ApplicationStateTransitionEventDataApplicationTransitionTypeEnum["applicationInitialized"] = "application_initialized";
     ApplicationStateTransitionEventDataApplicationTransitionTypeEnum["applicationExit"] = "application_exit";
     ApplicationStateTransitionEventDataApplicationTransitionTypeEnum["applicationBackground"] = "application_background";
     ApplicationStateTransitionEventDataApplicationTransitionTypeEnum["applicationForeground"] = "application_foreground";
-})(ApplicationStateTransitionEventDataApplicationTransitionTypeEnum = exports.ApplicationStateTransitionEventDataApplicationTransitionTypeEnum || (exports.ApplicationStateTransitionEventDataApplicationTransitionTypeEnum = {}));
-/**
- * Enum for the environment property.
- */
-var BatchEnvironmentEnum;
+})(exports.ApplicationStateTransitionEventDataApplicationTransitionTypeEnum || (exports.ApplicationStateTransitionEventDataApplicationTransitionTypeEnum = {}));
 (function (BatchEnvironmentEnum) {
     BatchEnvironmentEnum["unknown"] = "unknown";
     BatchEnvironmentEnum["development"] = "development";
     BatchEnvironmentEnum["production"] = "production";
-})(BatchEnvironmentEnum = exports.BatchEnvironmentEnum || (exports.BatchEnvironmentEnum = {}));
-/**
- * Enum for the event_type property.
- */
-var BreadcrumbEventEventTypeEnum;
+})(exports.BatchEnvironmentEnum || (exports.BatchEnvironmentEnum = {}));
 (function (BreadcrumbEventEventTypeEnum) {
     BreadcrumbEventEventTypeEnum["breadcrumb"] = "breadcrumb";
-})(BreadcrumbEventEventTypeEnum = exports.BreadcrumbEventEventTypeEnum || (exports.BreadcrumbEventEventTypeEnum = {}));
-/**
- * Enum for the event_type property.
- */
-var CommerceEventEventTypeEnum;
+})(exports.BreadcrumbEventEventTypeEnum || (exports.BreadcrumbEventEventTypeEnum = {}));
 (function (CommerceEventEventTypeEnum) {
     CommerceEventEventTypeEnum["commerceEvent"] = "commerce_event";
-})(CommerceEventEventTypeEnum = exports.CommerceEventEventTypeEnum || (exports.CommerceEventEventTypeEnum = {}));
-/**
- * Enum for the custom_event_type property.
- */
-var CommerceEventDataCustomEventTypeEnum;
+})(exports.CommerceEventEventTypeEnum || (exports.CommerceEventEventTypeEnum = {}));
 (function (CommerceEventDataCustomEventTypeEnum) {
     CommerceEventDataCustomEventTypeEnum["addToCart"] = "add_to_cart";
     CommerceEventDataCustomEventTypeEnum["removeFromCart"] = "remove_from_cart";
@@ -161,27 +143,15 @@ var CommerceEventDataCustomEventTypeEnum;
     CommerceEventDataCustomEventTypeEnum["promotionView"] = "promotion_view";
     CommerceEventDataCustomEventTypeEnum["promotionClick"] = "promotion_click";
     CommerceEventDataCustomEventTypeEnum["addToWishlist"] = "add_to_wishlist";
-    CommerceEventDataCustomEventTypeEnum["removeFromWishList"] = "remove_from_wishlist";
+    CommerceEventDataCustomEventTypeEnum["removeFromWishlist"] = "remove_from_wishlist";
     CommerceEventDataCustomEventTypeEnum["impression"] = "impression";
-})(CommerceEventDataCustomEventTypeEnum = exports.CommerceEventDataCustomEventTypeEnum || (exports.CommerceEventDataCustomEventTypeEnum = {}));
-/**
- * Enum for the event_type property.
- */
-var CrashReportEventEventTypeEnum;
+})(exports.CommerceEventDataCustomEventTypeEnum || (exports.CommerceEventDataCustomEventTypeEnum = {}));
 (function (CrashReportEventEventTypeEnum) {
     CrashReportEventEventTypeEnum["crashReport"] = "crash_report";
-})(CrashReportEventEventTypeEnum = exports.CrashReportEventEventTypeEnum || (exports.CrashReportEventEventTypeEnum = {}));
-/**
- * Enum for the event_type property.
- */
-var CustomEventEventTypeEnum;
+})(exports.CrashReportEventEventTypeEnum || (exports.CrashReportEventEventTypeEnum = {}));
 (function (CustomEventEventTypeEnum) {
     CustomEventEventTypeEnum["customEvent"] = "custom_event";
-})(CustomEventEventTypeEnum = exports.CustomEventEventTypeEnum || (exports.CustomEventEventTypeEnum = {}));
-/**
- * Enum for the custom_event_type property.
- */
-var CustomEventDataCustomEventTypeEnum;
+})(exports.CustomEventEventTypeEnum || (exports.CustomEventEventTypeEnum = {}));
 (function (CustomEventDataCustomEventTypeEnum) {
     CustomEventDataCustomEventTypeEnum["navigation"] = "navigation";
     CustomEventDataCustomEventTypeEnum["location"] = "location";
@@ -190,13 +160,10 @@ var CustomEventDataCustomEventTypeEnum;
     CustomEventDataCustomEventTypeEnum["userContent"] = "user_content";
     CustomEventDataCustomEventTypeEnum["userPreference"] = "user_preference";
     CustomEventDataCustomEventTypeEnum["social"] = "social";
+    CustomEventDataCustomEventTypeEnum["media"] = "media";
     CustomEventDataCustomEventTypeEnum["other"] = "other";
     CustomEventDataCustomEventTypeEnum["unknown"] = "unknown";
-})(CustomEventDataCustomEventTypeEnum = exports.CustomEventDataCustomEventTypeEnum || (exports.CustomEventDataCustomEventTypeEnum = {}));
-/**
- * Enum for the device_orientation property.
- */
-var DeviceCurrentStateDeviceOrientationEnum;
+})(exports.CustomEventDataCustomEventTypeEnum || (exports.CustomEventDataCustomEventTypeEnum = {}));
 (function (DeviceCurrentStateDeviceOrientationEnum) {
     DeviceCurrentStateDeviceOrientationEnum["portrait"] = "portrait";
     DeviceCurrentStateDeviceOrientationEnum["portraitUpsideDown"] = "portrait_upside_down";
@@ -206,11 +173,7 @@ var DeviceCurrentStateDeviceOrientationEnum;
     DeviceCurrentStateDeviceOrientationEnum["faceUp"] = "FaceUp";
     DeviceCurrentStateDeviceOrientationEnum["faceDown"] = "FaceDown";
     DeviceCurrentStateDeviceOrientationEnum["square"] = "Square";
-})(DeviceCurrentStateDeviceOrientationEnum = exports.DeviceCurrentStateDeviceOrientationEnum || (exports.DeviceCurrentStateDeviceOrientationEnum = {}));
-/**
- * Enum for the status_bar_orientation property.
- */
-var DeviceCurrentStateStatusBarOrientationEnum;
+})(exports.DeviceCurrentStateDeviceOrientationEnum || (exports.DeviceCurrentStateDeviceOrientationEnum = {}));
 (function (DeviceCurrentStateStatusBarOrientationEnum) {
     DeviceCurrentStateStatusBarOrientationEnum["portrait"] = "portrait";
     DeviceCurrentStateStatusBarOrientationEnum["portraitUpsideDown"] = "portrait_upside_down";
@@ -220,11 +183,7 @@ var DeviceCurrentStateStatusBarOrientationEnum;
     DeviceCurrentStateStatusBarOrientationEnum["faceUp"] = "FaceUp";
     DeviceCurrentStateStatusBarOrientationEnum["faceDown"] = "FaceDown";
     DeviceCurrentStateStatusBarOrientationEnum["square"] = "Square";
-})(DeviceCurrentStateStatusBarOrientationEnum = exports.DeviceCurrentStateStatusBarOrientationEnum || (exports.DeviceCurrentStateStatusBarOrientationEnum = {}));
-/**
- * Enum for the platform property.
- */
-var DeviceInformationPlatformEnum;
+})(exports.DeviceCurrentStateStatusBarOrientationEnum || (exports.DeviceCurrentStateStatusBarOrientationEnum = {}));
 (function (DeviceInformationPlatformEnum) {
     DeviceInformationPlatformEnum["iOS"] = "iOS";
     DeviceInformationPlatformEnum["android"] = "Android";
@@ -235,8 +194,7 @@ var DeviceInformationPlatformEnum;
     DeviceInformationPlatformEnum["outOfBand"] = "out_of_band";
     DeviceInformationPlatformEnum["smartTV"] = "smart_tv";
     DeviceInformationPlatformEnum["xbox"] = "xbox";
-})(DeviceInformationPlatformEnum = exports.DeviceInformationPlatformEnum || (exports.DeviceInformationPlatformEnum = {}));
-var EventTypeEnum;
+})(exports.DeviceInformationPlatformEnum || (exports.DeviceInformationPlatformEnum = {}));
 (function (EventTypeEnum) {
     EventTypeEnum["unknown"] = "unknown";
     EventTypeEnum["sessionStart"] = "session_start";
@@ -259,8 +217,7 @@ var EventTypeEnum;
     EventTypeEnum["userIdentityChange"] = "user_identity_change";
     EventTypeEnum["uninstall"] = "uninstall";
     EventTypeEnum["validationResult"] = "validation_result";
-})(EventTypeEnum = exports.EventTypeEnum || (exports.EventTypeEnum = {}));
-var IdentityTypeEnum;
+})(exports.EventTypeEnum || (exports.EventTypeEnum = {}));
 (function (IdentityTypeEnum) {
     IdentityTypeEnum["other"] = "other";
     IdentityTypeEnum["customerId"] = "customer_id";
@@ -275,25 +232,22 @@ var IdentityTypeEnum;
     IdentityTypeEnum["otherId2"] = "other_id_2";
     IdentityTypeEnum["otherId3"] = "other_id_3";
     IdentityTypeEnum["otherId4"] = "other_id_4";
-})(IdentityTypeEnum = exports.IdentityTypeEnum || (exports.IdentityTypeEnum = {}));
-/**
- * Enum for the event_type property.
- */
-var NetworkPerformanceEventEventTypeEnum;
+    IdentityTypeEnum["otherId5"] = "other_id_5";
+    IdentityTypeEnum["otherId6"] = "other_id_6";
+    IdentityTypeEnum["otherId7"] = "other_id_7";
+    IdentityTypeEnum["otherId8"] = "other_id_8";
+    IdentityTypeEnum["otherId9"] = "other_id_9";
+    IdentityTypeEnum["otherId10"] = "other_id_10";
+    IdentityTypeEnum["mobileNumber"] = "mobile_number";
+    IdentityTypeEnum["phoneNumber2"] = "phone_number_2";
+    IdentityTypeEnum["phoneNumber3"] = "phone_number_3";
+})(exports.IdentityTypeEnum || (exports.IdentityTypeEnum = {}));
 (function (NetworkPerformanceEventEventTypeEnum) {
     NetworkPerformanceEventEventTypeEnum["networkPerformance"] = "network_performance";
-})(NetworkPerformanceEventEventTypeEnum = exports.NetworkPerformanceEventEventTypeEnum || (exports.NetworkPerformanceEventEventTypeEnum = {}));
-/**
- * Enum for the event_type property.
- */
-var OptOutEventEnum;
+})(exports.NetworkPerformanceEventEventTypeEnum || (exports.NetworkPerformanceEventEventTypeEnum = {}));
 (function (OptOutEventEnum) {
     OptOutEventEnum["optOut"] = "opt_out";
-})(OptOutEventEnum = exports.OptOutEventEnum || (exports.OptOutEventEnum = {}));
-/**
- * Enum for the action property.
- */
-var ProductActionActionEnum;
+})(exports.OptOutEventEnum || (exports.OptOutEventEnum = {}));
 (function (ProductActionActionEnum) {
     ProductActionActionEnum["unknown"] = "unknown";
     ProductActionActionEnum["addToCart"] = "add_to_cart";
@@ -306,94 +260,50 @@ var ProductActionActionEnum;
     ProductActionActionEnum["refund"] = "refund";
     ProductActionActionEnum["addToWishlist"] = "add_to_wishlist";
     ProductActionActionEnum["removeFromWishlist"] = "remove_from_wish_list";
-})(ProductActionActionEnum = exports.ProductActionActionEnum || (exports.ProductActionActionEnum = {}));
-/**
- * Enum for the event_type property.
- */
-var ProfileEventEventTypeEnum;
+})(exports.ProductActionActionEnum || (exports.ProductActionActionEnum = {}));
 (function (ProfileEventEventTypeEnum) {
     ProfileEventEventTypeEnum["profile"] = "profile";
-})(ProfileEventEventTypeEnum = exports.ProfileEventEventTypeEnum || (exports.ProfileEventEventTypeEnum = {}));
-/**
- * Enum for the profile_event_type property.
- */
-var ProfileEventDataProfileEventTypeEnum;
+})(exports.ProfileEventEventTypeEnum || (exports.ProfileEventEventTypeEnum = {}));
 (function (ProfileEventDataProfileEventTypeEnum) {
     ProfileEventDataProfileEventTypeEnum["signup"] = "signup";
     ProfileEventDataProfileEventTypeEnum["login"] = "login";
     ProfileEventDataProfileEventTypeEnum["logout"] = "logout";
     ProfileEventDataProfileEventTypeEnum["update"] = "update";
     ProfileEventDataProfileEventTypeEnum["delete"] = "delete";
-})(ProfileEventDataProfileEventTypeEnum = exports.ProfileEventDataProfileEventTypeEnum || (exports.ProfileEventDataProfileEventTypeEnum = {}));
-/**
- * Enum for the action property.
- */
-var PromotionActionActionEnum;
+})(exports.ProfileEventDataProfileEventTypeEnum || (exports.ProfileEventDataProfileEventTypeEnum = {}));
 (function (PromotionActionActionEnum) {
     PromotionActionActionEnum["view"] = "view";
     PromotionActionActionEnum["click"] = "click";
-})(PromotionActionActionEnum = exports.PromotionActionActionEnum || (exports.PromotionActionActionEnum = {}));
-/**
- * Enum for the event_type property.
- */
-var PushMessageEventEventTypeEnum;
+})(exports.PromotionActionActionEnum || (exports.PromotionActionActionEnum = {}));
 (function (PushMessageEventEventTypeEnum) {
     PushMessageEventEventTypeEnum["pushMessage"] = "push_message";
-})(PushMessageEventEventTypeEnum = exports.PushMessageEventEventTypeEnum || (exports.PushMessageEventEventTypeEnum = {}));
-/**
- * Enum for the push_message_type property.
- */
-var PushMessageEventDataPushMessageTypeEnum;
+})(exports.PushMessageEventEventTypeEnum || (exports.PushMessageEventEventTypeEnum = {}));
 (function (PushMessageEventDataPushMessageTypeEnum) {
     PushMessageEventDataPushMessageTypeEnum["sent"] = "sent";
     PushMessageEventDataPushMessageTypeEnum["received"] = "received";
     PushMessageEventDataPushMessageTypeEnum["action"] = "action";
-})(PushMessageEventDataPushMessageTypeEnum = exports.PushMessageEventDataPushMessageTypeEnum || (exports.PushMessageEventDataPushMessageTypeEnum = {}));
-/**
- * Enum for the application_state property.
- */
-var PushMessageEventDataApplicationStateEnum;
+})(exports.PushMessageEventDataPushMessageTypeEnum || (exports.PushMessageEventDataPushMessageTypeEnum = {}));
 (function (PushMessageEventDataApplicationStateEnum) {
     PushMessageEventDataApplicationStateEnum["notRunning"] = "not_running";
     PushMessageEventDataApplicationStateEnum["background"] = "background";
     PushMessageEventDataApplicationStateEnum["foreground"] = "foreground";
-})(PushMessageEventDataApplicationStateEnum = exports.PushMessageEventDataApplicationStateEnum || (exports.PushMessageEventDataApplicationStateEnum = {}));
-/**
- * Enum for the push_message_behavior property.
- */
-var PushMessageEventDataPushMessageBehaviorEnum;
+})(exports.PushMessageEventDataApplicationStateEnum || (exports.PushMessageEventDataApplicationStateEnum = {}));
 (function (PushMessageEventDataPushMessageBehaviorEnum) {
     PushMessageEventDataPushMessageBehaviorEnum["received"] = "Received";
     PushMessageEventDataPushMessageBehaviorEnum["directOpen"] = "DirectOpen";
     PushMessageEventDataPushMessageBehaviorEnum["read"] = "Read";
     PushMessageEventDataPushMessageBehaviorEnum["influencedOpen"] = "InfluencedOpen";
     PushMessageEventDataPushMessageBehaviorEnum["displayed"] = "Displayed";
-})(PushMessageEventDataPushMessageBehaviorEnum = exports.PushMessageEventDataPushMessageBehaviorEnum || (exports.PushMessageEventDataPushMessageBehaviorEnum = {}));
-/**
- * Enum for the event_type property.
- */
-var PushRegistrationEventEventTypeEnum;
+})(exports.PushMessageEventDataPushMessageBehaviorEnum || (exports.PushMessageEventDataPushMessageBehaviorEnum = {}));
 (function (PushRegistrationEventEventTypeEnum) {
     PushRegistrationEventEventTypeEnum["pushRegistration"] = "push_registration";
-})(PushRegistrationEventEventTypeEnum = exports.PushRegistrationEventEventTypeEnum || (exports.PushRegistrationEventEventTypeEnum = {}));
-/**
- * Enum for the event_type property.
- */
-var SessionEndEventEventTypeEnum;
+})(exports.PushRegistrationEventEventTypeEnum || (exports.PushRegistrationEventEventTypeEnum = {}));
 (function (SessionEndEventEventTypeEnum) {
     SessionEndEventEventTypeEnum["sessionEnd"] = "session_end";
-})(SessionEndEventEventTypeEnum = exports.SessionEndEventEventTypeEnum || (exports.SessionEndEventEventTypeEnum = {}));
-/**
- * Enum for the event_type property.
- */
-var SessionStartEventEventTypeEnum;
+})(exports.SessionEndEventEventTypeEnum || (exports.SessionEndEventEventTypeEnum = {}));
 (function (SessionStartEventEventTypeEnum) {
     SessionStartEventEventTypeEnum["sessionStart"] = "session_start";
-})(SessionStartEventEventTypeEnum = exports.SessionStartEventEventTypeEnum || (exports.SessionStartEventEventTypeEnum = {}));
-/**
- * Enum for the channel property.
- */
-var SourceInformationChannelEnum;
+})(exports.SessionStartEventEventTypeEnum || (exports.SessionStartEventEventTypeEnum = {}));
 (function (SourceInformationChannelEnum) {
     SourceInformationChannelEnum["native"] = "native";
     SourceInformationChannelEnum["javascript"] = "javascript";
@@ -401,55 +311,47 @@ var SourceInformationChannelEnum;
     SourceInformationChannelEnum["desktop"] = "desktop";
     SourceInformationChannelEnum["partner"] = "partner";
     SourceInformationChannelEnum["serverToServer"] = "server_to_server";
-})(SourceInformationChannelEnum = exports.SourceInformationChannelEnum || (exports.SourceInformationChannelEnum = {}));
-/**
- * Enum for the event_type property.
- */
-var UserAttributeChangeEventEventTypeEnum;
+})(exports.SourceInformationChannelEnum || (exports.SourceInformationChannelEnum = {}));
 (function (UserAttributeChangeEventEventTypeEnum) {
     UserAttributeChangeEventEventTypeEnum["userAttributeChange"] = "user_attribute_change";
-})(UserAttributeChangeEventEventTypeEnum = exports.UserAttributeChangeEventEventTypeEnum || (exports.UserAttributeChangeEventEventTypeEnum = {}));
-/**
- * Enum for the event_type property.
- */
-var UserIdentityChangeEventEventTypeEnum;
+})(exports.UserAttributeChangeEventEventTypeEnum || (exports.UserAttributeChangeEventEventTypeEnum = {}));
 (function (UserIdentityChangeEventEventTypeEnum) {
     UserIdentityChangeEventEventTypeEnum["userIdentityChange"] = "user_identity_change";
-})(UserIdentityChangeEventEventTypeEnum = exports.UserIdentityChangeEventEventTypeEnum || (exports.UserIdentityChangeEventEventTypeEnum = {}));
+})(exports.UserIdentityChangeEventEventTypeEnum || (exports.UserIdentityChangeEventEventTypeEnum = {}));
 });
 
-unwrapExports(dist);
-var dist_1 = dist.ApplicationInformationOsEnum;
-var dist_2 = dist.ApplicationStateTransitionEventEventTypeEnum;
-var dist_3 = dist.ApplicationStateTransitionEventDataApplicationTransitionTypeEnum;
-var dist_4 = dist.BatchEnvironmentEnum;
-var dist_5 = dist.BreadcrumbEventEventTypeEnum;
-var dist_6 = dist.CommerceEventEventTypeEnum;
-var dist_7 = dist.CommerceEventDataCustomEventTypeEnum;
-var dist_8 = dist.CrashReportEventEventTypeEnum;
-var dist_9 = dist.CustomEventEventTypeEnum;
-var dist_10 = dist.CustomEventDataCustomEventTypeEnum;
-var dist_11 = dist.DeviceCurrentStateDeviceOrientationEnum;
-var dist_12 = dist.DeviceCurrentStateStatusBarOrientationEnum;
-var dist_13 = dist.DeviceInformationPlatformEnum;
-var dist_14 = dist.EventTypeEnum;
-var dist_15 = dist.IdentityTypeEnum;
-var dist_16 = dist.NetworkPerformanceEventEventTypeEnum;
-var dist_17 = dist.OptOutEventEnum;
-var dist_18 = dist.ProductActionActionEnum;
-var dist_19 = dist.ProfileEventEventTypeEnum;
-var dist_20 = dist.ProfileEventDataProfileEventTypeEnum;
-var dist_21 = dist.PromotionActionActionEnum;
-var dist_22 = dist.PushMessageEventEventTypeEnum;
-var dist_23 = dist.PushMessageEventDataPushMessageTypeEnum;
-var dist_24 = dist.PushMessageEventDataApplicationStateEnum;
-var dist_25 = dist.PushMessageEventDataPushMessageBehaviorEnum;
-var dist_26 = dist.PushRegistrationEventEventTypeEnum;
-var dist_27 = dist.SessionEndEventEventTypeEnum;
-var dist_28 = dist.SessionStartEventEventTypeEnum;
-var dist_29 = dist.SourceInformationChannelEnum;
-var dist_30 = dist.UserAttributeChangeEventEventTypeEnum;
-var dist_31 = dist.UserIdentityChangeEventEventTypeEnum;
+unwrapExports(dist$1);
+dist$1.ApplicationInformationOsEnum;
+dist$1.ApplicationStateTransitionEventEventTypeEnum;
+dist$1.ApplicationStateTransitionEventDataApplicationTransitionTypeEnum;
+var dist_4$1 = dist$1.BatchEnvironmentEnum;
+dist$1.BreadcrumbEventEventTypeEnum;
+dist$1.CommerceEventEventTypeEnum;
+dist$1.CommerceEventDataCustomEventTypeEnum;
+dist$1.CrashReportEventEventTypeEnum;
+dist$1.CustomEventEventTypeEnum;
+dist$1.CustomEventDataCustomEventTypeEnum;
+dist$1.DeviceCurrentStateDeviceOrientationEnum;
+dist$1.DeviceCurrentStateStatusBarOrientationEnum;
+dist$1.DeviceInformationPlatformEnum;
+var dist_14 = dist$1.EventTypeEnum;
+dist$1.IdentityTypeEnum;
+dist$1.NetworkPerformanceEventEventTypeEnum;
+dist$1.OptOutEventEnum;
+dist$1.ProductActionActionEnum;
+dist$1.ProfileEventEventTypeEnum;
+dist$1.ProfileEventDataProfileEventTypeEnum;
+dist$1.PromotionActionActionEnum;
+dist$1.PushMessageEventEventTypeEnum;
+dist$1.PushMessageEventDataPushMessageTypeEnum;
+dist$1.PushMessageEventDataApplicationStateEnum;
+dist$1.PushMessageEventDataPushMessageBehaviorEnum;
+dist$1.PushRegistrationEventEventTypeEnum;
+dist$1.SessionEndEventEventTypeEnum;
+dist$1.SessionStartEventEventTypeEnum;
+dist$1.SourceInformationChannelEnum;
+dist$1.UserAttributeChangeEventEventTypeEnum;
+dist$1.UserIdentityChangeEventEventTypeEnum;
 
 var bind = function bind(fn, thisArg) {
   return function wrap() {
@@ -1181,7 +1083,7 @@ function plural(ms, n, name) {
   return Math.ceil(ms / n) + ' ' + name + 's';
 }
 
-var debug = createCommonjsModule(function (module, exports) {
+var debug$1 = createCommonjsModule(function (module, exports) {
 /**
  * This is the common logic for both the Node.js and web browser
  * implementations of `debug()`.
@@ -1407,24 +1309,24 @@ function coerce(val) {
   return val;
 }
 });
-var debug_1 = debug.coerce;
-var debug_2 = debug.disable;
-var debug_3 = debug.enable;
-var debug_4 = debug.enabled;
-var debug_5 = debug.humanize;
-var debug_6 = debug.instances;
-var debug_7 = debug.names;
-var debug_8 = debug.skips;
-var debug_9 = debug.formatters;
+debug$1.coerce;
+debug$1.disable;
+debug$1.enable;
+debug$1.enabled;
+debug$1.humanize;
+debug$1.instances;
+debug$1.names;
+debug$1.skips;
+debug$1.formatters;
 
-var browser = createCommonjsModule(function (module, exports) {
+var browser$1 = createCommonjsModule(function (module, exports) {
 /**
  * This is the web browser implementation of `debug()`.
  *
  * Expose `debug()` as the module.
  */
 
-exports = module.exports = debug;
+exports = module.exports = debug$1;
 exports.log = log;
 exports.formatArgs = formatArgs;
 exports.save = save;
@@ -1614,13 +1516,13 @@ function localstorage() {
   } catch (e) {}
 }
 });
-var browser_1 = browser.log;
-var browser_2 = browser.formatArgs;
-var browser_3 = browser.save;
-var browser_4 = browser.load;
-var browser_5 = browser.useColors;
-var browser_6 = browser.storage;
-var browser_7 = browser.colors;
+browser$1.log;
+browser$1.formatArgs;
+browser$1.save;
+browser$1.load;
+browser$1.useColors;
+browser$1.storage;
+browser$1.colors;
 
 var hasFlag = (flag, argv) => {
 	argv = argv || process.argv;
@@ -1688,7 +1590,7 @@ function supportsColor(stream) {
 		// release, and Node.js 7 is not. Windows 10 build 10586 is the first Windows
 		// release that supports 256 colors. Windows 10 build 14931 is the first release
 		// that supports 16m/TrueColor.
-		const osRelease = os.release().split('.');
+		const osRelease = os__default["default"].release().split('.');
 		if (
 			Number(process.versions.node.split('.')[0]) >= 8 &&
 			Number(osRelease[0]) >= 10 &&
@@ -1757,6 +1659,9 @@ var supportsColor_1 = {
 	stdout: getSupportLevel(process.stdout),
 	stderr: getSupportLevel(process.stderr)
 };
+supportsColor_1.supportsColor;
+supportsColor_1.stdout;
+supportsColor_1.stderr;
 
 var node = createCommonjsModule(function (module, exports) {
 /**
@@ -1772,7 +1677,7 @@ var node = createCommonjsModule(function (module, exports) {
  * Expose `debug()` as the module.
  */
 
-exports = module.exports = debug;
+exports = module.exports = debug$1;
 exports.init = init;
 exports.log = log;
 exports.formatArgs = formatArgs;
@@ -1834,7 +1739,7 @@ exports.inspectOpts = Object.keys(process.env).filter(function (key) {
 function useColors() {
   return 'colors' in exports.inspectOpts
     ? Boolean(exports.inspectOpts.colors)
-    : tty.isatty(process.stderr.fd);
+    : tty__default["default"].isatty(process.stderr.fd);
 }
 
 /**
@@ -1843,7 +1748,7 @@ function useColors() {
 
 exports.formatters.o = function(v) {
   this.inspectOpts.colors = this.useColors;
-  return util$1.inspect(v, this.inspectOpts)
+  return util__default["default"].inspect(v, this.inspectOpts)
     .split('\n').map(function(str) {
       return str.trim()
     }).join(' ');
@@ -1855,7 +1760,7 @@ exports.formatters.o = function(v) {
 
 exports.formatters.O = function(v) {
   this.inspectOpts.colors = this.useColors;
-  return util$1.inspect(v, this.inspectOpts);
+  return util__default["default"].inspect(v, this.inspectOpts);
 };
 
 /**
@@ -1893,7 +1798,7 @@ function getDate() {
  */
 
 function log() {
-  return process.stderr.write(util$1.format.apply(util$1, arguments) + '\n');
+  return process.stderr.write(util__default["default"].format.apply(util__default["default"], arguments) + '\n');
 }
 
 /**
@@ -1946,14 +1851,14 @@ function init (debug) {
 
 exports.enable(load());
 });
-var node_1 = node.init;
-var node_2 = node.log;
-var node_3 = node.formatArgs;
-var node_4 = node.save;
-var node_5 = node.load;
-var node_6 = node.useColors;
-var node_7 = node.colors;
-var node_8 = node.inspectOpts;
+node.init;
+node.log;
+node.formatArgs;
+node.save;
+node.load;
+node.useColors;
+node.colors;
+node.inspectOpts;
 
 var src = createCommonjsModule(function (module) {
 /**
@@ -1962,14 +1867,14 @@ var src = createCommonjsModule(function (module) {
  */
 
 if (typeof process === 'undefined' || process.type === 'renderer') {
-  module.exports = browser;
+  module.exports = browser$1;
 } else {
   module.exports = node;
 }
 });
 
-var Writable = stream.Writable;
-var debug$1 = src("follow-redirects");
+var Writable = stream__default["default"].Writable;
+var debug = src("follow-redirects");
 
 // RFC7231§4.2.1: Of the request methods defined by this specification,
 // the GET, HEAD, OPTIONS, and TRACE methods are defined to be safe.
@@ -2133,7 +2038,7 @@ RedirectableRequest.prototype._performRequest = function () {
   // Create the native request
   var request = this._currentRequest =
         nativeProtocol.request(this._options, this._onNativeResponse);
-  this._currentUrl = url__default.format(this._options);
+  this._currentUrl = url__default["default"].format(this._options);
 
   // Set up event handlers
   request._redirectable = this;
@@ -2219,9 +2124,9 @@ RedirectableRequest.prototype._processResponse = function (response) {
     }
 
     // Perform the redirected request
-    var redirectUrl = url__default.resolve(this._currentUrl, location);
-    debug$1("redirecting to", redirectUrl);
-    Object.assign(this._options, url__default.parse(redirectUrl));
+    var redirectUrl = url__default["default"].resolve(this._currentUrl, location);
+    debug("redirecting to", redirectUrl);
+    Object.assign(this._options, url__default["default"].parse(redirectUrl));
     this._isRedirect = true;
     this._performRequest();
 
@@ -2257,7 +2162,7 @@ function wrap(protocols) {
     // Executes a request, following redirects
     wrappedProtocol.request = function (options, callback) {
       if (typeof options === "string") {
-        options = url__default.parse(options);
+        options = url__default["default"].parse(options);
         options.maxRedirects = exports.maxRedirects;
       }
       else {
@@ -2268,8 +2173,8 @@ function wrap(protocols) {
         }, options);
       }
       options.nativeProtocols = nativeProtocols;
-      assert.equal(options.protocol, protocol, "protocol mismatch");
-      debug$1("options", options);
+      assert__default["default"].equal(options.protocol, protocol, "protocol mismatch");
+      debug("options", options);
       return new RedirectableRequest(options, callback);
     };
 
@@ -2284,13 +2189,13 @@ function wrap(protocols) {
 }
 
 // Exports
-var followRedirects = wrap({ http: http, https: https });
+var followRedirects = wrap({ http: http__default["default"], https: https__default["default"] });
 var wrap_1 = wrap;
 followRedirects.wrap = wrap_1;
 
 var name = "axios";
 var version = "0.19.0";
-var description = "Promise based HTTP client for the browser and node.js";
+var description$1 = "Promise based HTTP client for the browser and node.js";
 var main = "index.js";
 var scripts = {
 	test: "grunt test && bundlesize",
@@ -2357,11 +2262,11 @@ var devDependencies = {
 	webpack: "^1.13.1",
 	"webpack-dev-server": "^1.14.1"
 };
-var browser$1 = {
+var browser = {
 	"./lib/adapters/http.js": "./lib/adapters/xhr.js"
 };
 var typings = "./index.d.ts";
-var dependencies = {
+var dependencies$1 = {
 	"follow-redirects": "1.5.10",
 	"is-buffer": "^2.0.2"
 };
@@ -2377,7 +2282,7 @@ var _from = "axios@0.19.0";
 var _package = {
 	name: name,
 	version: version,
-	description: description,
+	description: description$1,
 	main: main,
 	scripts: scripts,
 	repository: repository,
@@ -2387,9 +2292,9 @@ var _package = {
 	bugs: bugs,
 	homepage: homepage,
 	devDependencies: devDependencies,
-	browser: browser$1,
+	browser: browser,
 	typings: typings,
-	dependencies: dependencies,
+	dependencies: dependencies$1,
 	bundlesize: bundlesize,
 	_resolved: _resolved,
 	_integrity: _integrity,
@@ -2400,7 +2305,7 @@ var _package$1 = /*#__PURE__*/Object.freeze({
     __proto__: null,
     name: name,
     version: version,
-    description: description,
+    description: description$1,
     main: main,
     scripts: scripts,
     repository: repository,
@@ -2410,9 +2315,9 @@ var _package$1 = /*#__PURE__*/Object.freeze({
     bugs: bugs,
     homepage: homepage,
     devDependencies: devDependencies,
-    browser: browser$1,
+    browser: browser,
     typings: typings,
-    dependencies: dependencies,
+    dependencies: dependencies$1,
     bundlesize: bundlesize,
     _resolved: _resolved,
     _integrity: _integrity,
@@ -2479,7 +2384,7 @@ var http_1 = function httpAdapter(config) {
     }
 
     // Parse url
-    var parsed = url__default.parse(config.url);
+    var parsed = url__default["default"].parse(config.url);
     var protocol = parsed.protocol || 'http:';
 
     if (!auth && parsed.auth) {
@@ -2516,7 +2421,7 @@ var http_1 = function httpAdapter(config) {
       var proxyEnv = protocol.slice(0, -1) + '_proxy';
       var proxyUrl = process.env[proxyEnv] || process.env[proxyEnv.toUpperCase()];
       if (proxyUrl) {
-        var parsedProxyUrl = url__default.parse(proxyUrl);
+        var parsedProxyUrl = url__default["default"].parse(proxyUrl);
         var noProxyEnv = process.env.no_proxy || process.env.NO_PROXY;
         var shouldProxy = true;
 
@@ -2579,7 +2484,7 @@ var http_1 = function httpAdapter(config) {
     if (config.transport) {
       transport = config.transport;
     } else if (config.maxRedirects === 0) {
-      transport = isHttpsProxy ? https : http;
+      transport = isHttpsProxy ? https__default["default"] : http__default["default"];
     } else {
       if (config.maxRedirects) {
         options.maxRedirects = config.maxRedirects;
@@ -2603,7 +2508,7 @@ var http_1 = function httpAdapter(config) {
       case 'compress':
       case 'deflate':
         // add the unzipper to the body stream processing pipeline
-        stream = (res.statusCode === 204) ? stream : stream.pipe(zlib.createUnzip());
+        stream = (res.statusCode === 204) ? stream : stream.pipe(zlib__default["default"].createUnzip());
 
         // remove the content-encoding in order to not confuse downstream operations
         delete res.headers['content-encoding'];
@@ -3463,34 +3368,34 @@ function createInstance(defaultConfig) {
 }
 
 // Create the default instance to be exported
-var axios = createInstance(defaults_1);
+var axios$1 = createInstance(defaults_1);
 
 // Expose Axios class to allow class inheritance
-axios.Axios = Axios_1;
+axios$1.Axios = Axios_1;
 
 // Factory for creating new instances
-axios.create = function create(instanceConfig) {
-  return createInstance(mergeConfig(axios.defaults, instanceConfig));
+axios$1.create = function create(instanceConfig) {
+  return createInstance(mergeConfig(axios$1.defaults, instanceConfig));
 };
 
 // Expose Cancel & CancelToken
-axios.Cancel = Cancel_1;
-axios.CancelToken = CancelToken_1;
-axios.isCancel = isCancel;
+axios$1.Cancel = Cancel_1;
+axios$1.CancelToken = CancelToken_1;
+axios$1.isCancel = isCancel;
 
 // Expose all/spread
-axios.all = function all(promises) {
+axios$1.all = function all(promises) {
   return Promise.all(promises);
 };
-axios.spread = spread;
+axios$1.spread = spread;
 
-var axios_1 = axios;
+var axios_1 = axios$1;
 
 // Allow use of default import syntax in TypeScript
-var default_1 = axios;
+var default_1 = axios$1;
 axios_1.default = default_1;
 
-var axios$1 = axios_1;
+var axios = axios_1;
 
 var ApiClient = /** @class */ (function () {
     function ApiClient(rootUrl, token) {
@@ -3513,7 +3418,7 @@ var ApiClient = /** @class */ (function () {
         if (this.token) {
             headers = this.addTokens(this.token);
         }
-        return axios$1.get("" + this.rootUrl, { headers: headers });
+        return axios.get("" + this.rootUrl, { headers: headers });
     };
     // tslint:disable-next-line: no-any
     ApiClient.prototype.post = function (body) {
@@ -3521,7 +3426,7 @@ var ApiClient = /** @class */ (function () {
         if (this.token) {
             headers = this.addTokens(this.token);
         }
-        return axios$1.post("" + this.rootUrl, body, { headers: headers });
+        return axios.post("" + this.rootUrl, body, { headers: headers });
     };
     // tslint:disable-next-line: no-any
     ApiClient.prototype.patch = function (body) {
@@ -3529,7 +3434,7 @@ var ApiClient = /** @class */ (function () {
         if (this.token) {
             headers = this.addTokens(this.token);
         }
-        return axios$1.patch("" + this.rootUrl, body, { headers: headers });
+        return axios.patch("" + this.rootUrl, body, { headers: headers });
     };
     // tslint:disable-next-line: no-any
     ApiClient.prototype.delete = function () {
@@ -3537,7 +3442,7 @@ var ApiClient = /** @class */ (function () {
         if (this.token) {
             headers = this.addTokens(this.token);
         }
-        return axios$1.delete("" + this.rootUrl, { headers: headers });
+        return axios.delete("" + this.rootUrl, { headers: headers });
     };
     return ApiClient;
 }());
@@ -3591,14 +3496,12 @@ var AuthClient = /** @class */ (function () {
 
 var validation_error_type = createCommonjsModule(function (module, exports) {
 Object.defineProperty(exports, "__esModule", { value: true });
-var ValidationErrorTypeEnum;
 (function (ValidationErrorTypeEnum) {
     ValidationErrorTypeEnum["Unknown"] = "unknown";
     ValidationErrorTypeEnum["Unplanned"] = "unplanned";
     ValidationErrorTypeEnum["MissingRequired"] = "missing_required";
     ValidationErrorTypeEnum["InvalidValue"] = "invalid_value";
-})(ValidationErrorTypeEnum = exports.ValidationErrorTypeEnum || (exports.ValidationErrorTypeEnum = {}));
-var SchemaKeywordErrorTypeEnum;
+})(exports.ValidationErrorTypeEnum || (exports.ValidationErrorTypeEnum = {}));
 (function (SchemaKeywordErrorTypeEnum) {
     SchemaKeywordErrorTypeEnum["AdditionalItems"] = "additionalItems";
     SchemaKeywordErrorTypeEnum["AdditionalProperties"] = "additionalProperties";
@@ -3617,32 +3520,29 @@ var SchemaKeywordErrorTypeEnum;
     SchemaKeywordErrorTypeEnum["PatternProperties"] = "patternProperties";
     SchemaKeywordErrorTypeEnum["Required"] = "required";
     SchemaKeywordErrorTypeEnum["Type"] = "type";
-})(SchemaKeywordErrorTypeEnum = exports.SchemaKeywordErrorTypeEnum || (exports.SchemaKeywordErrorTypeEnum = {}));
+})(exports.SchemaKeywordErrorTypeEnum || (exports.SchemaKeywordErrorTypeEnum = {}));
 });
 
 unwrapExports(validation_error_type);
-var validation_error_type_1 = validation_error_type.ValidationErrorTypeEnum;
-var validation_error_type_2 = validation_error_type.SchemaKeywordErrorTypeEnum;
+validation_error_type.ValidationErrorTypeEnum;
+validation_error_type.SchemaKeywordErrorTypeEnum;
 
 var validation_result_event = createCommonjsModule(function (module, exports) {
 Object.defineProperty(exports, "__esModule", { value: true });
-var ValidationResultEventEventTypeEnum;
 (function (ValidationResultEventEventTypeEnum) {
     ValidationResultEventEventTypeEnum["ValidationResult"] = "validation_result";
-})(ValidationResultEventEventTypeEnum = exports.ValidationResultEventEventTypeEnum || (exports.ValidationResultEventEventTypeEnum = {}));
+})(exports.ValidationResultEventEventTypeEnum || (exports.ValidationResultEventEventTypeEnum = {}));
 });
 
 unwrapExports(validation_result_event);
-var validation_result_event_1 = validation_result_event.ValidationResultEventEventTypeEnum;
+validation_result_event.ValidationResultEventEventTypeEnum;
 
 var types = createCommonjsModule(function (module, exports) {
 Object.defineProperty(exports, "__esModule", { value: true });
-var ActivatedEnvironment;
 (function (ActivatedEnvironment) {
     ActivatedEnvironment["Development"] = "development";
     ActivatedEnvironment["Production"] = "production";
-})(ActivatedEnvironment = exports.ActivatedEnvironment || (exports.ActivatedEnvironment = {}));
-var DataPlanMatchType;
+})(exports.ActivatedEnvironment || (exports.ActivatedEnvironment = {}));
 (function (DataPlanMatchType) {
     DataPlanMatchType["Unknown"] = "unknown";
     DataPlanMatchType["SessionStart"] = "session_start";
@@ -3667,8 +3567,7 @@ var DataPlanMatchType;
     DataPlanMatchType["ProductAction"] = "product_action";
     DataPlanMatchType["PromotionAction"] = "promotion_action";
     DataPlanMatchType["ProductImpression"] = "product_impression";
-})(DataPlanMatchType = exports.DataPlanMatchType || (exports.DataPlanMatchType = {}));
-var MessageType;
+})(exports.DataPlanMatchType || (exports.DataPlanMatchType = {}));
 (function (MessageType) {
     MessageType["Unknown"] = "unknown";
     MessageType["SessionStart"] = "session_start";
@@ -3687,8 +3586,7 @@ var MessageType;
     MessageType["UserIdentityChange"] = "user_identity_chagne";
     MessageType["Uninstall"] = "uninstall";
     MessageType["Media"] = "media";
-})(MessageType = exports.MessageType || (exports.MessageType = {}));
-var EventType;
+})(exports.MessageType || (exports.MessageType = {}));
 (function (EventType) {
     EventType["Unknown"] = "unknown";
     EventType["Navigation"] = "navigation";
@@ -3700,22 +3598,21 @@ var EventType;
     EventType["Social"] = "social";
     EventType["Other"] = "other";
     EventType["Media"] = "media";
-})(EventType = exports.EventType || (exports.EventType = {}));
-var DataPlanValidatorType;
+})(exports.EventType || (exports.EventType = {}));
 (function (DataPlanValidatorType) {
     DataPlanValidatorType["Unknown"] = "unknown";
     DataPlanValidatorType["JSONSchema"] = "json_schema";
-})(DataPlanValidatorType = exports.DataPlanValidatorType || (exports.DataPlanValidatorType = {}));
+})(exports.DataPlanValidatorType || (exports.DataPlanValidatorType = {}));
 });
 
 unwrapExports(types);
-var types_1 = types.ActivatedEnvironment;
-var types_2 = types.DataPlanMatchType;
-var types_3 = types.MessageType;
-var types_4 = types.EventType;
-var types_5 = types.DataPlanValidatorType;
+types.ActivatedEnvironment;
+types.DataPlanMatchType;
+types.MessageType;
+types.EventType;
+types.DataPlanValidatorType;
 
-var dist$1 = createCommonjsModule(function (module, exports) {
+var dist = createCommonjsModule(function (module, exports) {
 function __export(m) {
     for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
 }
@@ -3725,21 +3622,21 @@ __export(validation_result_event);
 __export(types);
 });
 
-unwrapExports(dist$1);
-var dist_1$1 = dist$1.SchemaKeywordErrorTypeEnum;
-var dist_2$1 = dist$1.ValidationErrorType;
-var dist_3$1 = dist$1.ValidationError;
-var dist_4$1 = dist$1.MessageType;
-var dist_5$1 = dist$1.DataPlanMatchType;
-var dist_6$1 = dist$1.ScreenViewEventCriteria;
-var dist_7$1 = dist$1.CustomEventCriteria;
-var dist_8$1 = dist$1.ValidationErrorTypeEnum;
-var dist_9$1 = dist$1.ValidationResultEventEventTypeEnum;
+unwrapExports(dist);
+var dist_1 = dist.SchemaKeywordErrorTypeEnum;
+dist.ValidationErrorType;
+dist.ValidationError;
+var dist_4 = dist.MessageType;
+var dist_5 = dist.DataPlanMatchType;
+dist.ScreenViewEventCriteria;
+dist.CustomEventCriteria;
+var dist_8 = dist.ValidationErrorTypeEnum;
+dist.ValidationResultEventEventTypeEnum;
 
 var uri_all = createCommonjsModule(function (module, exports) {
 /** @license URI.js v4.2.1 (c) 2011 Gary Court. License: http://github.com/garycourt/uri-js */
 (function (global, factory) {
-	 factory(exports) ;
+	factory(exports) ;
 }(commonjsGlobal, (function (exports) {
 function merge() {
     for (var _len = arguments.length, sets = Array(_len), _key = 0; _key < _len; _key++) {
@@ -3793,10 +3690,10 @@ function buildExps(isIRI) {
         //subset, excludes bidi control characters
     IPRIVATE$$ = isIRI ? "[\\uE000-\\uF8FF]" : "[]",
         //subset
-    UNRESERVED$$ = merge(ALPHA$$, DIGIT$$, "[\\-\\.\\_\\~]", UCSCHAR$$),
-        SCHEME$ = subexp(ALPHA$$ + merge(ALPHA$$, DIGIT$$, "[\\+\\-\\.]") + "*"),
-        USERINFO$ = subexp(subexp(PCT_ENCODED$ + "|" + merge(UNRESERVED$$, SUB_DELIMS$$, "[\\:]")) + "*"),
-        DEC_OCTET_RELAXED$ = subexp(subexp("25[0-5]") + "|" + subexp("2[0-4]" + DIGIT$$) + "|" + subexp("1" + DIGIT$$ + DIGIT$$) + "|" + subexp("0?[1-9]" + DIGIT$$) + "|0?0?" + DIGIT$$),
+    UNRESERVED$$ = merge(ALPHA$$, DIGIT$$, "[\\-\\.\\_\\~]", UCSCHAR$$);
+        subexp(ALPHA$$ + merge(ALPHA$$, DIGIT$$, "[\\+\\-\\.]") + "*");
+        subexp(subexp(PCT_ENCODED$ + "|" + merge(UNRESERVED$$, SUB_DELIMS$$, "[\\:]")) + "*");
+        var DEC_OCTET_RELAXED$ = subexp(subexp("25[0-5]") + "|" + subexp("2[0-4]" + DIGIT$$) + "|" + subexp("1" + DIGIT$$ + DIGIT$$) + "|" + subexp("0?[1-9]" + DIGIT$$) + "|0?0?" + DIGIT$$),
         //relaxed parsing rules
     IPV4ADDRESS$ = subexp(DEC_OCTET_RELAXED$ + "\\." + DEC_OCTET_RELAXED$ + "\\." + DEC_OCTET_RELAXED$ + "\\." + DEC_OCTET_RELAXED$),
         H16$ = subexp(HEXDIG$$ + "{1,4}"),
@@ -3820,14 +3717,14 @@ function buildExps(isIRI) {
     IPV6ADDRESS9$ = subexp(subexp(subexp(H16$ + "\\:") + "{0,6}" + H16$) + "?\\:\\:"),
         //[ *6( h16 ":" ) h16 ] "::"
     IPV6ADDRESS$ = subexp([IPV6ADDRESS1$, IPV6ADDRESS2$, IPV6ADDRESS3$, IPV6ADDRESS4$, IPV6ADDRESS5$, IPV6ADDRESS6$, IPV6ADDRESS7$, IPV6ADDRESS8$, IPV6ADDRESS9$].join("|")),
-        ZONEID$ = subexp(subexp(UNRESERVED$$ + "|" + PCT_ENCODED$) + "+"),
+        ZONEID$ = subexp(subexp(UNRESERVED$$ + "|" + PCT_ENCODED$) + "+");
         //RFC 6874, with relaxed parsing rules
-    IPVFUTURE$ = subexp("[vV]" + HEXDIG$$ + "+\\." + merge(UNRESERVED$$, SUB_DELIMS$$, "[\\:]") + "+"),
+    subexp("[vV]" + HEXDIG$$ + "+\\." + merge(UNRESERVED$$, SUB_DELIMS$$, "[\\:]") + "+");
         //RFC 6874
-    REG_NAME$ = subexp(subexp(PCT_ENCODED$ + "|" + merge(UNRESERVED$$, SUB_DELIMS$$)) + "*"),
-        PCHAR$ = subexp(PCT_ENCODED$ + "|" + merge(UNRESERVED$$, SUB_DELIMS$$, "[\\:\\@]")),
-        SEGMENT_NZ_NC$ = subexp(subexp(PCT_ENCODED$ + "|" + merge(UNRESERVED$$, SUB_DELIMS$$, "[\\@]")) + "+"),
-        QUERY$ = subexp(subexp(PCHAR$ + "|" + merge("[\\/\\?]", IPRIVATE$$)) + "*");
+    subexp(subexp(PCT_ENCODED$ + "|" + merge(UNRESERVED$$, SUB_DELIMS$$)) + "*");
+        var PCHAR$ = subexp(PCT_ENCODED$ + "|" + merge(UNRESERVED$$, SUB_DELIMS$$, "[\\:\\@]"));
+        subexp(subexp(PCT_ENCODED$ + "|" + merge(UNRESERVED$$, SUB_DELIMS$$, "[\\@]")) + "+");
+        subexp(subexp(PCHAR$ + "|" + merge("[\\/\\?]", IPRIVATE$$)) + "*");
     return {
         NOT_SCHEME: new RegExp(merge("[^]", ALPHA$$, DIGIT$$, "[\\+\\-\\.]"), "g"),
         NOT_USERINFO: new RegExp(merge("[^\\%\\:]", UNRESERVED$$, SUB_DELIMS$$), "g"),
@@ -4889,7 +4786,7 @@ var handler$1 = {
 
 var O = {};
 //RFC 3986
-var UNRESERVED$$ = "[A-Za-z0-9\\-\\.\\_\\~" + ( "\\xA0-\\u200D\\u2010-\\u2029\\u202F-\\uD7FF\\uF900-\\uFDCF\\uFDF0-\\uFFEF" ) + "]";
+var UNRESERVED$$ = "[A-Za-z0-9\\-\\.\\_\\~" + ("\\xA0-\\u200D\\u2010-\\u2029\\u202F-\\uD7FF\\uF900-\\uFDCF\\uFDF0-\\uFFEF" ) + "]";
 var HEXDIG$$ = "[0-9A-Fa-f]"; //case-insensitive
 var PCT_ENCODED$ = subexp(subexp("%[EFef]" + HEXDIG$$ + "%" + HEXDIG$$ + HEXDIG$$ + "%" + HEXDIG$$ + HEXDIG$$) + "|" + subexp("%[89A-Fa-f]" + HEXDIG$$ + "%" + HEXDIG$$ + HEXDIG$$) + "|" + subexp("%" + HEXDIG$$ + HEXDIG$$)); //expanded
 //RFC 5322, except these symbols as per RFC 6068: @ : / ? # [ ] & ; =
@@ -5136,7 +5033,7 @@ var fastDeepEqual = function equal(a, b) {
 
 // https://mathiasbynens.be/notes/javascript-encoding
 // https://github.com/bestiejs/punycode.js - punycode.ucs2.decode
-var ucs2length = function ucs2length(str) {
+var ucs2length$1 = function ucs2length(str) {
   var length = 0
     , len = str.length
     , pos = 0
@@ -5158,11 +5055,11 @@ var util = {
   checkDataType: checkDataType,
   checkDataTypes: checkDataTypes,
   coerceToTypes: coerceToTypes,
-  toHash: toHash,
+  toHash: toHash$1,
   getProperty: getProperty,
   escapeQuotes: escapeQuotes,
   equal: fastDeepEqual,
-  ucs2length: ucs2length,
+  ucs2length: ucs2length$1,
   varOccurences: varOccurences,
   varReplace: varReplace,
   schemaHasRules: schemaHasRules,
@@ -5213,7 +5110,7 @@ function checkDataTypes(dataTypes, data, strictNumbers) {
     case 1: return checkDataType(dataTypes[0], data, strictNumbers, true);
     default:
       var code = '';
-      var types = toHash(dataTypes);
+      var types = toHash$1(dataTypes);
       if (types.array && types.object) {
         code = types.null ? '(': '(!' + data + ' || ';
         code += 'typeof ' + data + ' !== "object")';
@@ -5230,7 +5127,7 @@ function checkDataTypes(dataTypes, data, strictNumbers) {
 }
 
 
-var COERCE_TO_TYPES = toHash([ 'string', 'number', 'integer', 'boolean', 'null' ]);
+var COERCE_TO_TYPES = toHash$1([ 'string', 'number', 'integer', 'boolean', 'null' ]);
 function coerceToTypes(optionCoerceTypes, dataTypes) {
   if (Array.isArray(dataTypes)) {
     var types = [];
@@ -5248,19 +5145,19 @@ function coerceToTypes(optionCoerceTypes, dataTypes) {
 }
 
 
-function toHash(arr) {
+function toHash$1(arr) {
   var hash = {};
   for (var i=0; i<arr.length; i++) hash[arr[i]] = true;
   return hash;
 }
 
 
-var IDENTIFIER = /^[a-z$_][a-z$_0-9]*$/i;
+var IDENTIFIER$1 = /^[a-z$_][a-z$_0-9]*$/i;
 var SINGLE_QUOTE = /'|\\/g;
 function getProperty(key) {
   return typeof key == 'number'
           ? '[' + key + ']'
-          : IDENTIFIER.test(key)
+          : IDENTIFIER$1.test(key)
             ? '.' + key
             : "['" + escapeQuotes(key) + "']";
 }
@@ -5328,17 +5225,17 @@ function getPath(currentPath, prop, jsonPointers) {
 }
 
 
-var JSON_POINTER = /^\/(?:[^~]|~0|~1)*$/;
-var RELATIVE_JSON_POINTER = /^([0-9]+)(#|\/(?:[^~]|~0|~1)*)?$/;
+var JSON_POINTER$1 = /^\/(?:[^~]|~0|~1)*$/;
+var RELATIVE_JSON_POINTER$1 = /^([0-9]+)(#|\/(?:[^~]|~0|~1)*)?$/;
 function getData($data, lvl, paths) {
   var up, jsonPointer, data, matches;
   if ($data === '') return 'rootData';
   if ($data[0] == '/') {
-    if (!JSON_POINTER.test($data)) throw new Error('Invalid JSON-pointer: ' + $data);
+    if (!JSON_POINTER$1.test($data)) throw new Error('Invalid JSON-pointer: ' + $data);
     jsonPointer = $data;
     data = 'rootData';
   } else {
-    matches = $data.match(RELATIVE_JSON_POINTER);
+    matches = $data.match(RELATIVE_JSON_POINTER$1);
     if (!matches) throw new Error('Invalid JSON-pointer: ' + $data);
     up = +matches[1];
     jsonPointer = matches[2];
@@ -5389,6 +5286,28 @@ function escapeJsonPointer(str) {
 function unescapeJsonPointer(str) {
   return str.replace(/~1/g, '/').replace(/~0/g, '~');
 }
+util.copy;
+util.checkDataType;
+util.checkDataTypes;
+util.coerceToTypes;
+util.toHash;
+util.getProperty;
+util.escapeQuotes;
+util.equal;
+util.ucs2length;
+util.varOccurences;
+util.varReplace;
+util.schemaHasRules;
+util.schemaHasRulesExcept;
+util.schemaUnknownRules;
+util.toQuotedString;
+util.getPathExpr;
+util.getPath;
+util.getData;
+util.unescapeFragment;
+util.unescapeJsonPointer;
+util.escapeFragment;
+util.escapeJsonPointer;
 
 var schema_obj = SchemaObject;
 
@@ -5751,25 +5670,25 @@ function resolveIds(schema) {
 }
 
 var error_classes = {
-  Validation: errorSubclass(ValidationError),
-  MissingRef: errorSubclass(MissingRefError)
+  Validation: errorSubclass(ValidationError$1),
+  MissingRef: errorSubclass(MissingRefError$1)
 };
 
 
-function ValidationError(errors) {
+function ValidationError$1(errors) {
   this.message = 'validation failed';
   this.errors = errors;
   this.ajv = this.validation = true;
 }
 
 
-MissingRefError.message = function (baseId, ref) {
+MissingRefError$1.message = function (baseId, ref) {
   return 'can\'t resolve reference ' + ref + ' from id ' + baseId;
 };
 
 
-function MissingRefError(baseId, ref, message) {
-  this.message = message || MissingRefError.message(baseId, ref);
+function MissingRefError$1(baseId, ref, message) {
+  this.message = message || MissingRefError$1.message(baseId, ref);
   this.missingRef = resolve_1.url(baseId, ref);
   this.missingSchema = resolve_1.normalizeId(resolve_1.fullPath(this.missingRef));
 }
@@ -5839,7 +5758,7 @@ var fastJsonStableStringify = function (data, opts) {
     })(data);
 };
 
-var validate = function generate_validate(it, $keyword, $ruleType) {
+var validate$1 = function generate_validate(it, $keyword, $ruleType) {
   var out = '';
   var $async = it.schema.$async === true,
     $refKeywords = it.util.schemaHasRulesExcept(it.schema, it.RULES.all, '$ref'),
@@ -6333,13 +6252,13 @@ var validate = function generate_validate(it, $keyword, $ruleType) {
  * Functions below are used inside compiled validations function
  */
 
-var ucs2length$1 = util.ucs2length;
+var ucs2length = util.ucs2length;
 
 
 // this error is thrown by async schemas to return validation errors via exception
-var ValidationError$1 = error_classes.Validation;
+var ValidationError = error_classes.Validation;
 
-var compile_1 = compile;
+var compile_1 = compile$1;
 
 
 /**
@@ -6351,7 +6270,7 @@ var compile_1 = compile;
  * @param  {String} baseId base ID for IDs in the schema
  * @return {Function} validation function
  */
-function compile(schema, root, localRefs, baseId) {
+function compile$1(schema, root, localRefs, baseId) {
   /* jshint validthis: true, evil: true */
   /* eslint no-shadow: 0 */
   var self = this
@@ -6403,11 +6322,11 @@ function compile(schema, root, localRefs, baseId) {
   function localCompile(_schema, _root, localRefs, baseId) {
     var isRoot = !_root || (_root && _root.schema == _schema);
     if (_root.schema != root.schema)
-      return compile.call(self, _schema, _root, localRefs, baseId);
+      return compile$1.call(self, _schema, _root, localRefs, baseId);
 
     var $async = _schema.$async === true;
 
-    var sourceCode = validate({
+    var sourceCode = validate$1({
       isTop: true,
       schema: _schema,
       isRoot: isRoot,
@@ -6418,7 +6337,7 @@ function compile(schema, root, localRefs, baseId) {
       errorPath: '""',
       MissingRefError: error_classes.MissingRef,
       RULES: RULES,
-      validate: validate,
+      validate: validate$1,
       util: util,
       resolve: resolve_1,
       resolveRef: resolveRef,
@@ -6437,7 +6356,7 @@ function compile(schema, root, localRefs, baseId) {
 
     if (opts.processCode) sourceCode = opts.processCode(sourceCode, _schema);
     // console.log('\n\n\n *** \n', JSON.stringify(sourceCode));
-    var validate$1;
+    var validate;
     try {
       var makeValidate = new Function(
         'self',
@@ -6453,7 +6372,7 @@ function compile(schema, root, localRefs, baseId) {
         sourceCode
       );
 
-      validate$1 = makeValidate(
+      validate = makeValidate(
         self,
         RULES,
         formats,
@@ -6462,31 +6381,31 @@ function compile(schema, root, localRefs, baseId) {
         defaults,
         customRules,
         fastDeepEqual,
-        ucs2length$1,
-        ValidationError$1
+        ucs2length,
+        ValidationError
       );
 
-      refVal[0] = validate$1;
+      refVal[0] = validate;
     } catch(e) {
       self.logger.error('Error compiling schema, function code:', sourceCode);
       throw e;
     }
 
-    validate$1.schema = _schema;
-    validate$1.errors = null;
-    validate$1.refs = refs;
-    validate$1.refVal = refVal;
-    validate$1.root = isRoot ? validate$1 : _root;
-    if ($async) validate$1.$async = true;
+    validate.schema = _schema;
+    validate.errors = null;
+    validate.refs = refs;
+    validate.refVal = refVal;
+    validate.root = isRoot ? validate : _root;
+    if ($async) validate.$async = true;
     if (opts.sourceCode === true) {
-      validate$1.source = {
+      validate.source = {
         code: sourceCode,
         patterns: patterns,
         defaults: defaults
       };
     }
 
-    return validate$1;
+    return validate;
   }
 
   function resolveRef(baseId, ref, isRoot) {
@@ -6514,7 +6433,7 @@ function compile(schema, root, localRefs, baseId) {
       if (localSchema) {
         v = resolve_1.inlineRef(localSchema, opts.inlineRefs)
             ? localSchema
-            : compile.call(self, localSchema, root, localRefs, baseId);
+            : compile$1.call(self, localSchema, root, localRefs, baseId);
       }
     }
 
@@ -6750,9 +6669,9 @@ var URITEMPLATE = /^(?:(?:[^\x00-\x20"'<>%\\^`{|}]|%[0-9a-f]{2})|\{[+#./;?&=,!@|
 // var URL = /^(?:(?:https?|ftp):\/\/)(?:\S+(?::\S*)?@)?(?:(?!10(?:\.\d{1,3}){3})(?!127(?:\.\d{1,3}){3})(?!169\.254(?:\.\d{1,3}){2})(?!192\.168(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u{00a1}-\u{ffff}0-9]+-?)*[a-z\u{00a1}-\u{ffff}0-9]+)(?:\.(?:[a-z\u{00a1}-\u{ffff}0-9]+-?)*[a-z\u{00a1}-\u{ffff}0-9]+)*(?:\.(?:[a-z\u{00a1}-\u{ffff}]{2,})))(?::\d{2,5})?(?:\/[^\s]*)?$/iu;
 var URL = /^(?:(?:http[s\u017F]?|ftp):\/\/)(?:(?:[\0-\x08\x0E-\x1F!-\x9F\xA1-\u167F\u1681-\u1FFF\u200B-\u2027\u202A-\u202E\u2030-\u205E\u2060-\u2FFF\u3001-\uD7FF\uE000-\uFEFE\uFF00-\uFFFF]|[\uD800-\uDBFF][\uDC00-\uDFFF]|[\uD800-\uDBFF](?![\uDC00-\uDFFF])|(?:[^\uD800-\uDBFF]|^)[\uDC00-\uDFFF])+(?::(?:[\0-\x08\x0E-\x1F!-\x9F\xA1-\u167F\u1681-\u1FFF\u200B-\u2027\u202A-\u202E\u2030-\u205E\u2060-\u2FFF\u3001-\uD7FF\uE000-\uFEFE\uFF00-\uFFFF]|[\uD800-\uDBFF][\uDC00-\uDFFF]|[\uD800-\uDBFF](?![\uDC00-\uDFFF])|(?:[^\uD800-\uDBFF]|^)[\uDC00-\uDFFF])*)?@)?(?:(?!10(?:\.[0-9]{1,3}){3})(?!127(?:\.[0-9]{1,3}){3})(?!169\.254(?:\.[0-9]{1,3}){2})(?!192\.168(?:\.[0-9]{1,3}){2})(?!172\.(?:1[6-9]|2[0-9]|3[01])(?:\.[0-9]{1,3}){2})(?:[1-9][0-9]?|1[0-9][0-9]|2[01][0-9]|22[0-3])(?:\.(?:1?[0-9]{1,2}|2[0-4][0-9]|25[0-5])){2}(?:\.(?:[1-9][0-9]?|1[0-9][0-9]|2[0-4][0-9]|25[0-4]))|(?:(?:(?:[0-9KSa-z\xA1-\uD7FF\uE000-\uFFFF]|[\uD800-\uDBFF](?![\uDC00-\uDFFF])|(?:[^\uD800-\uDBFF]|^)[\uDC00-\uDFFF])+-?)*(?:[0-9KSa-z\xA1-\uD7FF\uE000-\uFFFF]|[\uD800-\uDBFF](?![\uDC00-\uDFFF])|(?:[^\uD800-\uDBFF]|^)[\uDC00-\uDFFF])+)(?:\.(?:(?:[0-9KSa-z\xA1-\uD7FF\uE000-\uFFFF]|[\uD800-\uDBFF](?![\uDC00-\uDFFF])|(?:[^\uD800-\uDBFF]|^)[\uDC00-\uDFFF])+-?)*(?:[0-9KSa-z\xA1-\uD7FF\uE000-\uFFFF]|[\uD800-\uDBFF](?![\uDC00-\uDFFF])|(?:[^\uD800-\uDBFF]|^)[\uDC00-\uDFFF])+)*(?:\.(?:(?:[KSa-z\xA1-\uD7FF\uE000-\uFFFF]|[\uD800-\uDBFF](?![\uDC00-\uDFFF])|(?:[^\uD800-\uDBFF]|^)[\uDC00-\uDFFF]){2,})))(?::[0-9]{2,5})?(?:\/(?:[\0-\x08\x0E-\x1F!-\x9F\xA1-\u167F\u1681-\u1FFF\u200B-\u2027\u202A-\u202E\u2030-\u205E\u2060-\u2FFF\u3001-\uD7FF\uE000-\uFEFE\uFF00-\uFFFF]|[\uD800-\uDBFF][\uDC00-\uDFFF]|[\uD800-\uDBFF](?![\uDC00-\uDFFF])|(?:[^\uD800-\uDBFF]|^)[\uDC00-\uDFFF])*)?$/i;
 var UUID = /^(?:urn:uuid:)?[0-9a-f]{8}-(?:[0-9a-f]{4}-){3}[0-9a-f]{12}$/i;
-var JSON_POINTER$1 = /^(?:\/(?:[^~/]|~0|~1)*)*$/;
+var JSON_POINTER = /^(?:\/(?:[^~/]|~0|~1)*)*$/;
 var JSON_POINTER_URI_FRAGMENT = /^#(?:\/(?:[a-z0-9_\-.!$&'()*+,;:=@]|%[0-9a-f]{2}|~0|~1)*)*$/i;
-var RELATIVE_JSON_POINTER$1 = /^(?:0|[1-9][0-9]*)(?:#|(?:\/(?:[^~/]|~0|~1)*)*)$/;
+var RELATIVE_JSON_POINTER = /^(?:0|[1-9][0-9]*)(?:#|(?:\/(?:[^~/]|~0|~1)*)*)$/;
 
 
 var formats_1 = formats;
@@ -6788,10 +6707,10 @@ formats.fast = {
   uuid: UUID,
   // JSON-pointer: https://tools.ietf.org/html/rfc6901
   // uri fragment: https://tools.ietf.org/html/rfc3986#appendix-A
-  'json-pointer': JSON_POINTER$1,
+  'json-pointer': JSON_POINTER,
   'json-pointer-uri-fragment': JSON_POINTER_URI_FRAGMENT,
   // relative JSON-pointer: http://tools.ietf.org/html/draft-luff-relative-json-pointer-00
-  'relative-json-pointer': RELATIVE_JSON_POINTER$1
+  'relative-json-pointer': RELATIVE_JSON_POINTER
 };
 
 
@@ -6809,9 +6728,9 @@ formats.full = {
   ipv6: /^\s*(?:(?:(?:[0-9a-f]{1,4}:){7}(?:[0-9a-f]{1,4}|:))|(?:(?:[0-9a-f]{1,4}:){6}(?::[0-9a-f]{1,4}|(?:(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(?:\.(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3})|:))|(?:(?:[0-9a-f]{1,4}:){5}(?:(?:(?::[0-9a-f]{1,4}){1,2})|:(?:(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(?:\.(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3})|:))|(?:(?:[0-9a-f]{1,4}:){4}(?:(?:(?::[0-9a-f]{1,4}){1,3})|(?:(?::[0-9a-f]{1,4})?:(?:(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(?:\.(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(?:(?:[0-9a-f]{1,4}:){3}(?:(?:(?::[0-9a-f]{1,4}){1,4})|(?:(?::[0-9a-f]{1,4}){0,2}:(?:(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(?:\.(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(?:(?:[0-9a-f]{1,4}:){2}(?:(?:(?::[0-9a-f]{1,4}){1,5})|(?:(?::[0-9a-f]{1,4}){0,3}:(?:(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(?:\.(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(?:(?:[0-9a-f]{1,4}:){1}(?:(?:(?::[0-9a-f]{1,4}){1,6})|(?:(?::[0-9a-f]{1,4}){0,4}:(?:(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(?:\.(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(?::(?:(?:(?::[0-9a-f]{1,4}){1,7})|(?:(?::[0-9a-f]{1,4}){0,5}:(?:(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(?:\.(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:)))(?:%.+)?\s*$/i,
   regex: regex,
   uuid: UUID,
-  'json-pointer': JSON_POINTER$1,
+  'json-pointer': JSON_POINTER,
   'json-pointer-uri-fragment': JSON_POINTER_URI_FRAGMENT,
-  'relative-json-pointer': RELATIVE_JSON_POINTER$1
+  'relative-json-pointer': RELATIVE_JSON_POINTER
 };
 
 
@@ -7118,7 +7037,7 @@ var comment = function generate_comment(it, $keyword, $ruleType) {
   var out = ' ';
   var $schema = it.schema[$keyword];
   var $errSchemaPath = it.errSchemaPath + '/' + $keyword;
-  var $breakOnError = !it.opts.allErrors;
+  !it.opts.allErrors;
   var $comment = it.util.toQuotedString($schema);
   if (it.opts.$comment === true) {
     out += ' console.log(' + ($comment) + ');';
@@ -7261,7 +7180,7 @@ var contains = function generate_contains(it, $keyword, $ruleType) {
   return out;
 };
 
-var dependencies$1 = function generate_dependencies(it, $keyword, $ruleType) {
+var dependencies = function generate_dependencies(it, $keyword, $ruleType) {
   var out = ' ';
   var $lvl = it.level;
   var $dataLvl = it.dataLevel;
@@ -8604,7 +8523,7 @@ var pattern = function generate_pattern(it, $keyword, $ruleType) {
   return out;
 };
 
-var properties = function generate_properties(it, $keyword, $ruleType) {
+var properties$2 = function generate_properties(it, $keyword, $ruleType) {
   var out = ' ';
   var $lvl = it.level;
   var $dataLvl = it.dataLevel;
@@ -9020,7 +8939,7 @@ var propertyNames = function generate_propertyNames(it, $keyword, $ruleType) {
   return out;
 };
 
-var required = function generate_required(it, $keyword, $ruleType) {
+var required$1 = function generate_required(it, $keyword, $ruleType) {
   var out = ' ';
   var $lvl = it.level;
   var $dataLvl = it.dataLevel;
@@ -9380,7 +9299,7 @@ var dotjs = {
   '$comment': comment,
   const: _const,
   contains: contains,
-  dependencies: dependencies$1,
+  dependencies: dependencies,
   'enum': _enum,
   format: format,
   'if': _if,
@@ -9397,14 +9316,14 @@ var dotjs = {
   not: not,
   oneOf: oneOf,
   pattern: pattern,
-  properties: properties,
+  properties: properties$2,
   propertyNames: propertyNames,
-  required: required,
+  required: required$1,
   uniqueItems: uniqueItems,
-  validate: validate
+  validate: validate$1
 };
 
-var toHash$1 = util.toHash;
+var toHash = util.toHash;
 
 var rules = function rules() {
   var RULES = [
@@ -9430,8 +9349,8 @@ var rules = function rules() {
     'additionalItems', 'then', 'else'
   ];
   var TYPES = [ 'number', 'integer', 'string', 'array', 'object', 'boolean', 'null' ];
-  RULES.all = toHash$1(ALL);
-  RULES.types = toHash$1(TYPES);
+  RULES.all = toHash(ALL);
+  RULES.types = toHash(TYPES);
 
   RULES.forEach(function (group) {
     group.rules = group.rules.map(function (keyword) {
@@ -9462,7 +9381,7 @@ var rules = function rules() {
     if (group.type) RULES.types[group.type] = group;
   });
 
-  RULES.keywords = toHash$1(ALL.concat(KEYWORDS));
+  RULES.keywords = toHash(ALL.concat(KEYWORDS));
   RULES.custom = {};
 
   return RULES;
@@ -9490,7 +9409,7 @@ var KEYWORDS = [
   'const'
 ];
 
-var data = function (metaSchema, keywordsJsonPointers) {
+var data$2 = function (metaSchema, keywordsJsonPointers) {
   for (var i=0; i<keywordsJsonPointers.length; i++) {
     metaSchema = JSON.parse(JSON.stringify(metaSchema));
     var segments = keywordsJsonPointers[i].split('/');
@@ -9516,7 +9435,7 @@ var data = function (metaSchema, keywordsJsonPointers) {
   return metaSchema;
 };
 
-var MissingRefError$1 = error_classes.MissingRef;
+var MissingRefError = error_classes.MissingRef;
 
 var async = compileAsync;
 
@@ -9569,7 +9488,7 @@ function compileAsync(schema, meta, callback) {
   function _compileAsync(schemaObj) {
     try { return self._compile(schemaObj); }
     catch(e) {
-      if (e instanceof MissingRefError$1) return loadMissingSchema(e);
+      if (e instanceof MissingRefError) return loadMissingSchema(e);
       throw e;
     }
 
@@ -9833,8 +9752,8 @@ var custom = function generate_custom(it, $keyword, $ruleType) {
   return out;
 };
 
-var $schema = "http://json-schema.org/draft-07/schema#";
-var $id = "http://json-schema.org/draft-07/schema#";
+var $schema$1 = "http://json-schema.org/draft-07/schema#";
+var $id$1 = "http://json-schema.org/draft-07/schema#";
 var title = "Core schema meta-schema";
 var definitions = {
 	schemaArray: {
@@ -9879,7 +9798,7 @@ var definitions = {
 		]
 	}
 };
-var type = [
+var type$1 = [
 	"object",
 	"boolean"
 ];
@@ -10076,22 +9995,22 @@ var properties$1 = {
 	}
 };
 var jsonSchemaDraft07 = {
-	$schema: $schema,
-	$id: $id,
+	$schema: $schema$1,
+	$id: $id$1,
 	title: title,
 	definitions: definitions,
-	type: type,
+	type: type$1,
 	properties: properties$1,
 	"default": true
 };
 
 var jsonSchemaDraft07$1 = /*#__PURE__*/Object.freeze({
     __proto__: null,
-    $schema: $schema,
-    $id: $id,
+    $schema: $schema$1,
+    $id: $id$1,
     title: title,
     definitions: definitions,
-    type: type,
+    type: type$1,
     properties: properties$1,
     'default': jsonSchemaDraft07
 });
@@ -10131,8 +10050,13 @@ var definition_schema = {
     }
   }
 };
+definition_schema.$id;
+definition_schema.definitions;
+definition_schema.type;
+definition_schema.dependencies;
+definition_schema.properties;
 
-var IDENTIFIER$1 = /^[a-z_$][a-z0-9_$-]*$/i;
+var IDENTIFIER = /^[a-z_$][a-z0-9_$-]*$/i;
 
 
 
@@ -10158,7 +10082,7 @@ function addKeyword(keyword, definition) {
   if (RULES.keywords[keyword])
     throw new Error('Keyword ' + keyword + ' is already defined');
 
-  if (!IDENTIFIER$1.test(keyword))
+  if (!IDENTIFIER.test(keyword))
     throw new Error('Keyword ' + keyword + ' is not a valid identifier');
 
   if (definition) {
@@ -10277,14 +10201,14 @@ function validateKeyword(definition, throwError) {
     return false;
 }
 
-var $schema$1 = "http://json-schema.org/draft-07/schema#";
-var $id$1 = "https://raw.githubusercontent.com/ajv-validator/ajv/master/lib/refs/data.json#";
-var description$1 = "Meta-schema for $data reference (JSON Schema extension proposal)";
-var type$1 = "object";
-var required$1 = [
+var $schema = "http://json-schema.org/draft-07/schema#";
+var $id = "https://raw.githubusercontent.com/ajv-validator/ajv/master/lib/refs/data.json#";
+var description = "Meta-schema for $data reference (JSON Schema extension proposal)";
+var type = "object";
+var required = [
 	"$data"
 ];
-var properties$2 = {
+var properties = {
 	$data: {
 		type: "string",
 		anyOf: [
@@ -10298,34 +10222,34 @@ var properties$2 = {
 	}
 };
 var additionalProperties = false;
-var data$1 = {
-	$schema: $schema$1,
-	$id: $id$1,
-	description: description$1,
-	type: type$1,
-	required: required$1,
-	properties: properties$2,
+var data = {
+	$schema: $schema,
+	$id: $id,
+	description: description,
+	type: type,
+	required: required,
+	properties: properties,
 	additionalProperties: additionalProperties
 };
 
-var data$2 = /*#__PURE__*/Object.freeze({
+var data$1 = /*#__PURE__*/Object.freeze({
     __proto__: null,
-    $schema: $schema$1,
-    $id: $id$1,
-    description: description$1,
-    type: type$1,
-    required: required$1,
-    properties: properties$2,
+    $schema: $schema,
+    $id: $id,
+    description: description,
+    type: type,
+    required: required,
+    properties: properties,
     additionalProperties: additionalProperties,
-    'default': data$1
+    'default': data
 });
 
-var require$$1 = getCjsExportFromNamespace(data$2);
+var require$$1 = getCjsExportFromNamespace(data$1);
 
 var ajv = Ajv;
 
-Ajv.prototype.validate = validate$1;
-Ajv.prototype.compile = compile$1;
+Ajv.prototype.validate = validate;
+Ajv.prototype.compile = compile;
 Ajv.prototype.addSchema = addSchema;
 Ajv.prototype.addMetaSchema = addMetaSchema;
 Ajv.prototype.validateSchema = validateSchema;
@@ -10347,7 +10271,7 @@ Ajv.prototype.validateKeyword = keyword.validate;
 
 Ajv.ValidationError = error_classes.Validation;
 Ajv.MissingRefError = error_classes.MissingRef;
-Ajv.$dataMetaSchema = data;
+Ajv.$dataMetaSchema = data$2;
 
 var META_SCHEMA_ID = 'http://json-schema.org/draft-07/schema';
 
@@ -10398,7 +10322,7 @@ function Ajv(opts) {
  * @param  {Any} data to be validated
  * @return {Boolean} validation result. Errors from the last validation will be available in `ajv.errors` (and also in compiled schema: `schema.errors`).
  */
-function validate$1(schemaKeyRef, data) {
+function validate(schemaKeyRef, data) {
   var v;
   if (typeof schemaKeyRef == 'string') {
     v = this.getSchema(schemaKeyRef);
@@ -10421,7 +10345,7 @@ function validate$1(schemaKeyRef, data) {
  * @param  {Boolean} _meta true if schema is a meta-schema. Used internally to compile meta schemas of custom keywords.
  * @return {Function} validating function
  */
-function compile$1(schema, _meta) {
+function compile(schema, _meta) {
   var schemaObj = this._addSchema(schema, undefined, _meta);
   return schemaObj.validate || this._compile(schemaObj);
 }
@@ -10758,7 +10682,7 @@ function addDefaultMetaSchema(self) {
   }
   if (self._opts.meta === false) return;
   var metaSchema = require$$2;
-  if (self._opts.$data) metaSchema = data(metaSchema, META_SUPPORT_DATA);
+  if (self._opts.$data) metaSchema = data$2(metaSchema, META_SUPPORT_DATA);
   self.addMetaSchema(metaSchema, META_SCHEMA_ID, true);
   self._refs['http://json-schema.org/schema'] = META_SCHEMA_ID;
 }
@@ -10914,51 +10838,51 @@ var JSONSchemaValidator = /** @class */ (function () {
         error.schema_keyword = args.keyword;
         error.key = lastNode(nodes);
         switch (args.keyword) {
-            case dist_1$1.MultipleOf:
-            case dist_1$1.Maximum:
-            case dist_1$1.ExclusiveMaximum:
-            case dist_1$1.Minimum:
-            case dist_1$1.ExclusiveMinimum:
-            case dist_1$1.MaxLength:
-            case dist_1$1.MinLength:
-            case dist_1$1.Pattern:
-            case dist_1$1.Format:
+            case dist_1.MultipleOf:
+            case dist_1.Maximum:
+            case dist_1.ExclusiveMaximum:
+            case dist_1.Minimum:
+            case dist_1.ExclusiveMinimum:
+            case dist_1.MaxLength:
+            case dist_1.MinLength:
+            case dist_1.Pattern:
+            case dist_1.Format:
                 error.validation_error_type =
-                    dist_8$1.InvalidValue;
+                    dist_8.InvalidValue;
                 error.expected = args.message;
                 break;
-            case dist_1$1.AdditionalItems:
-            case dist_1$1.AdditionalProperties:
-                error.validation_error_type = dist_8$1.Unplanned;
+            case dist_1.AdditionalItems:
+            case dist_1.AdditionalProperties:
+                error.validation_error_type = dist_8.Unplanned;
                 var additionalProperty = args.params.additionalProperty;
                 error.key = additionalProperty;
                 error.actual = additionalProperty;
                 break;
-            case dist_1$1.Required:
+            case dist_1.Required:
                 var missingProperty = args.params.missingProperty;
                 error.validation_error_type =
-                    dist_8$1.MissingRequired;
+                    dist_8.MissingRequired;
                 error.expected = missingProperty;
                 error.actual = undefined;
                 break;
-            case dist_1$1.Type:
-            case dist_1$1.Const:
-            case dist_1$1.Enum:
+            case dist_1.Type:
+            case dist_1.Const:
+            case dist_1.Enum:
                 error.validation_error_type =
-                    dist_8$1.InvalidValue;
+                    dist_8.InvalidValue;
                 error.expected = args.message;
                 break;
-            case dist_1$1.Dependencies:
+            case dist_1.Dependencies:
                 error.validation_error_type =
-                    dist_8$1.MissingRequired;
+                    dist_8.MissingRequired;
                 error.expected = args.message;
                 break;
-            case dist_1$1.PatternProperties:
+            case dist_1.PatternProperties:
                 error.validation_error_type =
-                    dist_8$1.InvalidValue;
+                    dist_8.InvalidValue;
                 break;
             default:
-                error.validation_error_type = dist_8$1.Unknown;
+                error.validation_error_type = dist_8.Unknown;
                 error.expected = args.message;
                 break;
         }
@@ -11275,7 +11199,7 @@ var DataPlanEventValidator = /** @class */ (function () {
         // Handle Unplannable Events
         if (!matchKey || !matchKey.trim()) {
             var validationError = {
-                validation_error_type: dist_8$1.Unplanned,
+                validation_error_type: dist_8.Unplanned,
                 key: 'unknown',
                 error_pointer: '#',
             };
@@ -11289,7 +11213,7 @@ var DataPlanEventValidator = /** @class */ (function () {
         // Handle Unplanned Events
         if (matchKey && !(matchKey in this.dataPlanMatchLookups)) {
             var validationError = {
-                validation_error_type: dist_8$1.Unplanned,
+                validation_error_type: dist_8.Unplanned,
                 key: this.getEventKey(event),
                 error_pointer: '#',
             };
@@ -11346,10 +11270,10 @@ var DataPlanEventValidator = /** @class */ (function () {
         // validation is required
         if (!schema || Object.keys(schema).length === 0) {
             result.match = {
-                type: dist_5$1.UserAttributes,
+                type: dist_5.UserAttributes,
             };
             var error = {
-                validation_error_type: dist_8$1.Unknown,
+                validation_error_type: dist_8.Unknown,
                 error_pointer: '#',
                 actual: 'Invalid JSON Schema',
                 key: 'user_attributes',
@@ -11384,46 +11308,46 @@ var DataPlanEventValidator = /** @class */ (function () {
      */
     DataPlanEventValidator.generateMatchKey = function (match) {
         switch (match.type) {
-            case dist_5$1.Breadcrumb:
-            case dist_5$1.CrashReport:
-            case dist_5$1.FirstRun:
-            case dist_5$1.NetworkPerformance:
-            case dist_5$1.OptOut:
-            case dist_5$1.ProductImpression:
-            case dist_5$1.SessionStart:
-            case dist_5$1.SessionEnd:
-            case dist_5$1.Uninstall:
-            case dist_5$1.UserAttributes:
-            case dist_5$1.UserIdentities:
+            case dist_5.Breadcrumb:
+            case dist_5.CrashReport:
+            case dist_5.FirstRun:
+            case dist_5.NetworkPerformance:
+            case dist_5.OptOut:
+            case dist_5.ProductImpression:
+            case dist_5.SessionStart:
+            case dist_5.SessionEnd:
+            case dist_5.Uninstall:
+            case dist_5.UserAttributes:
+            case dist_5.UserIdentities:
                 return match.type;
-            case dist_5$1.ApplicationStateTransition:
+            case dist_5.ApplicationStateTransition:
                 // tslint:disable-next-line: max-line-length
                 var astCriteria = match.criteria;
                 return [
-                    dist_5$1.ApplicationStateTransition,
+                    dist_5.ApplicationStateTransition,
                     astCriteria.application_transition_type,
                 ].join(':');
-            case dist_5$1.CustomEvent:
+            case dist_5.CustomEvent:
                 // tslint:disable-next-line: max-line-length
                 var customEventCriteria = match.criteria;
                 return [
-                    dist_5$1.CustomEvent,
+                    dist_5.CustomEvent,
                     customEventCriteria.custom_event_type,
                     customEventCriteria.event_name,
                 ].join(':');
-            case dist_5$1.ScreenView:
+            case dist_5.ScreenView:
                 // tslint:disable-next-line: max-line-length
                 var screenViewCriteria = match.criteria;
                 return [
-                    dist_5$1.ScreenView,
+                    dist_5.ScreenView,
                     '',
                     screenViewCriteria.screen_name,
                 ].join(':');
-            case dist_5$1.ProductAction:
+            case dist_5.ProductAction:
                 // tslint:disable-next-line: max-line-length
                 var productActionMatch = match.criteria;
                 return [match.type, productActionMatch.action].join(':');
-            case dist_5$1.PromotionAction:
+            case dist_5.PromotionAction:
                 // tslint:disable-next-line: max-line-length
                 var promoActionMatch = match.criteria;
                 return [match.type, promoActionMatch.action].join(':');
@@ -11438,61 +11362,61 @@ var DataPlanEventValidator = /** @class */ (function () {
      */
     DataPlanEventValidator.getMatchKey = function (eventToMatch) {
         switch (eventToMatch.event_type) {
-            case dist_4$1.Breadcrumb:
-                return dist_5$1.Breadcrumb;
-            case dist_4$1.CrashReport:
-                return dist_5$1.CrashReport;
-            case dist_4$1.FirstRun:
-                return dist_5$1.FirstRun;
-            case dist_4$1.NetworkPerformance:
-                return dist_5$1.NetworkPerformance;
-            case dist_4$1.OptOut:
-                return dist_5$1.OptOut;
-            case dist_4$1.SessionStart:
-                return dist_5$1.SessionStart;
-            case dist_4$1.SessionEnd:
-                return dist_5$1.SessionEnd;
-            case dist_4$1.Uninstall:
-                return dist_5$1.Uninstall;
-            case dist_4$1.ApplicationStateTransition:
+            case dist_4.Breadcrumb:
+                return dist_5.Breadcrumb;
+            case dist_4.CrashReport:
+                return dist_5.CrashReport;
+            case dist_4.FirstRun:
+                return dist_5.FirstRun;
+            case dist_4.NetworkPerformance:
+                return dist_5.NetworkPerformance;
+            case dist_4.OptOut:
+                return dist_5.OptOut;
+            case dist_4.SessionStart:
+                return dist_5.SessionStart;
+            case dist_4.SessionEnd:
+                return dist_5.SessionEnd;
+            case dist_4.Uninstall:
+                return dist_5.Uninstall;
+            case dist_4.ApplicationStateTransition:
                 // tslint:disable-next-line: max-line-length
                 var appStateTransitionEventData = eventToMatch.data;
                 return [
-                    dist_5$1.ApplicationStateTransition,
+                    dist_5.ApplicationStateTransition,
                     appStateTransitionEventData === null || appStateTransitionEventData === void 0 ? void 0 : appStateTransitionEventData.application_transition_type,
                 ].join(':');
-            case dist_4$1.ScreenView:
+            case dist_4.ScreenView:
                 // tslint:disable-next-line: max-line-length
                 var screenViewEventData = eventToMatch.data;
                 return [
-                    dist_5$1.ScreenView,
+                    dist_5.ScreenView,
                     '',
                     screenViewEventData === null || screenViewEventData === void 0 ? void 0 : screenViewEventData.screen_name,
                 ].join(':');
-            case dist_4$1.Commerce:
+            case dist_4.Commerce:
                 // tslint:disable-next-line: max-line-length
                 var commerceEventData = eventToMatch.data;
                 var matchKey = [];
                 if (commerceEventData) {
                     var product_action = commerceEventData.product_action, product_impressions = commerceEventData.product_impressions, promotion_action = commerceEventData.promotion_action;
                     if (product_action) {
-                        matchKey.push(dist_5$1.ProductAction);
+                        matchKey.push(dist_5.ProductAction);
                         matchKey.push(product_action.action);
                     }
                     else if (promotion_action) {
-                        matchKey.push(dist_5$1.PromotionAction);
+                        matchKey.push(dist_5.PromotionAction);
                         matchKey.push(promotion_action.action);
                     }
                     else if (product_impressions) {
-                        matchKey.push(dist_5$1.ProductImpression);
+                        matchKey.push(dist_5.ProductImpression);
                     }
                 }
                 return matchKey.join(':');
-            case dist_4$1.CustomEvent:
+            case dist_4.CustomEvent:
                 var customEventData = eventToMatch.data;
                 if (customEventData) {
                     return [
-                        dist_5$1.CustomEvent,
+                        dist_5.CustomEvent,
                         customEventData.custom_event_type,
                         customEventData.event_name,
                     ].join(':');
@@ -11510,9 +11434,9 @@ var DataPlanEventValidator = /** @class */ (function () {
     DataPlanEventValidator.synthesizeMatch = function (eventToMatch) {
         switch (eventToMatch.event_type) {
             case dist_14.sessionStart:
-                return { type: dist_5$1.SessionStart };
+                return { type: dist_5.SessionStart };
             case dist_14.sessionEnd:
-                return { type: dist_5$1.SessionEnd };
+                return { type: dist_5.SessionEnd };
             case dist_14.screenView:
                 // tslint:disable-next-line: max-line-length
                 var screenViewEventData = eventToMatch.data;
@@ -11524,7 +11448,7 @@ var DataPlanEventValidator = /** @class */ (function () {
                     screen_name: screenName,
                 };
                 return {
-                    type: dist_5$1.ScreenView,
+                    type: dist_5.ScreenView,
                     criteria: screenViewCriteria,
                 };
             case dist_14.customEvent:
@@ -11535,15 +11459,15 @@ var DataPlanEventValidator = /** @class */ (function () {
                     custom_event_type: (customEventData === null || customEventData === void 0 ? void 0 : customEventData.custom_event_type) || 'other',
                 };
                 return {
-                    type: dist_5$1.CustomEvent,
+                    type: dist_5.CustomEvent,
                     criteria: customEventCriteria,
                 };
             case dist_14.crashReport:
-                return { type: dist_5$1.CrashReport };
+                return { type: dist_5.CrashReport };
             case dist_14.optOut:
-                return { type: dist_5$1.OptOut };
+                return { type: dist_5.OptOut };
             case dist_14.firstRun:
-                return { type: dist_5$1.FirstRun };
+                return { type: dist_5.FirstRun };
             case dist_14.applicationStateTransition:
                 // tslint:disable-next-line: max-line-length
                 var appStateTransitionEventData = eventToMatch.data;
@@ -11555,15 +11479,15 @@ var DataPlanEventValidator = /** @class */ (function () {
                         'unknown',
                 };
                 return {
-                    type: dist_5$1.ApplicationStateTransition,
+                    type: dist_5.ApplicationStateTransition,
                     criteria: appStateTransitionCriteria,
                 };
             case dist_14.networkPerformance:
-                return { type: dist_5$1.NetworkPerformance };
+                return { type: dist_5.NetworkPerformance };
             case dist_14.breadcrumb:
-                return { type: dist_5$1.Breadcrumb };
+                return { type: dist_5.Breadcrumb };
             case dist_14.uninstall:
-                return { type: dist_5$1.Uninstall };
+                return { type: dist_5.Uninstall };
             case dist_14.commerceEvent:
                 // tslint:disable-next-line: max-line-length
                 var commerceEventData = eventToMatch.data;
@@ -11573,7 +11497,7 @@ var DataPlanEventValidator = /** @class */ (function () {
                             action: commerceEventData.product_action.action,
                         };
                         return {
-                            type: dist_5$1.ProductAction,
+                            type: dist_5.ProductAction,
                             criteria: criteria,
                         };
                     }
@@ -11582,19 +11506,19 @@ var DataPlanEventValidator = /** @class */ (function () {
                             action: commerceEventData.promotion_action.action,
                         };
                         return {
-                            type: dist_5$1.PromotionAction,
+                            type: dist_5.PromotionAction,
                             criteria: criteria,
                         };
                     }
                     else if (commerceEventData.product_impressions) {
-                        return { type: dist_5$1.ProductImpression };
+                        return { type: dist_5.ProductImpression };
                     }
                 }
                 break;
             default:
-                return { type: dist_5$1.Unknown };
+                return { type: dist_5.Unknown };
         }
-        return { type: dist_5$1.Unknown };
+        return { type: dist_5.Unknown };
     };
     DataPlanEventValidator.prototype.getEventKey = function (eventToConvert) {
         var key;
@@ -11644,7 +11568,7 @@ var DataPlanService = /** @class */ (function () {
     };
     DataPlanService.prototype.getAPIURL = function () {
         var workspaceId = this.workspaceId;
-        var urlPath = path.join(config.dataPlanningPath, "" + workspaceId, "plans");
+        var urlPath = path__default["default"].join(config.dataPlanningPath, "" + workspaceId, "plans");
         return this.buildUrl(config.apiRoot, urlPath);
     };
     DataPlanService.prototype.createDataPlan = function (dataPlanToCreate) {
@@ -11939,7 +11863,7 @@ var DataPlanService = /** @class */ (function () {
         var serverMode = options === null || options === void 0 ? void 0 : options.serverMode;
         // Create a mock batch so we can pass an event to the server
         var mpid = '';
-        var environment = dist_4.unknown;
+        var environment = dist_4$1.unknown;
         if (serverMode) {
             var batch = {
                 events: [event],

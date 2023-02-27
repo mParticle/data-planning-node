@@ -50,7 +50,7 @@
         "deepmerge": "^4.2.2",
         "faker": "^4.1.0",
         "gts": "^1.1.2",
-        "jest": "^24.9.0",
+        "jest": "^29.4.3",
         "jest-expect-message": "^1.0.2",
         "nock": "^13.2.9",
         "pre-commit": "^1.2.2",

@@ -1,3 +1,13 @@
+## [v1.0.6](https://github.com/mParticle/data-planning-node/compare/v1.0.5...v1.0.6)
+
+### Updates & Maintenance
+* chore: Dependabot Merge ([#344](https://github.com/mParticle/data-planning-node/pull/344))
+* chore: bump http-cache-semantics from 4.0.3 to 4.1.1 ([#360](https://github.com/mParticle/data-planning-node/pull/360)) 
+* chore: bump json5 from 2.1.1 to 2.2.3 ([#345](https://github.com/mParticle/data-planning-node/pull/345))
+* chore: bump qs from 6.5.2 to 6.5.3 ([#326](https://github.com/mParticle/data-planning-node/pull/326)) 
+* chore: bump decode-uri-component from 0.2.0 to 0.2.2 ([#317](https://github.com/mParticle/data-planning-node/pull/317))
+* chore: bump minimatch from 3.0.4 to 3.1.2 ([#307](https://github.com/mParticle/data-planning-node/pull/307))
+
 ## [v1.0.5](https://github.com/mParticle/data-planning-node/compare/v1.0.4...v1.0.5)
 
 ### Updates & Maintenance

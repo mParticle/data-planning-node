@@ -63,7 +63,7 @@
         "ts-node": "^10.9.1",
         "typedoc": "^0.26.2",
         "typedoc-default-themes": "git+https://git@github.com/mParticle/typedoc-default-themes.git#mp-custom",
-        "typescript": "^3.8.3"
+        "typescript": "^5.8.2"
     },
     "dependencies": {
         "@mparticle/data-planning-models": "0.1.6",

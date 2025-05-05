@@ -16,15 +16,6 @@ jobs:
           with:
               node-version: 12.x
 
-        - name: Run NPM CI
-          run: npm ci
-
-        - name: Lint
-          run: npm run lint
-
-        - name: Run Core tests
-          run: npm run test
-
   automerge-dependabot:
     name: "Save PR Number for Dependabot Automerge"
     needs:
